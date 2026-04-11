@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Free AI Tool - Prompt Builder</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Prompt Builder</h1>
+      <p>Create clear, powerful prompts in seconds.</p>
+    </header>
+
+    <section class="card">
+      <label>Goal (what is needed?)</label>
+      <input id="goal" placeholder="Example: Write a professional email to a recruiter" />
+
+      <label>Context (important details)</label>
+      <textarea id="context" rows="5" placeholder="Example: Interview reschedule, time zone confusion..."></textarea>
+
+      <label>Output format</label>
+      <input id="format" placeholder="Example: Short email, polite and confident" />
+
+      <button id="build">Build Prompt</button>
+    </section>
+
+    <section class="card">
+      <h2>Generated Prompt</h2>
+      <pre id="result"></pre>
+      <button id="copy">Copy</button>
+    </section>
+
+    <footer>
+      <small>Made with GitHub Pages (Free)</small>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
