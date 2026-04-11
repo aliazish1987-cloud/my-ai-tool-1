@@ -2,38 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Free AI Tool - Prompt Builder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prompt Builder</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <h1>Prompt Builder</h1>
-      <p>Create clear, powerful prompts in seconds.</p>
+    <header class="header">
+      <div>
+        <h1>Prompt Builder</h1>
+        <p class="sub">Create clear, high-performing prompts in seconds.</p>
+      </div>
+      <div class="badge">Free • Runs in browser • No login</div>
     </header>
 
-    <section class="card">
-      <label>Goal (what is needed?)</label>
-      <input id="goal" placeholder="Example: Write a professional email to a recruiter" />
+    <section class="grid">
+      <div class="card">
+        <h2>Inputs</h2>
 
-      <label>Context (important details)</label>
-      <textarea id="context" rows="5" placeholder="Example: Interview reschedule, time zone confusion..."></textarea>
+        <label for="template">Template</label>
+        <select id="template"></select>
 
-      <label>Output format</label>
-      <input id="format" placeholder="Example: Short email, polite and confident" />
+        <label for="role">ROLE (who the AI should act as)</label>
+        <input id="role" placeholder="Example: Expert recruiter + resume writer" />
 
-      <button id="build">Build Prompt</button>
+        <label for="goal">GOAL (what is needed)</label>
+        <input id="goal" placeholder="Example: Write a professional follow-up email" />
+
+        <label for="context">CONTEXT (important details)</label>
+        <textarea id="context" rows="6" placeholder="Add details, job description, background, constraints..."></textarea>
+
+        <div class="two">
+          <div>
+            <label for="audience">Audience</label>
+            <input id="audience" placeholder="Example: US hiring manager" />
+          </div>
+          <div>
+            <label for="tone">Tone</label>
+            <input id="tone" placeholder="Example: Warm, confident, concise" />
+          </div>
+        </div>
+
+        <label for="output">OUTPUT (format)</label>
+        <input id="output" placeholder="Example: 6 bullet points + a short email" />
+
+        <label for="constraints">CONSTRAINTS (rules)</label>
+        <textarea id="constraints" rows="4" placeholder="Example: No fluff. Be critical. Use simple English."></textarea>
+
+        <div class="btnRow">
+          <button id="build" class="primary">Build Prompt</button>
+          <button id="clear" class="ghost">Clear</button>
+          <button id="save" class="ghost">Save</button>
+        </div>
+
+        <p class="hint">
+          Tip: Paste job descriptions into CONTEXT and ask for exact outputs (scripts, emails, checklists).
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Generated Prompt</h2>
+        <pre id="result" class="result"></pre>
+
+        <div class="btnRow">
+          <button id="copy" class="primary">Copy</button>
+          <button id="download" class="ghost">Download .txt</button>
+        </div>
+
+        <h3>Saved Prompts</h3>
+        <div id="saved" class="saved"></div>
+      </div>
     </section>
 
-    <section class="card">
-      <h2>Generated Prompt</h2>
-      <pre id="result"></pre>
-      <button id="copy">Copy</button>
-    </section>
-
-    <footer>
-      <small>Made with GitHub Pages (Free)</small>
+    <footer class="footer">
+      <small>Built with GitHub Pages. Upgrade later with a free backend (Cloudflare Workers) if needed.</small>
     </footer>
   </div>
 
