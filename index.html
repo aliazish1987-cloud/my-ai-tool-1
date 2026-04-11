@@ -1,83 +1,359 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Prompt Builder</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptCraft Pro — Free AI Prompt Enhancer</title>
+  <meta name="description" content="Transform rough ideas into professional AI prompts instantly. Free, no login required." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="wrap">
-    <header class="header">
-      <div>
-        <h1>Prompt Builder</h1>
-        <p class="sub">Create clear, high-performing prompts in seconds.</p>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">PromptCraft <span class="logo-pro">Pro</span></span>
       </div>
-      <div class="badge">Free • Runs in browser • No login</div>
-    </header>
+      <div class="nav-badges">
+        <span class="badge">✓ Free</span>
+        <span class="badge">✓ No Login</span>
+        <span class="badge">✓ No AI Limits</span>
+      </div>
+    </div>
+  </nav>
 
-    <section class="grid">
-      <div class="card">
-        <h2>Inputs</h2>
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-tag">🚀 The Smartest Free Prompt Tool</div>
+      <h1 class="hero-title">
+        Turn Rough Ideas Into<br />
+        <span class="gradient-text">Master-Level AI Prompts</span>
+      </h1>
+      <p class="hero-sub">
+        No experience needed. Pick a template, fill in your idea,<br />
+        and get a structured professional prompt in seconds.
+      </p>
+      <div class="hero-stats">
+        <div class="stat"><strong>10+</strong><small>Templates</small></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>100%</strong><small>Free Forever</small></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><strong>Works With</strong><small>Any AI Tool</small></div>
+      </div>
+    </div>
+  </section>
 
-        <label for="template">Template</label>
-        <select id="template"></select>
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works">
+    <div class="section-inner">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-sub">Three simple steps. No technical knowledge needed.</p>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-icon">🎯</div>
+          <h3>Pick a Template</h3>
+          <p>Choose from 10+ expert templates (Doctor, Photographer, Resume Writer, Coder and more)</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon">✍️</div>
+          <h3>Describe Your Idea</h3>
+          <p>Type your rough thoughts in plain simple language. No technical words needed.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-icon">⚡</div>
+          <h3>Get Master Prompt</h3>
+          <p>Click Build Prompt. Copy the professional result and paste into ChatGPT, Gemini, or Claude.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <label for="role">ROLE (who the AI should act as)</label>
-        <input id="role" placeholder="Example: Expert recruiter + resume writer" />
+  <!-- MAIN TOOL -->
+  <section class="tool-section">
+    <div class="section-inner">
+      <h2 class="section-title">Build Your Prompt</h2>
+      <p class="section-sub">Fill in the fields below — the more detail provided, the better the result.</p>
 
-        <label for="goal">GOAL (what is needed)</label>
-        <input id="goal" placeholder="Example: Write a professional follow-up email" />
+      <div class="tool-grid">
 
-        <label for="context">CONTEXT (important details)</label>
-        <textarea id="context" rows="6" placeholder="Add details, job description, background, constraints..."></textarea>
-
-        <div class="two">
-          <div>
-            <label for="audience">Audience</label>
-            <input id="audience" placeholder="Example: US hiring manager" />
+        <!-- LEFT: INPUT PANEL -->
+        <div class="panel input-panel">
+          <div class="panel-header">
+            <span class="panel-icon">✍️</span>
+            <span>Your Inputs</span>
           </div>
-          <div>
-            <label for="tone">Tone</label>
-            <input id="tone" placeholder="Example: Warm, confident, concise" />
+          <div class="panel-body">
+
+            <!-- TEMPLATE SELECTOR -->
+            <div class="field-group">
+              <label class="field-label">
+                🎯 Choose a Template
+                <span class="field-tip">Auto-fills the fields below</span>
+              </label>
+              <select id="template" class="select-input">
+                <option value="">— Select a Template —</option>
+                <optgroup label="🧠 AI & Tech">
+                  <option value="ai_expert">AI Expert + Prompt Engineer</option>
+                  <option value="coder">Software Developer / Coder</option>
+                  <option value="data_analyst">Data Analyst</option>
+                </optgroup>
+                <optgroup label="💼 Career & Business">
+                  <option value="resume_writer">Resume Writer</option>
+                  <option value="cover_letter">Cover Letter Writer</option>
+                  <option value="customer_support">Customer Support Expert</option>
+                  <option value="sales">Sales & Marketing Expert</option>
+                </optgroup>
+                <optgroup label="🎨 Creative">
+                  <option value="photographer">Fashion Photographer</option>
+                  <option value="content_creator">Content Creator</option>
+                  <option value="storyteller">Storyteller / Writer</option>
+                </optgroup>
+                <optgroup label="🏥 Professional">
+                  <option value="doctor">Medical Doctor</option>
+                  <option value="teacher">Teacher / Educator</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- SIMPLE MODE TOGGLE -->
+            <div class="mode-toggle">
+              <button class="mode-btn active" id="simpleMode" onclick="setMode('simple')">
+                🟢 Simple Mode
+              </button>
+              <button class="mode-btn" id="advancedMode" onclick="setMode('advanced')">
+                🔵 Advanced Mode
+              </button>
+            </div>
+
+            <!-- SIMPLE MODE FIELDS -->
+            <div id="simpleFields">
+              <div class="field-group">
+                <label class="field-label">
+                  💡 What do you want the AI to do?
+                  <span class="field-tip">Write in your own words</span>
+                </label>
+                <textarea id="simple_idea" class="textarea-input" rows="4"
+                  placeholder="Example: Help me write a good resume for customer support jobs. I have 15 years experience."></textarea>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">🎭 Who should the AI act like?</label>
+                <input id="simple_role" class="text-input" type="text"
+                  placeholder="Example: Expert resume writer, Career coach, Doctor" />
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">📝 What format should the answer be in?</label>
+                <select id="simple_format" class="select-input">
+                  <option value="detailed explanation">Detailed Explanation</option>
+                  <option value="step-by-step guide">Step-by-Step Guide</option>
+                  <option value="bullet points">Bullet Points</option>
+                  <option value="professional email">Professional Email</option>
+                  <option value="full document">Full Document</option>
+                  <option value="short summary">Short Summary</option>
+                  <option value="table or comparison">Table / Comparison</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ADVANCED MODE FIELDS -->
+            <div id="advancedFields" style="display:none;">
+              <div class="field-group">
+                <label class="field-label">🎭 Role <span class="field-tip">Who should the AI act as?</span></label>
+                <input id="adv_role" class="text-input" type="text"
+                  placeholder="AI expert and prompt engineer" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">🎯 Goal <span class="field-tip">What is the main task?</span></label>
+                <input id="adv_goal" class="text-input" type="text"
+                  placeholder="Enhance and transform rough ideas into master-level prompts" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">📋 Context <span class="field-tip">Important background details</span></label>
+                <textarea id="adv_context" class="textarea-input" rows="3"
+                  placeholder="The user is a beginner. They want to improve AI prompt results..."></textarea>
+              </div>
+              <div class="two-col">
+                <div class="field-group">
+                  <label class="field-label">👥 Audience</label>
+                  <input id="adv_audience" class="text-input" type="text" placeholder="Beginners, Professionals..." />
+                </div>
+                <div class="field-group">
+                  <label class="field-label">🎨 Tone</label>
+                  <select id="adv_tone" class="select-input">
+                    <option>Professional</option>
+                    <option>Friendly</option>
+                    <option>Expert</option>
+                    <option>Simple</option>
+                    <option>Creative</option>
+                    <option>Formal</option>
+                    <option>Casual</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">📤 Output Format</label>
+                <input id="adv_output" class="text-input" type="text"
+                  placeholder="Step-by-step guide with examples and variations" />
+              </div>
+              <div class="field-group">
+                <label class="field-label">⚠️ Constraints / Rules</label>
+                <textarea id="adv_constraints" class="textarea-input" rows="2"
+                  placeholder="Keep it under 500 words. Use simple language..."></textarea>
+              </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="action-buttons">
+              <button class="btn-primary" onclick="buildPrompt()">
+                ⚡ Build Prompt
+              </button>
+              <button class="btn-secondary" onclick="clearAll()">
+                🗑️ Clear
+              </button>
+              <button class="btn-secondary" onclick="savePrompt()">
+                💾 Save
+              </button>
+            </div>
+
+            <div class="tip-box">
+              💡 <strong>Pro Tip:</strong> Use Simple Mode for quick results. Switch to Advanced Mode for expert-level control over every detail of your prompt.
+            </div>
+
           </div>
         </div>
 
-        <label for="output">OUTPUT (format)</label>
-        <input id="output" placeholder="Example: 6 bullet points + a short email" />
+        <!-- RIGHT: OUTPUT PANEL -->
+        <div class="panel output-panel">
+          <div class="panel-header">
+            <span class="panel-icon">⚡</span>
+            <span>Generated Prompt</span>
+          </div>
+          <div class="panel-body">
 
-        <label for="constraints">CONSTRAINTS (rules)</label>
-        <textarea id="constraints" rows="4" placeholder="Example: No fluff. Be critical. Use simple English."></textarea>
+            <!-- EMPTY STATE -->
+            <div class="empty-state" id="emptyState">
+              <div class="empty-icon">🎯</div>
+              <h3>Your Master Prompt Appears Here</h3>
+              <p>Fill in the fields on the left and click "Build Prompt" to generate a professional, structured AI prompt ready to paste into ChatGPT, Gemini, or Claude.</p>
+              <div class="empty-steps">
+                <span>1. Pick Template</span>
+                <span>→</span>
+                <span>2. Fill Fields</span>
+                <span>→</span>
+                <span>3. Build Prompt</span>
+              </div>
+            </div>
 
-        <div class="btnRow">
-          <button id="build" class="primary">Build Prompt</button>
-          <button id="clear" class="ghost">Clear</button>
-          <button id="save" class="ghost">Save</button>
+            <!-- RESULT BOX -->
+            <div class="result-box" id="resultBox" style="display:none;">
+              <div class="result-label">
+                <span>✅ Master Prompt Ready</span>
+                <span class="result-chars" id="charCount"></span>
+              </div>
+              <pre id="result" class="result-text"></pre>
+              <div class="result-actions">
+                <button class="btn-copy" onclick="copyPrompt()">📋 Copy Prompt</button>
+                <button class="btn-download" onclick="downloadPrompt()">⬇️ Download .txt</button>
+                <button class="btn-secondary small" onclick="sharePrompt()">🔗 Share</button>
+              </div>
+              <div class="use-with">
+                <span class="use-label">Use with:</span>
+                <a href="https://chat.openai.com" target="_blank" class="ai-link">ChatGPT</a>
+                <a href="https://gemini.google.com" target="_blank" class="ai-link">Gemini</a>
+                <a href="https://claude.ai" target="_blank" class="ai-link">Claude</a>
+              </div>
+            </div>
+
+            <!-- SAVED PROMPTS -->
+            <div class="saved-section">
+              <div class="saved-header">
+                <span>💾 Saved Prompts</span>
+                <button class="btn-clear-saved" onclick="clearSaved()">Clear All</button>
+              </div>
+              <div id="savedList">
+                <div class="no-saved">No saved prompts yet. Click Save after building a prompt.</div>
+              </div>
+            </div>
+
+          </div>
         </div>
 
-        <p class="hint">
-          Tip: Paste job descriptions into CONTEXT and ask for exact outputs (scripts, emails, checklists).
-        </p>
       </div>
+    </div>
+  </section>
 
-      <div class="card">
-        <h2>Generated Prompt</h2>
-        <pre id="result" class="result"></pre>
-
-        <div class="btnRow">
-          <button id="copy" class="primary">Copy</button>
-          <button id="download" class="ghost">Download .txt</button>
+  <!-- TEMPLATES SHOWCASE -->
+  <section class="templates-section">
+    <div class="section-inner">
+      <h2 class="section-title">What Can This Build?</h2>
+      <p class="section-sub">Click any example to load it into the builder instantly</p>
+      <div class="examples-grid">
+        <div class="example-card" onclick="loadExample('resume')">
+          <div class="ex-icon">📄</div>
+          <h4>Resume Enhancement</h4>
+          <p>Turn basic job history into powerful, ATS-optimized resume content</p>
+          <span class="ex-tag">Career</span>
         </div>
-
-        <h3>Saved Prompts</h3>
-        <div id="saved" class="saved"></div>
+        <div class="example-card" onclick="loadExample('email')">
+          <div class="ex-icon">✉️</div>
+          <h4>Professional Email</h4>
+          <p>Write polished emails for recruiters, clients, and business partners</p>
+          <span class="ex-tag">Business</span>
+        </div>
+        <div class="example-card" onclick="loadExample('image')">
+          <div class="ex-icon">🖼️</div>
+          <h4>Image Generation</h4>
+          <p>Create cinematic, detailed prompts for Midjourney, DALL-E, and Gemini</p>
+          <span class="ex-tag">Creative</span>
+        </div>
+        <div class="example-card" onclick="loadExample('support')">
+          <div class="ex-icon">🎧</div>
+          <h4>Customer Support</h4>
+          <p>Generate empathetic, professional responses for difficult customer situations</p>
+          <span class="ex-tag">Business</span>
+        </div>
+        <div class="example-card" onclick="loadExample('medical')">
+          <div class="ex-icon">🏥</div>
+          <h4>Medical Explanation</h4>
+          <p>Explain complex medical topics in simple, understandable language</p>
+          <span class="ex-tag">Health</span>
+        </div>
+        <div class="example-card" onclick="loadExample('code')">
+          <div class="ex-icon">💻</div>
+          <h4>Code Helper</h4>
+          <p>Build detailed coding prompts for debugging, learning, or building projects</p>
+          <span class="ex-tag">Tech</span>
+        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <footer class="footer">
-      <small>Built with GitHub Pages. Upgrade later with a free backend (Cloudflare Workers) if needed.</small>
-    </footer>
-  </div>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">PromptCraft <span class="logo-pro">Pro</span></span>
+      </div>
+      <p class="footer-desc">Free AI Prompt Builder — Works with ChatGPT, Gemini, Claude, Midjourney and more.</p>
+      <div class="footer-links">
+        <span>Built with GitHub Pages</span>
+        <span>•</span>
+        <span>100% Free</span>
+        <span>•</span>
+        <span>No Data Stored</span>
+      </div>
+    </div>
+  </footer>
 
   <script src="app.js"></script>
 </body>
