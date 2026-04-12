@@ -1,360 +1,1286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PromptCraft Pro — Free AI Prompt Enhancer</title>
-  <meta name="description" content="Transform rough ideas into professional AI prompts instantly. Free, no login required." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>OPAL — AI Prompt Engine</title>
+<meta name="description" content="Transform any idea into a master-level AI prompt instantly. Free. No login."/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { box-sizing: border-box; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #030712;
+    color: #f1f5f9;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── ANIMATED BACKGROUND ── */
+  .bg-orbs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+  .orb-1 { width: 500px; height: 500px; background: #3b82f6; top: -100px; left: -100px; animation-delay: 0s; }
+  .orb-2 { width: 400px; height: 400px; background: #8b5cf6; top: 40%; right: -80px; animation-delay: 3s; }
+  .orb-3 { width: 300px; height: 300px; background: #06b6d4; bottom: -80px; left: 30%; animation-delay: 6s; }
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(30px,20px) scale(1.08); }
+  }
+
+  /* ── GLASSMORPHISM ── */
+  .glass {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .glass-strong {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .glass-card {
+    background: rgba(15,23,42,0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  /* ── GRADIENT TEXT ── */
+  .gradient-text {
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #34d399 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .gradient-text-2 {
+    background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── INPUTS ── */
+  .opal-input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #f1f5f9;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 12px 16px;
+    outline: none;
+    transition: all 0.2s;
+    resize: vertical;
+  }
+  .opal-input:focus {
+    border-color: rgba(96,165,250,0.6);
+    background: rgba(96,165,250,0.06);
+    box-shadow: 0 0 0 3px rgba(96,165,250,0.1);
+  }
+  .opal-input::placeholder { color: rgba(148,163,184,0.5); }
+  .opal-select {
+    appearance: none;
+    cursor: pointer;
+  }
+  .opal-input::-webkit-resizer { display: none; }
+
+  /* ── BUTTONS ── */
+  .btn-build {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 24px rgba(59,130,246,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-build::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .btn-build:hover::before { opacity: 1; }
+  .btn-build:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(59,130,246,0.5); }
+  .btn-build:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.1); color: #f1f5f9; border-color: rgba(255,255,255,0.2); }
+
+  .btn-copy {
+    background: rgba(16,185,129,0.15);
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 10px;
+    color: #34d399;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-copy:hover { background: rgba(16,185,129,0.25); }
+
+  /* ── MODE TOGGLE ── */
+  .toggle-container {
+    display: flex;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 4px;
+  }
+  .toggle-btn {
+    flex: 1;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: #64748b;
+  }
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.4);
+  }
+
+  /* ── LIVE PREVIEW ── */
+  .live-preview {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 16px;
+    font-family: 'Inter', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #94a3b8;
+    min-height: 120px;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    transition: all 0.3s;
+  }
+  .live-preview.has-content { color: #e2e8f0; }
+
+  /* ── RESULT BOX ── */
+  .result-text {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 20px;
+    font-size: 13px;
+    line-height: 1.9;
+    color: #e2e8f0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 9999;
+    background: rgba(16,185,129,0.15);
+    border: 1px solid rgba(16,185,129,0.4);
+    backdrop-filter: blur(20px);
+    border-radius: 14px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #34d399;
+    font-weight: 600;
+    font-size: 14px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── NAV ── */
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(3,7,18,0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ── HOW IT WORKS MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal-box {
+    background: #0f172a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 32px;
+    max-width: 560px;
+    width: 100%;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .modal-overlay.open .modal-box { transform: scale(1); }
+
+  /* ── STEP CARDS ── */
+  .step-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── SAVED ITEMS ── */
+  .saved-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  .saved-item:hover { border-color: rgba(96,165,250,0.4); color: #e2e8f0; background: rgba(96,165,250,0.05); }
+
+  /* ── TEMPLATE CHIPS ── */
+  .template-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    font-size: 12px;
+    font-weight: 500;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .template-chip:hover { border-color: rgba(96,165,250,0.5); color: #60a5fa; background: rgba(96,165,250,0.08); }
+  .template-chip.selected { border-color: #3b82f6; background: rgba(59,130,246,0.15); color: #60a5fa; }
+
+  /* ── LABEL ── */
+  .field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+
+  /* ── GLOW EFFECT ── */
+  .glow-blue { box-shadow: 0 0 30px rgba(59,130,246,0.2); }
+  .glow-purple { box-shadow: 0 0 30px rgba(139,92,246,0.2); }
+
+  /* ── CHAR COUNTER ── */
+  .char-bar { height: 2px; border-radius: 1px; transition: width 0.3s; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-blue { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+  .badge-green { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+  .badge-purple { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+
+  /* ── ANIMATIONS ── */
+  .fade-in { animation: fadeIn 0.4s ease forwards; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  .pulse-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #34d399;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(0.8); }
+  }
+
+  /* ── HERO GRID BG ── */
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+</style>
 </head>
 <body>
 
-  <!-- NAVIGATION BAR -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <div class="logo">
-        <span class="logo-icon">⚡</span>
-        <span class="logo-text">PromptCraft <span class="logo-pro">Pro</span></span>
+<!-- ── ANIMATED BACKGROUND ── -->
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- ── TOAST NOTIFICATION ── -->
+<div class="toast" id="toast">
+  <span>✅</span>
+  <span id="toastMsg">Copied to clipboard!</span>
+</div>
+
+<!-- ── HOW IT WORKS MODAL ── -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold">How OPAL Works</h2>
+      <button onclick="toggleModal()" class="btn-secondary" style="padding:8px 14px; font-size:13px;">✕ Close</button>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div style="display:flex; gap:16px; align-items:flex-start;">
+        <div class="step-dot" style="background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.3);">1</div>
+        <div>
+          <h3 style="font-weight:700; margin-bottom:4px;">Choose Your Mode</h3>
+          <p style="color:#64748b; font-size:13px; line-height:1.6;">Simple Mode: One text box. Type your rough idea and click Build. Advanced Mode: Full control over Role, Tone, Context, and Output format.</p>
+        </div>
       </div>
-      <div class="nav-badges">
-        <span class="badge">✓ Free</span>
-        <span class="badge">✓ No Login</span>
-        <span class="badge">✓ No AI Limits</span>
+      <div style="display:flex; gap:16px; align-items:flex-start;">
+        <div class="step-dot" style="background:rgba(139,92,246,0.2); color:#a78bfa; border:1px solid rgba(139,92,246,0.3);">2</div>
+        <div>
+          <h3 style="font-weight:700; margin-bottom:4px;">Pick a Template (Optional)</h3>
+          <p style="color:#64748b; font-size:13px; line-height:1.6;">Click any template chip (Resume Writer, Doctor, Photographer...) to auto-fill professional defaults. Then customize as needed.</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:flex-start;">
+        <div class="step-dot" style="background:rgba(16,185,129,0.2); color:#34d399; border:1px solid rgba(16,185,129,0.3);">3</div>
+        <div>
+          <h3 style="font-weight:700; margin-bottom:4px;">Build & Copy</h3>
+          <p style="color:#64748b; font-size:13px; line-height:1.6;">The Heuristic Engine structures your input into a professional master prompt. Copy it and paste into ChatGPT, Gemini, or Claude.</p>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:flex-start;">
+        <div class="step-dot" style="background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid rgba(245,158,11,0.3);">4</div>
+        <div>
+          <h3 style="font-weight:700; margin-bottom:4px;">Save Your Best Prompts</h3>
+          <p style="color:#64748b; font-size:13px; line-height:1.6;">Click Save to store up to 10 prompts in your browser. Load them anytime. No account needed.</p>
+        </div>
       </div>
     </div>
-  </nav>
+  </div>
+</div>
 
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-tag">🚀 The Smartest Free Prompt Tool</div>
-      <h1 class="hero-title">
-        Turn Rough Ideas Into<br />
-        <span class="gradient-text">Master-Level AI Prompts</span>
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <div style="max-width:1280px; margin:0 auto; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <!-- LOGO PLACEHOLDER -->
+      <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,#3b82f6,#8b5cf6); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900;">⚡</div>
+      <span style="font-size:20px; font-weight:800; letter-spacing:-0.5px;">OPAL<span style="font-size:11px; font-weight:600; color:#64748b; margin-left:4px; letter-spacing:0;">PROMPT ENGINE</span></span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button onclick="toggleModal()" class="btn-secondary" style="padding:8px 16px; font-size:13px; display:flex; align-items:center; gap:6px;">
+        <span style="font-size:14px;">?</span> How It Works
+      </button>
+      <span class="badge badge-green">
+        <span class="pulse-dot"></span> Free
+      </span>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ── -->
+<div style="position:relative; z-index:1;">
+
+  <!-- ── HERO ── -->
+  <section class="grid-bg" style="padding:64px 24px 48px; text-align:center;">
+    <div style="max-width:700px; margin:0 auto;">
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); border-radius:100px; padding:6px 16px; font-size:12px; font-weight:600; color:#f59e0b; margin-bottom:24px;">
+        🚀 World's Smartest Free Prompt Builder
+      </div>
+      <h1 style="font-size:clamp(32px,6vw,60px); font-weight:900; line-height:1.1; letter-spacing:-2px; margin-bottom:16px;">
+        Turn Any Idea Into a<br/>
+        <span class="gradient-text">Master AI Prompt</span>
       </h1>
-      <p class="hero-sub">
-        No experience needed. Pick a template, fill in your idea,<br />
-        and get a structured professional prompt in seconds.
+      <p style="font-size:18px; color:#64748b; line-height:1.7; margin-bottom:32px;">
+        No experience needed. Type your rough thought,<br/>click Build, and get a professional prompt instantly.
       </p>
-      <div class="hero-stats">
-        <div class="stat"><strong>10+</strong><small>Templates</small></div>
-        <div class="stat-divider"></div>
-        <div class="stat"><strong>100%</strong><small>Free Forever</small></div>
-        <div class="stat-divider"></div>
-        <div class="stat"><strong>Works With</strong><small>Any AI Tool</small></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="how-it-works">
-    <div class="section-inner">
-      <h2 class="section-title">How It Works</h2>
-      <p class="section-sub">Three simple steps. No technical knowledge needed.</p>
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-number">1</div>
-          <div class="step-icon">🎯</div>
-          <h3>Pick a Template</h3>
-          <p>Choose from 10+ expert templates (Doctor, Photographer, Resume Writer, Coder and more)</p>
+      <div style="display:flex; align-items:center; justify-content:center; gap:24px; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:#60a5fa;">12+</div>
+          <div style="font-size:12px; color:#64748b;">Templates</div>
         </div>
-        <div class="step-card">
-          <div class="step-number">2</div>
-          <div class="step-icon">✍️</div>
-          <h3>Describe Your Idea</h3>
-          <p>Type your rough thoughts in plain simple language. No technical words needed.</p>
+        <div style="width:1px; height:36px; background:rgba(255,255,255,0.08);"></div>
+        <div style="text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:#a78bfa;">100%</div>
+          <div style="font-size:12px; color:#64748b;">Free Forever</div>
         </div>
-        <div class="step-card">
-          <div class="step-number">3</div>
-          <div class="step-icon">⚡</div>
-          <h3>Get Master Prompt</h3>
-          <p>Click Build Prompt. Copy the professional result and paste into ChatGPT, Gemini, or Claude.</p>
+        <div style="width:1px; height:36px; background:rgba(255,255,255,0.08);"></div>
+        <div style="text-align:center;">
+          <div style="font-size:28px; font-weight:900; color:#34d399;">Works With</div>
+          <div style="font-size:12px; color:#64748b;">Any AI Tool</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- MAIN TOOL -->
-  <section class="tool-section">
-    <div class="section-inner">
-      <h2 class="section-title">Build Your Prompt</h2>
-      <p class="section-sub">Fill in the fields below — the more detail provided, the better the result.</p>
+  <!-- ── MAIN TOOL ── -->
+  <section style="padding:24px 24px 64px; max-width:1280px; margin:0 auto;">
 
-      <div class="tool-grid">
+    <!-- TEMPLATE CHIPS -->
+    <div style="margin-bottom:24px; overflow-x:auto; padding-bottom:8px;">
+      <div style="display:flex; gap:8px; width:max-content;">
+        <span style="font-size:12px; font-weight:600; color:#64748b; display:flex; align-items:center; margin-right:4px;">Quick Templates:</span>
+        <button class="template-chip" onclick="loadTemplate('resume')" id="chip-resume">📄 Resume Writer</button>
+        <button class="template-chip" onclick="loadTemplate('customer')" id="chip-customer">🎧 Customer Support</button>
+        <button class="template-chip" onclick="loadTemplate('ai')" id="chip-ai">🤖 AI Expert</button>
+        <button class="template-chip" onclick="loadTemplate('doctor')" id="chip-doctor">🏥 Doctor</button>
+        <button class="template-chip" onclick="loadTemplate('photo')" id="chip-photo">📸 Photographer</button>
+        <button class="template-chip" onclick="loadTemplate('email')" id="chip-email">✉️ Email Writer</button>
+        <button class="template-chip" onclick="loadTemplate('code')" id="chip-code">💻 Coder</button>
+        <button class="template-chip" onclick="loadTemplate('sales')" id="chip-sales">💼 Sales Expert</button>
+        <button class="template-chip" onclick="loadTemplate('teacher')" id="chip-teacher">📚 Teacher</button>
+        <button class="template-chip" onclick="loadTemplate('content')" id="chip-content">🎬 Content Creator</button>
+      </div>
+    </div>
 
-        <!-- LEFT: INPUT PANEL -->
-        <div class="panel input-panel">
-          <div class="panel-header">
-            <span class="panel-icon">✍️</span>
-            <span>Your Inputs</span>
+    <!-- TWO-COLUMN GRID -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;" id="mainGrid">
+
+      <!-- ── LEFT: INPUT PANEL ── -->
+      <div class="glass-card" style="border-radius:20px; overflow:hidden;">
+        <!-- Panel Header -->
+        <div style="padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px;">
+            <span>✍️</span> Build Your Prompt
           </div>
-          <div class="panel-body">
+          <!-- MODE TOGGLE -->
+          <div class="toggle-container" style="width:200px;">
+            <button class="toggle-btn active" id="simpleToggle" onclick="setMode('simple')">⚡ Simple</button>
+            <button class="toggle-btn" id="advancedToggle" onclick="setMode('advanced')">🔧 Advanced</button>
+          </div>
+        </div>
 
-            <!-- TEMPLATE SELECTOR -->
-            <div class="field-group">
-              <label class="field-label">
-                🎯 Choose a Template
-                <span class="field-tip">Auto-fills the fields below</span>
-              </label>
-              <select id="template" class="select-input">
-                <option value="">— Select a Template —</option>
-                <optgroup label="🧠 AI & Tech">
-                  <option value="ai_expert">AI Expert + Prompt Engineer</option>
-                  <option value="coder">Software Developer / Coder</option>
-                  <option value="data_analyst">Data Analyst</option>
-                </optgroup>
-                <optgroup label="💼 Career & Business">
-                  <option value="resume_writer">Resume Writer</option>
-                  <option value="cover_letter">Cover Letter Writer</option>
-                  <option value="customer_support">Customer Support Expert</option>
-                  <option value="sales">Sales & Marketing Expert</option>
-                </optgroup>
-                <optgroup label="🎨 Creative">
-                  <option value="photographer">Fashion Photographer</option>
-                  <option value="content_creator">Content Creator</option>
-                  <option value="storyteller">Storyteller / Writer</option>
-                </optgroup>
-                <optgroup label="🏥 Professional">
-                  <option value="doctor">Medical Doctor</option>
-                  <option value="teacher">Teacher / Educator</option>
-                </optgroup>
-              </select>
+        <div style="padding:20px;">
+
+          <!-- ── SIMPLE MODE ── -->
+          <div id="simpleMode">
+            <div style="margin-bottom:16px;">
+              <label class="field-label">What do you want the AI to do?</label>
+              <textarea
+                id="simple_idea"
+                class="opal-input"
+                rows="6"
+                placeholder="Type your rough idea here in plain language...&#10;&#10;Example: Help me write a professional email to a recruiter to reschedule my interview. There was a timezone confusion and I waited 2 hours. I want to be polite but also mention I am still very interested."
+                oninput="updateLivePreview()"
+              ></textarea>
+              <div style="display:flex; justify-content:space-between; margin-top:6px;">
+                <span style="font-size:11px; color:#374151;">Plain language is fine. OPAL will structure it professionally.</span>
+                <span style="font-size:11px; color:#374151;" id="simpleCharCount">0 / 500</span>
+              </div>
             </div>
 
-            <!-- SIMPLE MODE TOGGLE -->
-            <div class="mode-toggle">
-              <button class="mode-btn active" id="simpleMode" onclick="setMode('simple')">
-                🟢 Simple Mode
-              </button>
-              <button class="mode-btn" id="advancedMode" onclick="setMode('advanced')">
-                🔵 Advanced Mode
-              </button>
-            </div>
-
-            <!-- SIMPLE MODE FIELDS -->
-            <div id="simpleFields">
-              <div class="field-group">
-                <label class="field-label">
-                  💡 What do you want the AI to do?
-                  <span class="field-tip">Write in your own words</span>
-                </label>
-                <textarea id="simple_idea" class="textarea-input" rows="4"
-                  placeholder="Example: Help me write a good resume for customer support jobs. I have 15 years experience."></textarea>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+              <div>
+                <label class="field-label">Role (Optional)</label>
+                <input type="text" id="simple_role" class="opal-input" placeholder="Leave blank = Global Expert" oninput="updateLivePreview()" style="padding:10px 14px;"/>
               </div>
-
-              <div class="field-group">
-                <label class="field-label">🎭 Who should the AI act like?</label>
-                <input id="simple_role" class="text-input" type="text"
-                  placeholder="Example: Expert resume writer, Career coach, Doctor" />
-              </div>
-
-              <div class="field-group">
-                <label class="field-label">📝 What format should the answer be in?</label>
-                <select id="simple_format" class="select-input">
+              <div>
+                <label class="field-label">Output Format</label>
+                <select id="simple_format" class="opal-input opal-select" onchange="updateLivePreview()" style="padding:10px 14px;">
                   <option value="detailed explanation">Detailed Explanation</option>
                   <option value="step-by-step guide">Step-by-Step Guide</option>
                   <option value="bullet points">Bullet Points</option>
                   <option value="professional email">Professional Email</option>
                   <option value="full document">Full Document</option>
                   <option value="short summary">Short Summary</option>
-                  <option value="table or comparison">Table / Comparison</option>
                 </select>
               </div>
             </div>
+          </div>
 
-            <!-- ADVANCED MODE FIELDS -->
-            <div id="advancedFields" style="display:none;">
-              <div class="field-group">
-                <label class="field-label">🎭 Role <span class="field-tip">Who should the AI act as?</span></label>
-                <input id="adv_role" class="text-input" type="text"
-                  placeholder="AI expert and prompt engineer" />
+          <!-- ── ADVANCED MODE ── -->
+          <div id="advancedMode" style="display:none;">
+            <div style="display:grid; gap:14px;">
+              <div>
+                <label class="field-label">🎭 Role / Persona <span style="color:#374151; font-weight:400; text-transform:none; letter-spacing:0;">(blank = Global Expert)</span></label>
+                <input type="text" id="adv_role" class="opal-input" placeholder="Senior Customer Support Manager with 15+ years experience" oninput="updateLivePreview()" style="padding:10px 14px;"/>
               </div>
-              <div class="field-group">
-                <label class="field-label">🎯 Goal <span class="field-tip">What is the main task?</span></label>
-                <input id="adv_goal" class="text-input" type="text"
-                  placeholder="Enhance and transform rough ideas into master-level prompts" />
+              <div>
+                <label class="field-label">🎯 Goal / Objective</label>
+                <input type="text" id="adv_goal" class="opal-input" placeholder="What is the main task or desired outcome?" oninput="updateLivePreview()" style="padding:10px 14px;"/>
               </div>
-              <div class="field-group">
-                <label class="field-label">📋 Context <span class="field-tip">Important background details</span></label>
-                <textarea id="adv_context" class="textarea-input" rows="3"
-                  placeholder="The user is a beginner. They want to improve AI prompt results..."></textarea>
+              <div>
+                <label class="field-label">📋 Context / Background</label>
+                <textarea id="adv_context" class="opal-input" rows="3" placeholder="Important details, background information, or the situation..." oninput="updateLivePreview()"></textarea>
               </div>
-              <div class="two-col">
-                <div class="field-group">
-                  <label class="field-label">👥 Audience</label>
-                  <input id="adv_audience" class="text-input" type="text" placeholder="Beginners, Professionals..." />
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div>
+                  <label class="field-label">👥 Target Audience</label>
+                  <input type="text" id="adv_audience" class="opal-input" placeholder="Who will read this?" oninput="updateLivePreview()" style="padding:10px 14px;"/>
                 </div>
-                <div class="field-group">
+                <div>
                   <label class="field-label">🎨 Tone</label>
-                  <select id="adv_tone" class="select-input">
+                  <select id="adv_tone" class="opal-input opal-select" onchange="updateLivePreview()" style="padding:10px 14px;">
                     <option>Professional</option>
                     <option>Friendly</option>
                     <option>Expert</option>
                     <option>Simple</option>
                     <option>Creative</option>
                     <option>Formal</option>
-                    <option>Casual</option>
+                    <option>Empathetic</option>
+                    <option>Cinematic</option>
                   </select>
                 </div>
               </div>
-              <div class="field-group">
+              <div>
                 <label class="field-label">📤 Output Format</label>
-                <input id="adv_output" class="text-input" type="text"
-                  placeholder="Step-by-step guide with examples and variations" />
+                <input type="text" id="adv_output" class="opal-input" placeholder="Step-by-step guide with examples and 3 variations" oninput="updateLivePreview()" style="padding:10px 14px;"/>
               </div>
-              <div class="field-group">
-                <label class="field-label">⚠️ Constraints / Rules</label>
-                <textarea id="adv_constraints" class="textarea-input" rows="2"
-                  placeholder="Keep it under 500 words. Use simple language..."></textarea>
+              <div>
+                <label class="field-label">⚠️ Constraints <span style="color:#374151; font-weight:400; text-transform:none; letter-spacing:0;">(blank = auto-injected)</span></label>
+                <textarea id="adv_constraints" class="opal-input" rows="2" placeholder="Rules, limitations, or specific requirements..." oninput="updateLivePreview()"></textarea>
               </div>
             </div>
+          </div>
 
-            <!-- ACTION BUTTONS -->
-            <div class="action-buttons">
-              <button class="btn-primary" onclick="buildPrompt()">
-                ⚡ Build Prompt
-              </button>
-              <button class="btn-secondary" onclick="clearAll()">
-                🗑️ Clear
-              </button>
-              <button class="btn-secondary" onclick="savePrompt()">
-                💾 Save
-              </button>
+          <!-- ACTION BUTTONS -->
+          <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+            <button class="btn-build" onclick="buildPrompt()" style="flex:1;">
+              ⚡ Build Master Prompt
+            </button>
+            <button class="btn-secondary" onclick="clearAll()">🗑️ Clear</button>
+            <button class="btn-secondary" onclick="saveCurrentPrompt()">💾 Save</button>
+          </div>
+
+          <!-- LIVE PREVIEW -->
+          <div style="margin-top:20px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <label class="field-label" style="margin:0;">👁️ Live Preview</label>
+              <span class="badge badge-blue" style="font-size:10px;">Updates as you type</span>
             </div>
+            <div class="live-preview" id="livePreview">Start typing above to see your prompt structure appear here in real-time...</div>
+          </div>
 
-            <div class="tip-box">
-              💡 <strong>Pro Tip:</strong> Use Simple Mode for quick results. Switch to Advanced Mode for expert-level control over every detail of your prompt.
-            </div>
+        </div>
+      </div>
 
+      <!-- ── RIGHT: OUTPUT PANEL ── -->
+      <div class="glass-card" style="border-radius:20px; overflow:hidden;">
+        <!-- Panel Header -->
+        <div style="padding:16px 20px; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between;">
+          <div style="display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px;">
+            <span>⚡</span> Master Prompt Output
+          </div>
+          <div id="outputBadge" style="display:none;">
+            <span class="badge badge-green">✅ Ready to Use</span>
           </div>
         </div>
 
-        <!-- RIGHT: OUTPUT PANEL -->
-        <div class="panel output-panel">
-          <div class="panel-header">
-            <span class="panel-icon">⚡</span>
-            <span>Generated Prompt</span>
+        <div style="padding:20px; display:flex; flex-direction:column; gap:16px;">
+
+          <!-- EMPTY STATE -->
+          <div id="emptyState" style="text-align:center; padding:48px 20px;">
+            <div style="font-size:56px; margin-bottom:16px; opacity:0.4;">🎯</div>
+            <h3 style="font-size:17px; font-weight:700; margin-bottom:10px; color:#475569;">Your Master Prompt Appears Here</h3>
+            <p style="color:#374151; font-size:13px; line-height:1.7; max-width:280px; margin:0 auto 24px;">
+              Fill in the fields on the left, then click<br/><strong style="color:#60a5fa;">⚡ Build Master Prompt</strong>
+            </p>
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; font-size:12px; color:#374151;">
+              <span style="background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:6px;">1. Pick Template</span>
+              <span>→</span>
+              <span style="background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:6px;">2. Fill Fields</span>
+              <span>→</span>
+              <span style="background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:6px;">3. Build</span>
+            </div>
           </div>
-          <div class="panel-body">
 
-            <!-- EMPTY STATE -->
-            <div class="empty-state" id="emptyState">
-              <div class="empty-icon">🎯</div>
-              <h3>Your Master Prompt Appears Here</h3>
-              <p>Fill in the fields on the left and click "Build Prompt" to generate a professional, structured AI prompt ready to paste into ChatGPT, Gemini, or Claude.</p>
-              <div class="empty-steps">
-                <span>1. Pick Template</span>
-                <span>→</span>
-                <span>2. Fill Fields</span>
-                <span>→</span>
-                <span>3. Build Prompt</span>
-              </div>
+          <!-- RESULT BOX -->
+          <div id="resultBox" style="display:none;" class="fade-in">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <span style="font-size:13px; font-weight:600; color:#34d399;">✅ Master Prompt Generated</span>
+              <span style="font-size:12px; color:#374151;" id="charCountDisplay"></span>
+            </div>
+            <pre class="result-text" id="resultText"></pre>
+
+            <!-- RESULT ACTIONS -->
+            <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+              <button class="btn-copy" onclick="copyResult()">📋 Copy Prompt</button>
+              <button class="btn-secondary" onclick="downloadResult()" style="font-size:13px; padding:10px 16px;">⬇️ Download</button>
+              <button class="btn-secondary" onclick="shareResult()" style="font-size:13px; padding:10px 16px;">🔗 Share</button>
             </div>
 
-            <!-- RESULT BOX -->
-            <div class="result-box" id="resultBox" style="display:none;">
-              <div class="result-label">
-                <span>✅ Master Prompt Ready</span>
-                <span class="result-chars" id="charCount"></span>
-              </div>
-              <pre id="result" class="result-text"></pre>
-              <div class="result-actions">
-                <button class="btn-copy" onclick="copyPrompt()">📋 Copy Prompt</button>
-                <button class="btn-download" onclick="downloadPrompt()">⬇️ Download .txt</button>
-                <button class="btn-secondary small" onclick="sharePrompt()">🔗 Share</button>
-              </div>
-              <div class="use-with">
-                <span class="use-label">Use with:</span>
-                <a href="https://chat.openai.com" target="_blank" class="ai-link">ChatGPT</a>
-                <a href="https://gemini.google.com" target="_blank" class="ai-link">Gemini</a>
-                <a href="https://claude.ai" target="_blank" class="ai-link">Claude</a>
-              </div>
+            <!-- USE WITH -->
+            <div style="display:flex; align-items:center; gap:8px; margin-top:12px; flex-wrap:wrap;">
+              <span style="font-size:11px; color:#374151;">Paste into:</span>
+              <a href="https://chat.openai.com" target="_blank" style="font-size:11px; padding:3px 10px; border-radius:100px; border:1px solid rgba(255,255,255,0.1); color:#94a3b8; text-decoration:none; transition:all 0.2s;">ChatGPT</a>
+              <a href="https://gemini.google.com" target="_blank" style="font-size:11px; padding:3px 10px; border-radius:100px; border:1px solid rgba(255,255,255,0.1); color:#94a3b8; text-decoration:none;">Gemini</a>
+              <a href="https://claude.ai" target="_blank" style="font-size:11px; padding:3px 10px; border-radius:100px; border:1px solid rgba(255,255,255,0.1); color:#94a3b8; text-decoration:none;">Claude</a>
             </div>
-
-            <!-- SAVED PROMPTS -->
-            <div class="saved-section">
-              <div class="saved-header">
-                <span>💾 Saved Prompts</span>
-                <button class="btn-clear-saved" onclick="clearSaved()">Clear All</button>
-              </div>
-              <div id="savedList">
-                <div class="no-saved">No saved prompts yet. Click Save after building a prompt.</div>
-              </div>
-            </div>
-
           </div>
+
+          <!-- SAVED PROMPTS -->
+          <div style="border-top:1px solid rgba(255,255,255,0.06); padding-top:16px; margin-top:4px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+              <label class="field-label" style="margin:0;">💾 Saved Prompts</label>
+              <button onclick="clearAllSaved()" style="background:none; border:none; color:#374151; font-size:12px; cursor:pointer; transition:color 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#374151'">Clear All</button>
+            </div>
+            <div id="savedList">
+              <div style="color:#374151; font-size:12px; text-align:center; padding:20px;">No saved prompts yet.</div>
+            </div>
+          </div>
+
         </div>
+      </div>
 
+    </div>
+
+  </section>
+
+  <!-- ── WHAT CAN OPAL DO ── -->
+  <section style="padding:48px 24px 64px; background:rgba(255,255,255,0.01); border-top:1px solid rgba(255,255,255,0.05);">
+    <div style="max-width:1280px; margin:0 auto;">
+      <h2 style="font-size:clamp(22px,3vw,36px); font-weight:800; text-align:center; margin-bottom:10px;">What Can OPAL Build?</h2>
+      <p style="text-align:center; color:#64748b; margin-bottom:36px; font-size:15px;">Click any card to load it instantly into the builder</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px;">
+        <div class="glass-card" style="border-radius:16px; padding:20px; cursor:pointer; transition:all 0.2s;" onclick="loadTemplate('resume')" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'; this.style.transform='translateY(0)'">
+          <div style="font-size:28px; margin-bottom:10px;">📄</div>
+          <h4 style="font-size:14px; font-weight:700; margin-bottom:6px;">Resume Writer</h4>
+          <p style="font-size:12px; color:#64748b; line-height:1.5;">ATS-optimized resume content and bullet points</p>
+        </div>
+        <div class="glass-card" style="border-radius:16px; padding:20px; cursor:pointer; transition:all 0.2s;" onclick="loadTemplate('email')" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'; this.style.transform='translateY(0)'">
+          <div style="font-size:28px; margin-bottom:10px;">✉️</div>
+          <h4 style="font-size:14px; font-weight:700; margin-bottom:6px;">Email Writer</h4>
+          <p style="font-size:12px; color:#64748b; line-height:1.5;">Professional emails for any business situation</p>
+        </div>
+        <div class="glass-card" style="border-radius:16px; padding:20px; cursor:pointer; transition:all 0.2s;" onclick="loadTemplate('photo')" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'; this.style.transform='translateY(0)'">
+          <div style="font-size:28px; margin-bottom:10px;">🖼️</div>
+          <h4 style="font-size:14px; font-weight:700; margin-bottom:6px;">Image Prompts</h4>
+          <p style="font-size:12px; color:#64748b; line-height:1.5;">Cinematic prompts for Midjourney, DALL-E, Gemini</p>
+        </div>
+        <div class="glass-card" style="border-radius:16px; padding:20px; cursor:pointer; transition:all 0.2s;" onclick="loadTemplate('customer')" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'; this.style.transform='translateY(0)'">
+          <div style="font-size:28px; margin-bottom:10px;">🎧</div>
+          <h4 style="font-size:14px; font-weight:700; margin-bottom:6px;">Customer Support</h4>
+          <p style="font-size:12px; color:#64748b; line-height:1.5;">Empathetic, professional customer responses</p>
+        </div>
+        <div class="glass-card" style="border-radius:16px; padding:20px; cursor:pointer; transition:all 0.2s;" onclick="loadTemplate('doctor')" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'; this.style.transform='translateY(0)'">
+          <div style="font-size:28px; margin-bottom:10px;">🏥</div>
+          <h4 style="font-size:14px; font-weight:700; margin-bottom:6px;">Medical Expert</h4>
+          <p style="font-size:12px; color:#64748b; line-height:1.5;">Health topics explained simply and safely</p>
+        </div>
+        <div class="glass-card" style="border-radius:16px; padding:20px; cursor:pointer; transition:all 0.2s;" onclick="loadTemplate('code')" onmouseover="this.style.borderColor='rgba(96,165,250,0.4)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'; this.style.transform='translateY(0)'">
+          <div style="font-size:28px; margin-bottom:10px;">💻</div>
+          <h4 style="font-size:14px; font-weight:700; margin-bottom:6px;">Code Helper</h4>
+          <p style="font-size:12px; color:#64748b; line-height:1.5;">Debug, write, or learn code step by step</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- TEMPLATES SHOWCASE -->
-  <section class="templates-section">
-    <div class="section-inner">
-      <h2 class="section-title">What Can This Build?</h2>
-      <p class="section-sub">Click any example to load it into the builder instantly</p>
-      <div class="examples-grid">
-        <div class="example-card" onclick="loadExample('resume')">
-          <div class="ex-icon">📄</div>
-          <h4>Resume Enhancement</h4>
-          <p>Turn basic job history into powerful, ATS-optimized resume content</p>
-          <span class="ex-tag">Career</span>
-        </div>
-        <div class="example-card" onclick="loadExample('email')">
-          <div class="ex-icon">✉️</div>
-          <h4>Professional Email</h4>
-          <p>Write polished emails for recruiters, clients, and business partners</p>
-          <span class="ex-tag">Business</span>
-        </div>
-        <div class="example-card" onclick="loadExample('image')">
-          <div class="ex-icon">🖼️</div>
-          <h4>Image Generation</h4>
-          <p>Create cinematic, detailed prompts for Midjourney, DALL-E, and Gemini</p>
-          <span class="ex-tag">Creative</span>
-        </div>
-        <div class="example-card" onclick="loadExample('support')">
-          <div class="ex-icon">🎧</div>
-          <h4>Customer Support</h4>
-          <p>Generate empathetic, professional responses for difficult customer situations</p>
-          <span class="ex-tag">Business</span>
-        </div>
-        <div class="example-card" onclick="loadExample('medical')">
-          <div class="ex-icon">🏥</div>
-          <h4>Medical Explanation</h4>
-          <p>Explain complex medical topics in simple, understandable language</p>
-          <span class="ex-tag">Health</span>
-        </div>
-        <div class="example-card" onclick="loadExample('code')">
-          <div class="ex-icon">💻</div>
-          <h4>Code Helper</h4>
-          <p>Build detailed coding prompts for debugging, learning, or building projects</p>
-          <span class="ex-tag">Tech</span>
-        </div>
+  <!-- ── FOOTER ── -->
+  <footer style="padding:32px 24px; border-top:1px solid rgba(255,255,255,0.06); text-align:center; position:relative; z-index:1;">
+    <div style="max-width:1280px; margin:0 auto;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px;">
+        <div style="width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,#3b82f6,#8b5cf6); display:flex; align-items:center; justify-content:center; font-size:14px;">⚡</div>
+        <span style="font-size:16px; font-weight:800;">OPAL PROMPT ENGINE</span>
       </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-logo">
-        <span class="logo-icon">⚡</span>
-        <span class="logo-text">PromptCraft <span class="logo-pro">Pro</span></span>
-      </div>
-      <p class="footer-desc">Free AI Prompt Builder — Works with ChatGPT, Gemini, Claude, Midjourney and more.</p>
-      <div class="footer-links">
-        <span>Built with GitHub Pages</span>
+      <p style="color:#374151; font-size:13px; margin-bottom:12px;">Free AI Prompt Builder — Works with ChatGPT, Gemini, Claude, Midjourney and more.</p>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; color:#374151; font-size:12px; flex-wrap:wrap;">
+        <span>Built on GitHub Pages</span>
         <span>•</span>
         <span>100% Free</span>
+        <span>•</span>
+        <span>No Login Required</span>
         <span>•</span>
         <span>No Data Stored</span>
       </div>
     </div>
   </footer>
 
-  <script src="app.js"></script>
+</div>
+
+<!-- ── JAVASCRIPT BRAIN ── -->
+<script>
+// ==============================
+// TEMPLATE DATA (HEURISTIC ENGINE)
+// ==============================
+const templates = {
+  resume: {
+    mode: 'advanced',
+    role: 'Certified professional resume writer, ATS expert, and career coach',
+    goal: 'Transform raw work experience into powerful, ATS-optimized resume content that gets interviews',
+    context: 'The candidate is applying for international remote positions. The resume needs to highlight achievements with metrics and strong action verbs.',
+    audience: 'Hiring managers, recruiters, and ATS (Applicant Tracking Systems)',
+    tone: 'Professional',
+    output: 'Rewritten bullet points with quantified achievements + Professional summary paragraph + Top 10 ATS keywords',
+    constraints: 'Start every bullet with a strong action verb. Quantify achievements where possible. Keep each bullet under 20 words.'
+  },
+  customer: {
+    mode: 'advanced',
+    role: 'Senior customer success manager and expert communicator with 15+ years of experience',
+    goal: 'Write professional, empathetic customer support responses that resolve issues and retain clients',
+    context: 'A customer has raised a complaint or inquiry that requires a thoughtful, solution-focused response.',
+    audience: 'Customers (potentially frustrated or confused)',
+    tone: 'Empathetic',
+    output: 'Professional response email + De-escalation technique explanation + Follow-up message',
+    constraints: 'Always acknowledge the issue first. Never blame the customer. Offer a specific solution within the first 2 sentences.'
+  },
+  ai: {
+    mode: 'advanced',
+    role: 'World-class AI expert, senior prompt engineer, and machine learning specialist',
+    goal: 'Transform rough ideas and basic inputs into highly effective, structured master-level AI prompts',
+    context: 'The user has a rough idea or draft that needs professional structuring to maximize AI output quality.',
+    audience: 'Advanced AI tool users who want better, more precise results',
+    tone: 'Expert',
+    output: 'Enhanced master prompt + Explanation of improvements made + 2 alternative variations + Usage tips',
+    constraints: 'Be specific and unambiguous. Remove vague language. Add context, constraints, and expected output format.'
+  },
+  doctor: {
+    mode: 'advanced',
+    role: 'Experienced general practitioner, medical educator, and health communicator',
+    goal: 'Explain medical information clearly, safely, and accurately in simple language anyone can understand',
+    context: 'The user wants to understand a health topic better or needs clear guidance on a medical question.',
+    audience: 'General public with no medical background',
+    tone: 'Empathetic',
+    output: 'Simple explanation + Common symptoms or causes + When to see a doctor + Practical tips',
+    constraints: 'Never provide a diagnosis. Always recommend professional consultation. Use simple everyday language.'
+  },
+  photo: {
+    mode: 'advanced',
+    role: 'Award-winning luxury fashion photographer, visual artist, and creative director',
+    goal: 'Create a detailed, cinematic, and highly specific image generation prompt for AI art tools',
+    context: 'The user wants to generate a high-quality, professional AI image with specific visual qualities.',
+    audience: 'AI image generation tools (Midjourney, DALL-E 3, Gemini Imagine, Stable Diffusion)',
+    tone: 'Cinematic',
+    output: 'Complete image prompt + Camera angle + Lighting description + Color palette + Negative prompt',
+    constraints: 'Include: lens type (85mm, 50mm), lighting quality, mood, time of day, and style reference. No watermarks or text in image.'
+  },
+  email: {
+    mode: 'advanced',
+    role: 'Professional business communication expert and career consultant',
+    goal: 'Write a compelling, polished, and concise professional email that achieves its objective',
+    context: 'The user needs to send a professional email for business, career, or networking purposes.',
+    audience: 'Professional recipients (recruiters, clients, managers, partners)',
+    tone: 'Professional',
+    output: 'Complete email with subject line + Opening + Body + Closing + Follow-up option',
+    constraints: 'Keep under 250 words. One clear call-to-action. Human-sounding. No corporate clichés.'
+  },
+  code: {
+    mode: 'advanced',
+    role: 'Senior software engineer, coding mentor, and computer science educator',
+    goal: 'Help write, debug, explain, or teach code in a clear, structured, and beginner-friendly way',
+    context: 'The user needs coding assistance, whether writing new code, fixing bugs, or learning a concept.',
+    audience: 'Beginner to intermediate developers',
+    tone: 'Friendly',
+    output: 'Working code with inline comments + Step-by-step explanation + Common errors to avoid + Next steps',
+    constraints: 'Use clear variable names. Explain every non-obvious line. Provide a simple example first, then complex version.'
+  },
+  sales: {
+    mode: 'advanced',
+    role: 'Elite sales strategist, persuasion expert, and business development consultant',
+    goal: 'Create compelling, conversion-focused sales content that resonates with the target audience',
+    context: 'The user needs help with sales messaging, outreach, pitch decks, or product descriptions.',
+    audience: 'Potential customers, business decision-makers, and investors',
+    tone: 'Professional',
+    output: 'Sales message + Compelling subject line + Key value propositions + Call-to-action + Objection handling',
+    constraints: 'Focus on benefits not features. Create urgency without being pushy. Be specific and honest.'
+  },
+  teacher: {
+    mode: 'advanced',
+    role: 'Experienced educator, curriculum designer, and learning specialist',
+    goal: 'Explain complex topics in simple, memorable, and engaging ways that anyone can understand',
+    context: 'The user wants to learn or understand something new. The explanation should be accessible and clear.',
+    audience: 'Students and adult learners (beginner level, assume no prior knowledge)',
+    tone: 'Friendly',
+    output: 'Simple explanation + Real-life analogy + 3 key takeaways + Practice question + Suggested next learning step',
+    constraints: 'Use everyday examples. Explain like teaching a curious 14-year-old. Avoid jargon. Check for understanding at the end.'
+  },
+  content: {
+    mode: 'advanced',
+    role: 'Viral content strategist, social media expert, and creative director',
+    goal: 'Create scroll-stopping, shareable, and engaging content that drives likes, shares, and follows',
+    context: 'The user wants to create content for social media, YouTube, blogs, or digital platforms.',
+    audience: 'Social media users and online community members',
+    tone: 'Creative',
+    output: 'Content hook + Main message + Caption + 5 targeted hashtags + Best posting time recommendation',
+    constraints: 'First line must create curiosity or emotion. Keep caption under 150 words. Use power words that trigger engagement.'
+  }
+};
+
+// ==============================
+// CURRENT STATE
+// ==============================
+let currentMode = 'simple';
+let selectedChip = null;
+
+// ==============================
+// MODE SWITCHING
+// ==============================
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('simpleMode').style.display = mode === 'simple' ? 'block' : 'none';
+  document.getElementById('advancedMode').style.display = mode === 'advanced' ? 'block' : 'none';
+  document.getElementById('simpleToggle').classList.toggle('active', mode === 'simple');
+  document.getElementById('advancedToggle').classList.toggle('active', mode === 'advanced');
+  updateLivePreview();
+}
+
+// ==============================
+// LOAD TEMPLATE
+// ==============================
+function loadTemplate(key) {
+  const t = templates[key];
+  if (!t) return;
+
+  // Update chip selection
+  document.querySelectorAll('.template-chip').forEach(c => c.classList.remove('selected'));
+  const chip = document.getElementById('chip-' + key);
+  if (chip) chip.classList.add('selected');
+
+  // Set mode
+  setMode(t.mode);
+
+  // Fill advanced fields
+  setValue('adv_role', t.role);
+  setValue('adv_goal', t.goal);
+  setValue('adv_context', t.context);
+  setValue('adv_audience', t.audience);
+  setValue('adv_output', t.output);
+  setValue('adv_constraints', t.constraints);
+
+  // Set tone dropdown
+  const toneSelect = document.getElementById('adv_tone');
+  for (let opt of toneSelect.options) {
+    if (opt.value === t.tone) { toneSelect.value = t.tone; break; }
+  }
+
+  // Fill simple role too
+  setValue('simple_role', t.role);
+
+  updateLivePreview();
+
+  // Smooth scroll to tool
+  document.getElementById('mainGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function setValue(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val || '';
+}
+
+// ==============================
+// LIVE PREVIEW (REAL-TIME)
+// ==============================
+function updateLivePreview() {
+  const preview = document.getElementById('livePreview');
+  let text = '';
+
+  if (currentMode === 'simple') {
+    const idea = getVal('simple_idea');
+    const role = getVal('simple_role') || 'Global Expert';
+    const format = getVal('simple_format');
+    const charCount = idea.length;
+    document.getElementById('simpleCharCount').textContent = charCount + ' / 500';
+
+    if (!idea) {
+      preview.textContent = 'Start typing above to see your prompt structure appear here in real-time...';
+      preview.classList.remove('has-content');
+      return;
+    }
+
+    text = `ROLE: ${role}\n\nTASK: ${idea.substring(0, 80)}${idea.length > 80 ? '...' : ''}\n\nFORMAT: ${format}\n\n[Quality standards, constraints, and expert instructions will be auto-added...]`;
+  } else {
+    const role = getVal('adv_role') || 'Global Expert';
+    const goal = getVal('adv_goal');
+    const context = getVal('adv_context');
+    const tone = getVal('adv_tone');
+    const output = getVal('adv_output');
+    const constraints = getVal('adv_constraints') || 'Prioritize actionable, high-impact results.';
+
+    if (!goal && !context) {
+      preview.textContent = 'Fill in the Goal or Context fields to see your prompt structure...';
+      preview.classList.remove('has-content');
+      return;
+    }
+
+    text = `ROLE: ${role}`;
+    if (goal) text += `\n\nOBJECTIVE: ${goal.substring(0, 60)}${goal.length > 60 ? '...' : ''}`;
+    if (context) text += `\n\nCONTEXT: ${context.substring(0, 60)}${context.length > 60 ? '...' : ''}`;
+    if (tone) text += `\n\nTONE: ${tone}`;
+    if (output) text += `\n\nOUTPUT: ${output.substring(0, 60)}${output.length > 60 ? '...' : ''}`;
+    text += `\n\nCONSTRAINTS: ${constraints.substring(0, 60)}${constraints.length > 60 ? '...' : ''}`;
+    text += '\n\n[Full structured prompt with quality standards will appear after clicking Build...]';
+  }
+
+  preview.textContent = text;
+  preview.classList.add('has-content');
+}
+
+function getVal(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+// ==============================
+// BUILD PROMPT (HEURISTIC ENGINE)
+// ==============================
+function buildPrompt() {
+  let finalPrompt = '';
+
+  if (currentMode === 'simple') {
+    const idea = getVal('simple_idea');
+    const role = getVal('simple_role') || 'Global Expert';
+    const format = getVal('simple_format');
+
+    if (!idea) {
+      showToast('Please describe what you want the AI to do.', 'error');
+      document.getElementById('simple_idea').focus();
+      return;
+    }
+
+    finalPrompt = `═══════════════════════════════════
+OPAL MASTER PROMPT
+═══════════════════════════════════
+
+ROLE:
+You are a ${role}. Bring your full expertise to this task.
+
+TASK:
+${idea}
+
+DELIVERABLE FORMAT:
+Please structure your response as a ${format}.
+
+QUALITY REQUIREMENTS:
+• Be thorough, specific, and immediately actionable
+• Use clear professional language appropriate for the audience
+• Provide concrete examples to illustrate key points
+• Structure the response for maximum readability
+• If critical information is missing, state your assumptions clearly before proceeding
+
+THINKING INSTRUCTION:
+Think step by step. Consider edge cases. Deliver your highest quality response.
+═══════════════════════════════════`;
+
+  } else {
+    const role = getVal('adv_role') || 'Global Expert';
+    const goal = getVal('adv_goal');
+    const context = getVal('adv_context');
+    const audience = getVal('adv_audience');
+    const tone = getVal('adv_tone') || 'Professional';
+    const output = getVal('adv_output');
+    const constraints = getVal('adv_constraints') || 'Prioritize actionable, high-impact results.';
+
+    if (!goal && !context) {
+      showToast('Please fill in at least the Goal or Context field.', 'error');
+      return;
+    }
+
+    finalPrompt = `═══════════════════════════════════
+OPAL MASTER PROMPT
+═══════════════════════════════════
+
+ROLE:
+You are a ${role}.`;
+
+    if (goal) finalPrompt += `\n\nOBJECTIVE:\n${goal}`;
+    if (context) finalPrompt += `\n\nCONTEXT & BACKGROUND:\n${context}`;
+    if (audience) finalPrompt += `\n\nTARGET AUDIENCE:\n${audience}`;
+
+    finalPrompt += `\n\nCOMMUNICATION STYLE:
+Use a ${tone.toLowerCase()} tone throughout. Adapt your language and depth to match the audience's level.`;
+
+    if (output) finalPrompt += `\n\nDELIVERABLE FORMAT:\n${output}`;
+
+    finalPrompt += `\n\nCONSTRAINTS & RULES:\n${constraints}
+
+QUALITY STANDARDS:
+• Think deeply before responding — accuracy matters more than speed
+• Be specific and actionable — avoid vague generalizations
+• Use structure (headers, bullets, numbered lists) for clarity
+• Provide real examples to illustrate abstract concepts
+• If information is insufficient, clearly state your assumptions
+
+FINAL INSTRUCTION:
+Deliver a response that exceeds expectations. Think like the world's leading expert in this domain.
+═══════════════════════════════════`;
+  }
+
+  // Display result
+  document.getElementById('resultText').textContent = finalPrompt;
+  document.getElementById('charCountDisplay').textContent = finalPrompt.length.toLocaleString() + ' characters';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('resultBox').style.display = 'block';
+  document.getElementById('outputBadge').style.display = 'flex';
+  document.getElementById('resultBox').classList.add('fade-in');
+
+  // Scroll to result on mobile
+  if (window.innerWidth < 900) {
+    document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  showToast('✅ Master Prompt Generated!');
+}
+
+// ==============================
+// COPY
+// ==============================
+function copyResult() {
+  const text = document.getElementById('resultText').textContent;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('📋 Copied to clipboard!');
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.textContent = '📋 Copy Prompt'; }, 2500);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('📋 Copied to clipboard!');
+  });
+}
+
+// ==============================
+// DOWNLOAD
+// ==============================
+function downloadResult() {
+  const text = document.getElementById('resultText').textContent;
+  if (!text) return;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'opal-master-prompt-' + Date.now() + '.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('⬇️ Prompt downloaded!');
+}
+
+// ==============================
+// SHARE
+// ==============================
+function shareResult() {
+  const text = document.getElementById('resultText').textContent;
+  if (navigator.share) {
+    navigator.share({ title: 'OPAL Master Prompt', text: text.substring(0, 500) });
+  } else {
+    copyResult();
+  }
+}
+
+// ==============================
+// SAVE PROMPT
+// ==============================
+function saveCurrentPrompt() {
+  const text = document.getElementById('resultText').textContent;
+  if (!text) { showToast('Build a prompt first!', 'warn'); return; }
+
+  const saved = JSON.parse(localStorage.getItem('opalSaved') || '[]');
+  saved.unshift({ text, date: new Date().toLocaleString(), preview: text.substring(40, 120) + '...' });
+  if (saved.length > 10) saved.pop();
+  localStorage.setItem('opalSaved', JSON.stringify(saved));
+  renderSaved();
+  showToast('💾 Prompt saved!');
+}
+
+// ==============================
+// RENDER SAVED
+// ==============================
+function renderSaved() {
+  const saved = JSON.parse(localStorage.getItem('opalSaved') || '[]');
+  const container = document.getElementById('savedList');
+  if (!saved.length) {
+    container.innerHTML = '<div style="color:#374151; font-size:12px; text-align:center; padding:20px;">No saved prompts yet.</div>';
+    return;
+  }
+  container.innerHTML = saved.map((item, i) => `
+    <div class="saved-item" onclick="loadSaved(${i})" style="margin-bottom:8px;">
+      <div style="color:#374151; font-size:10px; margin-bottom:4px;">📅 ${item.date}</div>
+      ${item.preview}
+    </div>
+  `).join('');
+}
+
+function loadSaved(index) {
+  const saved = JSON.parse(localStorage.getItem('opalSaved') || '[]');
+  if (!saved[index]) return;
+  document.getElementById('resultText').textContent = saved[index].text;
+  document.getElementById('charCountDisplay').textContent = saved[index].text.length.toLocaleString() + ' characters';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('resultBox').style.display = 'block';
+  showToast('📂 Prompt loaded!');
+}
+
+function clearAllSaved() {
+  if (!confirm('Clear all saved prompts?')) return;
+  localStorage.removeItem('opalSaved');
+  renderSaved();
+  showToast('🗑️ All saved prompts cleared.');
+}
+
+// ==============================
+// CLEAR ALL FIELDS
+// ==============================
+function clearAll() {
+  ['simple_idea','simple_role','adv_role','adv_goal','adv_context','adv_audience','adv_output','adv_constraints'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('emptyState').style.display = 'block';
+  document.getElementById('resultBox').style.display = 'none';
+  document.getElementById('outputBadge').style.display = 'none';
+  document.querySelectorAll('.template-chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('simpleCharCount').textContent = '0 / 500';
+  updateLivePreview();
+  showToast('🗑️ All fields cleared.');
+}
+
+// ==============================
+// TOAST NOTIFICATION
+// ==============================
+let toastTimer = null;
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+
+  if (type === 'error') {
+    toast.style.background = 'rgba(239,68,68,0.15)';
+    toast.style.borderColor = 'rgba(239,68,68,0.4)';
+    toast.style.color = '#f87171';
+  } else if (type === 'warn') {
+    toast.style.background = 'rgba(245,158,11,0.15)';
+    toast.style.borderColor = 'rgba(245,158,11,0.4)';
+    toast.style.color = '#fbbf24';
+  } else {
+    toast.style.background = 'rgba(16,185,129,0.15)';
+    toast.style.borderColor = 'rgba(16,185,129,0.4)';
+    toast.style.color = '#34d399';
+  }
+
+  toastMsg.textContent = msg;
+  toast.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toast.classList.remove('show'); }, 2800);
+}
+
+// ==============================
+// MODAL
+// ==============================
+function toggleModal() {
+  document.getElementById('modal').classList.toggle('open');
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) toggleModal();
+}
+
+// ==============================
+// RESPONSIVE GRID
+// ==============================
+function handleResize() {
+  const grid = document.getElementById('mainGrid');
+  if (window.innerWidth < 900) {
+    grid.style.gridTemplateColumns = '1fr';
+  } else {
+    grid.style.gridTemplateColumns = '1fr 1fr';
+  }
+}
+
+// ==============================
+// KEYBOARD SHORTCUT
+// ==============================
+document.addEventListener('keydown', function(e) {
+  // Ctrl+Enter or Cmd+Enter to build
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    buildPrompt();
+  }
+  // Escape to close modal
+  if (e.key === 'Escape') {
+    document.getElementById('modal').classList.remove('open');
+  }
+});
+
+// ==============================
+// INIT
+// ==============================
+window.addEventListener('resize', handleResize);
+handleResize();
+renderSaved();
+updateLivePreview();
+</script>
 </body>
 </html>
