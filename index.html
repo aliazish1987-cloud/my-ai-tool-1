@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OPAL - Professional AI Prompt Engineering Suite</title>
-    <meta name="description" content="Professional-grade prompt builder with templates, analytics, and AI enhancement">
+    <meta name="description" content="Professional-grade AI prompt builder with templates, quality analytics, and multi-platform optimization for ChatGPT, Claude, Gemini & more">
+    <meta name="keywords" content="AI prompt builder, ChatGPT prompts, Claude AI, prompt engineering, AI tools">
+    <meta name="author" content="OPAL Engineering">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="OPAL - Professional Prompt Engineering Suite">
+    <meta property="og:description" content="Build professional AI prompts in seconds with quality scoring and smart defaults">
+    <meta property="og:image" content="https://aliazish1987-cloud.github.io/my-ai-tool-1/og-image.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,8 +31,10 @@
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
+            --info: #3b82f6;
         }
         
+        /* Gradient Backgrounds */
         .gradient-bg {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
@@ -34,63 +45,123 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
         
+        /* Expert Mode Transition */
         .expert-fields {
             max-height: 0;
             overflow: hidden;
             opacity: 0;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .expert-fields.active {
-            max-height: 2000px;
+            max-height: 2500px;
             opacity: 1;
             margin-top: 1.5rem;
         }
         
+        /* Animations */
         .pulse-success {
             animation: pulseGreen 0.6s ease-in-out;
         }
         
         @keyframes pulseGreen {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); background-color: var(--success); }
+            50% { transform: scale(1.08); background-color: var(--success); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0.2); }
         }
         
         .fade-in {
-            animation: fadeIn 0.4s ease-in;
+            animation: fadeIn 0.5s ease-in;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .tab-active {
-            background: var(--primary);
-            color: white;
+        .slide-in {
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .scale-in {
+            animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Focus Mode */
+        .focus-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .focus-mode-content {
+            background: white;
+            border-radius: 1rem;
+            max-width: 1200px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            animation: scaleIn 0.4s ease;
+        }
+        
+        /* Tab Styles */
+        .tab-active {
+            background: var(--primary) !important;
+            color: white !important;
+        }
+        
+        /* Template Card Hover */
         .template-card {
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .template-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
         }
         
-        .stat-card {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        /* Platform Selector Styles */
+        .platform-btn {
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
         
-        .token-counter {
-            font-variant-numeric: tabular-nums;
+        .platform-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(102, 126, 234, 0.3);
         }
         
+        .platform-btn:hover:not(.active) {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        /* Quality Indicator */
         .quality-indicator {
             width: 100%;
-            height: 6px;
+            height: 8px;
             background: #e5e7eb;
             border-radius: 10px;
             overflow: hidden;
@@ -98,9 +169,10 @@
         
         .quality-fill {
             height: 100%;
-            transition: all 0.5s ease;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -125,7 +197,7 @@
             border-radius: 1rem;
             max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             animation: slideUp 0.4s ease;
         }
@@ -135,6 +207,7 @@
             to { transform: translateY(0); opacity: 1; }
         }
         
+        /* Badge Styles */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -147,14 +220,31 @@
         .badge-success { background: #d1fae5; color: #065f46; }
         .badge-warning { background: #fef3c7; color: #92400e; }
         .badge-info { background: #dbeafe; color: #1e40af; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            width: 20px;
+            height: 20px;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
         
         /* Scrollbar Styling */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
+            height: 10px;
         }
         
         ::-webkit-scrollbar-track {
             background: #f1f5f9;
+            border-radius: 10px;
         }
         
         ::-webkit-scrollbar-thumb {
@@ -162,10 +252,67 @@
             border-radius: 10px;
         }
         
-        /* Responsive tweaks */
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Focus States */
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+        
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.5rem 1rem;
+            background: #1f2937;
+            color: white;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            z-index: 1000;
+            margin-bottom: 0.5rem;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        /* Print Styles */
+        @media print {
+            header, footer, .no-print {
+                display: none !important;
+            }
+        }
+        
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .stat-card {
-                text-align: center;
+            .focus-mode-content {
+                padding: 1.5rem;
+            }
+            
+            .modal-content {
+                width: 95%;
             }
         }
     </style>
@@ -173,11 +320,11 @@
 <body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
     
     <!-- Header with Stats -->
-    <header class="gradient-bg text-white py-6 shadow-2xl sticky top-0 z-50">
+    <header class="gradient-bg text-white py-6 shadow-2xl sticky top-0 z-50" role="banner">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
+                    <div class="bg-white/20 p-2 rounded-xl backdrop-blur-sm" aria-hidden="true">
                         <i data-lucide="gem" class="w-8 h-8"></i>
                     </div>
                     <div>
@@ -186,11 +333,19 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button id="analyticsBtn" class="hidden md:flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition-all">
+                    <button 
+                        id="analyticsBtn" 
+                        class="hidden md:flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition-all"
+                        aria-label="View analytics dashboard"
+                    >
                         <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
                         <span class="text-sm font-medium">Analytics</span>
                     </button>
-                    <button id="helpBtn" class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition-all">
+                    <button 
+                        id="helpBtn" 
+                        class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition-all"
+                        aria-label="Open help guide"
+                    >
                         <i data-lucide="help-circle" class="w-4 h-4"></i>
                         <span class="text-sm font-medium hidden sm:inline">Help</span>
                     </button>
@@ -198,17 +353,17 @@
             </div>
             
             <!-- Quick Stats -->
-            <div class="grid grid-cols-3 gap-3 mt-4">
-                <div class="stat-card bg-white/10 rounded-lg p-3 text-center backdrop-blur-sm">
-                    <div class="text-2xl font-bold" id="totalPromptsCount">0</div>
+            <div class="grid grid-cols-3 gap-3 mt-4" role="region" aria-label="Usage statistics">
+                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur-sm">
+                    <div class="text-2xl font-bold" id="totalPromptsCount" aria-live="polite">0</div>
                     <div class="text-xs text-purple-100">Total Prompts</div>
                 </div>
-                <div class="stat-card bg-white/10 rounded-lg p-3 text-center backdrop-blur-sm">
-                    <div class="text-2xl font-bold" id="thisWeekCount">0</div>
+                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur-sm">
+                    <div class="text-2xl font-bold" id="thisWeekCount" aria-live="polite">0</div>
                     <div class="text-xs text-purple-100">This Week</div>
                 </div>
-                <div class="stat-card bg-white/10 rounded-lg p-3 text-center backdrop-blur-sm">
-                    <div class="text-2xl font-bold" id="qualityScore">-</div>
+                <div class="bg-white/10 rounded-lg p-3 text-center backdrop-blur-sm">
+                    <div class="text-2xl font-bold" id="qualityScore" aria-live="polite">-</div>
                     <div class="text-xs text-purple-100">Avg Quality</div>
                 </div>
             </div>
@@ -216,28 +371,88 @@
     </header>
 
     <!-- Main Container -->
-    <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <main class="container mx-auto px-4 py-8 max-w-7xl" role="main">
         
         <!-- Tab Navigation -->
-        <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-            <button class="tab-btn tab-active px-6 py-3 rounded-lg font-semibold whitespace-nowrap transition-all" data-tab="builder">
+        <nav class="flex gap-2 mb-6 overflow-x-auto pb-2" role="tablist" aria-label="Main navigation">
+            <button 
+                class="tab-btn tab-active px-6 py-3 rounded-lg font-semibold whitespace-nowrap transition-all" 
+                data-tab="builder"
+                role="tab"
+                aria-selected="true"
+                aria-controls="builderTab"
+            >
                 <i data-lucide="wand-2" class="w-4 h-4 inline mr-2"></i>Builder
             </button>
-            <button class="tab-btn px-6 py-3 rounded-lg font-semibold bg-white hover:bg-slate-50 whitespace-nowrap transition-all" data-tab="templates">
+            <button 
+                class="tab-btn px-6 py-3 rounded-lg font-semibold bg-white hover:bg-slate-50 whitespace-nowrap transition-all" 
+                data-tab="templates"
+                role="tab"
+                aria-selected="false"
+                aria-controls="templatesTab"
+            >
                 <i data-lucide="layout-template" class="w-4 h-4 inline mr-2"></i>Templates
             </button>
-            <button class="tab-btn px-6 py-3 rounded-lg font-semibold bg-white hover:bg-slate-50 whitespace-nowrap transition-all" data-tab="library">
+            <button 
+                class="tab-btn px-6 py-3 rounded-lg font-semibold bg-white hover:bg-slate-50 whitespace-nowrap transition-all" 
+                data-tab="library"
+                role="tab"
+                aria-selected="false"
+                aria-controls="libraryTab"
+            >
                 <i data-lucide="library" class="w-4 h-4 inline mr-2"></i>Library
             </button>
-        </div>
+        </nav>
 
         <!-- TAB 1: Builder Section -->
-        <section id="builderTab" class="tab-content">
+        <section id="builderTab" class="tab-content" role="tabpanel" aria-labelledby="builder-tab">
             <div class="grid lg:grid-cols-3 gap-6">
                 
                 <!-- Left: Input Form -->
                 <div class="lg:col-span-2">
                     <div class="glass-effect rounded-2xl shadow-2xl p-6 md:p-8 fade-in">
+                        
+                        <!-- Platform Selector -->
+                        <div class="mb-6 pb-6 border-b border-slate-200">
+                            <label class="block text-sm font-semibold text-slate-700 mb-3">
+                                <i data-lucide="cpu" class="w-4 h-4 inline mr-1 text-purple-600"></i>
+                                Target AI Platform
+                            </label>
+                            <div class="flex flex-wrap gap-2" role="radiogroup" aria-label="Select AI platform">
+                                <button 
+                                    class="platform-btn active px-4 py-2 border-2 border-slate-300 rounded-lg text-sm font-medium"
+                                    data-platform="chatgpt"
+                                    role="radio"
+                                    aria-checked="true"
+                                >
+                                    ChatGPT
+                                </button>
+                                <button 
+                                    class="platform-btn px-4 py-2 border-2 border-slate-300 rounded-lg text-sm font-medium"
+                                    data-platform="claude"
+                                    role="radio"
+                                    aria-checked="false"
+                                >
+                                    Claude
+                                </button>
+                                <button 
+                                    class="platform-btn px-4 py-2 border-2 border-slate-300 rounded-lg text-sm font-medium"
+                                    data-platform="gemini"
+                                    role="radio"
+                                    aria-checked="false"
+                                >
+                                    Gemini
+                                </button>
+                                <button 
+                                    class="platform-btn px-4 py-2 border-2 border-slate-300 rounded-lg text-sm font-medium"
+                                    data-platform="generic"
+                                    role="radio"
+                                    aria-checked="false"
+                                >
+                                    Generic
+                                </button>
+                            </div>
+                        </div>
                         
                         <!-- Mode Toggle -->
                         <div class="flex items-center justify-between mb-6 pb-6 border-b border-slate-200">
@@ -251,6 +466,8 @@
                             <button 
                                 id="modeToggle" 
                                 class="flex items-center space-x-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all"
+                                aria-label="Toggle expert mode"
+                                aria-expanded="false"
                             >
                                 <i data-lucide="settings" class="w-4 h-4"></i>
                                 <span id="modeText" class="text-sm font-medium">Expert Mode</span>
@@ -261,7 +478,7 @@
                         <!-- Simple Mode - Always Visible -->
                         <div class="space-y-6">
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                <label for="coreGoal" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                     <i data-lucide="target" class="w-4 h-4 text-purple-600"></i>
                                     Core Goal
                                     <span class="text-xs font-normal text-slate-400 ml-1">(What do you want the AI to do?)</span>
@@ -271,8 +488,9 @@
                                     rows="5" 
                                     class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all resize-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                                     placeholder="Example: Create a comprehensive marketing strategy for a sustainable fashion brand targeting Gen-Z consumers..."
+                                    aria-describedby="coreGoalHelp"
                                 ></textarea>
-                                <div class="flex items-center justify-between mt-2 text-xs text-slate-500">
+                                <div id="coreGoalHelp" class="flex items-center justify-between mt-2 text-xs text-slate-500">
                                     <span class="token-counter">Characters: <strong id="charCount">0</strong></span>
                                     <span>Est. tokens: <strong id="tokenCount">0</strong></span>
                                 </div>
@@ -284,7 +502,7 @@
                             <div class="grid md:grid-cols-2 gap-6">
                                 
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                    <label for="role" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                         <i data-lucide="user-circle" class="w-4 h-4 text-purple-600"></i>
                                         AI Role
                                     </label>
@@ -293,11 +511,12 @@
                                         id="role" 
                                         class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                                         placeholder="e.g., Marketing Strategist, Developer..."
+                                        aria-label="AI role or persona"
                                     />
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                    <label for="audience" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                         <i data-lucide="users" class="w-4 h-4 text-purple-600"></i>
                                         Target Audience
                                     </label>
@@ -306,11 +525,12 @@
                                         id="audience" 
                                         class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                                         placeholder="e.g., Beginners, Professionals..."
+                                        aria-label="Target audience"
                                     />
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                    <label for="tone" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                         <i data-lucide="message-circle" class="w-4 h-4 text-purple-600"></i>
                                         Tone & Style
                                     </label>
@@ -319,11 +539,12 @@
                                         id="tone" 
                                         class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                                         placeholder="e.g., Professional, Casual, Technical..."
+                                        aria-label="Communication tone and style"
                                     />
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                    <label for="format" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                         <i data-lucide="sliders" class="w-4 h-4 text-purple-600"></i>
                                         Format & Structure
                                     </label>
@@ -332,11 +553,12 @@
                                         id="format" 
                                         class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                                         placeholder="e.g., Bullet points, Detailed essay..."
+                                        aria-label="Output format and structure"
                                     />
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                    <label for="constraints" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                         <i data-lucide="alert-circle" class="w-4 h-4 text-purple-600"></i>
                                         Constraints & Rules
                                     </label>
@@ -345,11 +567,12 @@
                                         id="constraints" 
                                         class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                                         placeholder="e.g., Under 500 words, No jargon..."
+                                        aria-label="Constraints and rules"
                                     />
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                    <label for="context" class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                                         <i data-lucide="lightbulb" class="w-4 h-4 text-purple-600"></i>
                                         Additional Context
                                     </label>
@@ -358,17 +581,19 @@
                                         id="context" 
                                         class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                                         placeholder="e.g., Industry trends, Examples..."
+                                        aria-label="Additional context"
                                     />
                                 </div>
 
                             </div>
                         </div>
 
-                        <!-- Action Button -->
+                        <!-- Action Buttons -->
                         <div class="mt-8 flex flex-col sm:flex-row gap-3">
                             <button 
                                 id="buildBtn" 
                                 class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                                aria-label="Build professional prompt"
                             >
                                 <i data-lucide="wand-2" class="w-5 h-5"></i>
                                 Build Professional Prompt
@@ -376,6 +601,7 @@
                             <button 
                                 id="clearBtn" 
                                 class="px-6 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+                                aria-label="Clear all fields"
                             >
                                 <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
                                 Clear
@@ -389,18 +615,18 @@
                 <div class="space-y-6">
                     
                     <!-- Quality Score -->
-                    <div class="glass-effect rounded-2xl shadow-xl p-6">
+                    <div class="glass-effect rounded-2xl shadow-xl p-6" role="region" aria-label="Quality metrics">
                         <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
                             <i data-lucide="gauge" class="w-5 h-5 text-purple-600"></i>
                             Prompt Quality
                         </h3>
                         <div class="mb-3">
-                            <div class="quality-indicator">
+                            <div class="quality-indicator" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                                 <div id="qualityBar" class="quality-fill bg-gradient-to-r from-purple-600 to-indigo-600" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-slate-800" id="qualityPercent">0%</div>
+                            <div class="text-3xl font-bold text-slate-800" id="qualityPercent" aria-live="polite">0%</div>
                             <div class="text-sm text-slate-500" id="qualityLabel">Start typing to analyze</div>
                         </div>
                         
@@ -408,15 +634,15 @@
                         <div class="mt-4 space-y-2 text-xs">
                             <div class="flex items-center justify-between">
                                 <span class="text-slate-600">Clarity</span>
-                                <span class="badge badge-info" id="clarityBadge">-</span>
+                                <span class="badge badge-info" id="clarityBadge" aria-live="polite">-</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="text-slate-600">Specificity</span>
-                                <span class="badge badge-info" id="specificityBadge">-</span>
+                                <span class="badge badge-info" id="specificityBadge" aria-live="polite">-</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="text-slate-600">Completeness</span>
-                                <span class="badge badge-info" id="completenessBadge">-</span>
+                                <span class="badge badge-info" id="completenessBadge" aria-live="polite">-</span>
                             </div>
                         </div>
                     </div>
@@ -427,22 +653,26 @@
                             <i data-lucide="lightbulb" class="w-5 h-5 text-amber-500"></i>
                             Pro Tips
                         </h3>
-                        <ul class="space-y-3 text-sm text-slate-600">
+                        <ul class="space-y-3 text-sm text-slate-600" role="list">
                             <li class="flex gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" aria-hidden="true"></i>
                                 <span>Be specific about your desired outcome</span>
                             </li>
                             <li class="flex gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" aria-hidden="true"></i>
                                 <span>Define the target audience clearly</span>
                             </li>
                             <li class="flex gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" aria-hidden="true"></i>
                                 <span>Include examples when possible</span>
                             </li>
                             <li class="flex gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" aria-hidden="true"></i>
                                 <span>Set clear constraints and boundaries</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" aria-hidden="true"></i>
+                                <span>Use keyboard shortcuts: Ctrl+Enter to build</span>
                             </li>
                         </ul>
                     </div>
@@ -452,16 +682,27 @@
             </div>
 
             <!-- Output Section -->
-            <div id="outputSection" class="mt-6 glass-effect rounded-2xl shadow-2xl p-6 md:p-8 hidden fade-in">
+            <div id="outputSection" class="mt-6 glass-effect rounded-2xl shadow-2xl p-6 md:p-8 hidden fade-in" role="region" aria-label="Generated prompt">
                 <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
                     <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
                         <i data-lucide="file-text" class="w-5 h-5 text-purple-600"></i>
                         Your Professional Prompt
+                        <span class="badge badge-success ml-2" id="platformBadge">ChatGPT</span>
                     </h3>
                     <div class="flex gap-2 flex-wrap">
                         <button 
+                            id="focusModeBtn" 
+                            class="flex items-center gap-2 px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-lg transition-all tooltip"
+                            data-tooltip="Expand to full screen"
+                            aria-label="Open focus mode"
+                        >
+                            <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                            Focus
+                        </button>
+                        <button 
                             id="copyBtn" 
                             class="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-all"
+                            aria-label="Copy prompt to clipboard"
                         >
                             <i data-lucide="copy" class="w-4 h-4"></i>
                             Copy
@@ -469,6 +710,7 @@
                         <button 
                             id="exportBtn" 
                             class="flex items-center gap-2 px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-lg transition-all"
+                            aria-label="Export prompt"
                         >
                             <i data-lucide="download" class="w-4 h-4"></i>
                             Export
@@ -476,12 +718,13 @@
                     </div>
                 </div>
                 <div class="bg-slate-50 border-2 border-slate-200 rounded-xl p-6 min-h-[200px]">
-                    <pre id="outputText" class="whitespace-pre-wrap text-sm text-slate-700 leading-relaxed font-mono"></pre>
+                    <pre id="outputText" class="whitespace-pre-wrap text-sm text-slate-700 leading-relaxed font-mono" role="log" aria-live="polite"></pre>
                 </div>
                 <div class="mt-4 flex gap-3 flex-wrap">
                     <button 
                         id="saveBtn" 
                         class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-all"
+                        aria-label="Save prompt to library"
                     >
                         <i data-lucide="save" class="w-4 h-4"></i>
                         Save to Library
@@ -489,6 +732,7 @@
                     <button 
                         id="shareBtn" 
                         class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all"
+                        aria-label="Share prompt"
                     >
                         <i data-lucide="share-2" class="w-4 h-4"></i>
                         Share
@@ -498,7 +742,7 @@
         </section>
 
         <!-- TAB 2: Templates Section -->
-        <section id="templatesTab" class="tab-content hidden">
+        <section id="templatesTab" class="tab-content hidden" role="tabpanel" aria-labelledby="templates-tab">
             <div class="glass-effect rounded-2xl shadow-2xl p-6 md:p-8">
                 <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
                     <i data-lucide="layout-template" class="w-6 h-6 text-purple-600"></i>
@@ -506,24 +750,24 @@
                 </h2>
                 
                 <!-- Category Filter -->
-                <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                    <button class="category-filter-btn badge bg-purple-600 text-white" data-category="all">All</button>
-                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="marketing">Marketing</button>
-                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="coding">Coding</button>
-                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="writing">Writing</button>
-                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="business">Business</button>
-                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="education">Education</button>
+                <div class="flex gap-2 mb-6 overflow-x-auto pb-2" role="group" aria-label="Filter templates by category">
+                    <button class="category-filter-btn badge bg-purple-600 text-white" data-category="all" aria-pressed="true">All</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="marketing" aria-pressed="false">Marketing</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="coding" aria-pressed="false">Coding</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="writing" aria-pressed="false">Writing</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="business" aria-pressed="false">Business</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="education" aria-pressed="false">Education</button>
                 </div>
 
                 <!-- Templates Grid -->
-                <div id="templatesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div id="templatesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" role="list">
                     <!-- Templates will be dynamically inserted here -->
                 </div>
             </div>
         </section>
 
         <!-- TAB 3: Library Section -->
-        <section id="libraryTab" class="tab-content hidden">
+        <section id="libraryTab" class="tab-content hidden" role="tabpanel" aria-labelledby="library-tab">
             <div class="glass-effect rounded-2xl shadow-2xl p-6 md:p-8">
                 <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
                     <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -531,11 +775,19 @@
                         Saved Prompts Library
                     </h3>
                     <div class="flex gap-2">
-                        <button id="sortBtn" class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all text-sm">
+                        <button 
+                            id="sortBtn" 
+                            class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all text-sm"
+                            aria-label="Sort saved prompts"
+                        >
                             <i data-lucide="arrow-down-up" class="w-4 h-4"></i>
                             Sort
                         </button>
-                        <button id="searchToggleBtn" class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all text-sm">
+                        <button 
+                            id="searchToggleBtn" 
+                            class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all text-sm"
+                            aria-label="Toggle search"
+                        >
                             <i data-lucide="search" class="w-4 h-4"></i>
                             Search
                         </button>
@@ -549,13 +801,14 @@
                         id="searchInput" 
                         placeholder="Search your prompts..." 
                         class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        aria-label="Search prompts"
                     />
                 </div>
 
                 <div id="savedPrompts" class="space-y-4">
                     <!-- Empty State -->
                     <div id="emptyState" class="text-center py-16">
-                        <i data-lucide="folder-open" class="w-16 h-16 mx-auto mb-4 text-slate-300"></i>
+                        <i data-lucide="folder-open" class="w-16 h-16 mx-auto mb-4 text-slate-300" aria-hidden="true"></i>
                         <p class="text-slate-400 text-lg font-medium">Your professional library is currently empty</p>
                         <p class="text-slate-300 text-sm mt-2">Build a masterpiece to see it here</p>
                     </div>
@@ -566,25 +819,25 @@
     </main>
 
     <!-- Footer -->
-    <footer class="text-center py-8 text-slate-500 text-sm">
+    <footer class="text-center py-8 text-slate-500 text-sm no-print" role="contentinfo">
         <div class="container mx-auto px-4">
-            <p class="mb-2">OPAL Prompt Engine v4.0 • Engineered for Excellence</p>
+            <p class="mb-2">OPAL Prompt Engine v5.0 • Engineered for Excellence</p>
             <div class="flex items-center justify-center gap-4 text-xs">
                 <a href="#" class="hover:text-purple-600 transition-colors">Privacy Policy</a>
-                <span>•</span>
+                <span aria-hidden="true">•</span>
                 <a href="#" class="hover:text-purple-600 transition-colors">Terms of Service</a>
-                <span>•</span>
+                <span aria-hidden="true">•</span>
                 <a href="#" class="hover:text-purple-600 transition-colors">Contact</a>
             </div>
         </div>
     </footer>
 
     <!-- Modal: Export Options -->
-    <div id="exportModal" class="modal">
+    <div id="exportModal" class="modal" role="dialog" aria-labelledby="exportModalTitle" aria-modal="true">
         <div class="modal-content p-8">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-slate-800">Export Prompt</h3>
-                <button class="modal-close text-slate-400 hover:text-slate-600">
+                <h3 id="exportModalTitle" class="text-xl font-bold text-slate-800">Export Prompt</h3>
+                <button class="modal-close text-slate-400 hover:text-slate-600" aria-label="Close modal">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
@@ -606,11 +859,11 @@
     </div>
 
     <!-- Modal: Analytics -->
-    <div id="analyticsModal" class="modal">
+    <div id="analyticsModal" class="modal" role="dialog" aria-labelledby="analyticsModalTitle" aria-modal="true">
         <div class="modal-content p-8">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-slate-800">Analytics Dashboard</h3>
-                <button class="modal-close text-slate-400 hover:text-slate-600">
+                <h3 id="analyticsModalTitle" class="text-xl font-bold text-slate-800">Analytics Dashboard</h3>
+                <button class="modal-close text-slate-400 hover:text-slate-600" aria-label="Close modal">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
@@ -620,77 +873,88 @@
                         <i data-lucide="trending-up" class="w-5 h-5 text-purple-600"></i>
                         <h4 class="font-semibold text-slate-700">Total Prompts Created</h4>
                     </div>
-                    <div class="text-3xl font-bold text-slate-800" id="analyticsTotal">0</div>
+                    <div class="text-3xl font-bold text-slate-800" id="analyticsTotal" aria-live="polite">0</div>
                 </div>
                 <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6">
                     <div class="flex items-center gap-3 mb-2">
                         <i data-lucide="calendar" class="w-5 h-5 text-emerald-600"></i>
                         <h4 class="font-semibold text-slate-700">This Month</h4>
                     </div>
-                    <div class="text-3xl font-bold text-slate-800" id="analyticsMonth">0</div>
+                    <div class="text-3xl font-bold text-slate-800" id="analyticsMonth" aria-live="polite">0</div>
                 </div>
                 <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6">
                     <div class="flex items-center gap-3 mb-2">
                         <i data-lucide="star" class="w-5 h-5 text-amber-600"></i>
                         <h4 class="font-semibold text-slate-700">Most Used Category</h4>
                     </div>
-                    <div class="text-2xl font-bold text-slate-800" id="analyticsCategory">-</div>
+                    <div class="text-2xl font-bold text-slate-800" id="analyticsCategory" aria-live="polite">-</div>
                 </div>
                 <div class="bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl p-6">
                     <div class="flex items-center gap-3 mb-2">
                         <i data-lucide="zap" class="w-5 h-5 text-rose-600"></i>
                         <h4 class="font-semibold text-slate-700">Avg Quality Score</h4>
                     </div>
-                    <div class="text-3xl font-bold text-slate-800" id="analyticsQuality">-</div>
+                    <div class="text-3xl font-bold text-slate-800" id="analyticsQuality" aria-live="polite">-</div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Modal: Help Guide -->
-    <div id="helpModal" class="modal">
+    <div id="helpModal" class="modal" role="dialog" aria-labelledby="helpModalTitle" aria-modal="true">
         <div class="modal-content p-8">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-slate-800">Quick Start Guide</h3>
-                <button class="modal-close text-slate-400 hover:text-slate-600">
+                <h3 id="helpModalTitle" class="text-xl font-bold text-slate-800">Quick Start Guide</h3>
+                <button class="modal-close text-slate-400 hover:text-slate-600" aria-label="Close modal">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
             <div class="space-y-4 text-sm text-slate-600">
                 <div class="flex gap-3">
-                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">1</div>
+                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0" aria-hidden="true">1</div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-1">Select Your AI Platform</h4>
+                        <p>Choose between ChatGPT, Claude, Gemini, or Generic format for optimal compatibility.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0" aria-hidden="true">2</div>
                     <div>
                         <h4 class="font-semibold text-slate-800 mb-1">Enter Your Core Goal</h4>
                         <p>Describe what you want the AI to accomplish. Be specific and clear.</p>
                     </div>
                 </div>
                 <div class="flex gap-3">
-                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">2</div>
+                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0" aria-hidden="true">3</div>
                     <div>
                         <h4 class="font-semibold text-slate-800 mb-1">Toggle Expert Mode (Optional)</h4>
                         <p>Add advanced parameters like role, audience, tone, and constraints.</p>
                     </div>
                 </div>
                 <div class="flex gap-3">
-                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">3</div>
+                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0" aria-hidden="true">4</div>
                     <div>
-                        <h4 class="font-semibold text-slate-800 mb-1">Build & Copy</h4>
-                        <p>Click "Build Professional Prompt" and copy the result to use with any AI.</p>
+                        <h4 class="font-semibold text-slate-800 mb-1">Build, Copy & Use</h4>
+                        <p>Click "Build" (or press Ctrl+Enter), then copy the result to use with any AI.</p>
                     </div>
                 </div>
-                <div class="flex gap-3">
-                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">4</div>
-                    <div>
-                        <h4 class="font-semibold text-slate-800 mb-1">Save & Organize</h4>
-                        <p>Save your best prompts to the library for future use and reference.</p>
-                    </div>
+                <div class="mt-6 p-4 bg-purple-50 rounded-lg">
+                    <h4 class="font-semibold text-slate-800 mb-2">Keyboard Shortcuts</h4>
+                    <ul class="space-y-1 text-xs">
+                        <li><kbd class="px-2 py-1 bg-white rounded border">Ctrl</kbd> + <kbd class="px-2 py-1 bg-white rounded border">Enter</kbd> = Build Prompt</li>
+                        <li><kbd class="px-2 py-1 bg-white rounded border">Ctrl</kbd> + <kbd class="px-2 py-1 bg-white rounded border">K</kbd> = Clear Form</li>
+                        <li><kbd class="px-2 py-1 bg-white rounded border">Esc</kbd> = Close Modals</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Initialize Lucide icons
+        // ========================================
+        // INITIALIZE
+        // ========================================
+        
         lucide.createIcons();
 
         // ========================================
@@ -698,6 +962,7 @@
         // ========================================
         
         let expertMode = false;
+        let currentPlatform = 'chatgpt';
         let savedPromptsArray = JSON.parse(localStorage.getItem('opalPrompts')) || [];
         let analyticsData = JSON.parse(localStorage.getItem('opalAnalytics')) || {
             totalPrompts: 0,
@@ -708,6 +973,34 @@
         };
         let currentPrompt = '';
         let currentTab = 'builder';
+
+        // ========================================
+        // PLATFORM-SPECIFIC STYLES
+        // ========================================
+        
+        const styles = {
+            chatgpt: {
+                wrapper: (content) => `# PROFESSIONAL AI INSTRUCTION\n\n${content}`,
+                sectionHeader: (title) => `## ${title}\n`,
+                emphasis: '**'
+            },
+            claude: {
+                wrapper: (content) => `<prompt>\n${content}\n</prompt>`,
+                sectionHeader: (title) => `<${title.toLowerCase().replace(/\s+/g, '_')}>\n`,
+                sectionFooter: (title) => `</${title.toLowerCase().replace(/\s+/g, '_')}>\n\n`,
+                emphasis: ''
+            },
+            gemini: {
+                wrapper: (content) => `# PROFESSIONAL AI INSTRUCTION\n\n${content}`,
+                sectionHeader: (title) => `### ${title}\n`,
+                emphasis: '**'
+            },
+            generic: {
+                wrapper: (content) => content,
+                sectionHeader: (title) => `${title}:\n`,
+                emphasis: ''
+            }
+        };
 
         // ========================================
         // PROFESSIONAL TEMPLATES
@@ -922,6 +1215,7 @@
         const saveBtn = document.getElementById('saveBtn');
         const shareBtn = document.getElementById('shareBtn');
         const exportBtn = document.getElementById('exportBtn');
+        const focusModeBtn = document.getElementById('focusModeBtn');
         const outputSection = document.getElementById('outputSection');
         const outputText = document.getElementById('outputText');
         const savedPrompts = document.getElementById('savedPrompts');
@@ -933,13 +1227,33 @@
         const qualityPercent = document.getElementById('qualityPercent');
         const qualityLabel = document.getElementById('qualityLabel');
 
-        // Tab Elements
         const tabBtns = document.querySelectorAll('.tab-btn');
         const tabContents = document.querySelectorAll('.tab-content');
-
-        // Modal Elements
         const modals = document.querySelectorAll('.modal');
         const modalCloses = document.querySelectorAll('.modal-close');
+        const platformBtns = document.querySelectorAll('.platform-btn');
+
+        // ========================================
+        // PLATFORM SELECTOR
+        // ========================================
+        
+        platformBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                platformBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-checked', 'false');
+                });
+                btn.classList.add('active');
+                btn.setAttribute('aria-checked', 'true');
+                currentPlatform = btn.dataset.platform;
+                
+                // Update platform badge if output is visible
+                if (!outputSection.classList.contains('hidden')) {
+                    document.getElementById('platformBadge').textContent = 
+                        currentPlatform.charAt(0).toUpperCase() + currentPlatform.slice(1);
+                }
+            });
+        });
 
         // ========================================
         // TAB NAVIGATION
@@ -949,15 +1263,15 @@
             btn.addEventListener('click', () => {
                 const targetTab = btn.dataset.tab;
                 
-                // Update active tab button
                 tabBtns.forEach(b => {
                     b.classList.remove('tab-active', 'bg-purple-600', 'text-white');
                     b.classList.add('bg-white', 'hover:bg-slate-50');
+                    b.setAttribute('aria-selected', 'false');
                 });
                 btn.classList.add('tab-active', 'bg-purple-600', 'text-white');
                 btn.classList.remove('bg-white', 'hover:bg-slate-50');
+                btn.setAttribute('aria-selected', 'true');
                 
-                // Show target tab content
                 tabContents.forEach(content => {
                     content.classList.add('hidden');
                 });
@@ -965,10 +1279,12 @@
                 
                 currentTab = targetTab;
                 
-                // Load templates if switching to templates tab
                 if (targetTab === 'templates') {
                     renderTemplates();
                 }
+                
+                // Scroll to top
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
             });
         });
 
@@ -981,21 +1297,27 @@
             expertFields.classList.toggle('active');
             modeIcon.style.transform = expertMode ? 'rotate(180deg)' : 'rotate(0)';
             modeText.textContent = expertMode ? 'Simple Mode' : 'Expert Mode';
+            modeToggle.setAttribute('aria-expanded', expertMode);
         });
 
         // ========================================
-        // LIVE CHARACTER & TOKEN COUNTER
+        // CHARACTER & TOKEN COUNTER
         // ========================================
         
         coreGoalInput.addEventListener('input', () => {
             const text = coreGoalInput.value;
             const chars = text.length;
-            const tokens = Math.ceil(chars / 4); // Rough estimate
+            const tokens = Math.ceil(chars / 4);
             
             charCount.textContent = chars;
             tokenCount.textContent = tokens;
             
             updateQualityScore();
+        });
+
+        // Listen to expert fields too
+        ['role', 'audience', 'tone', 'format', 'constraints', 'context'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateQualityScore);
         });
 
         // ========================================
@@ -1007,6 +1329,8 @@
             const role = document.getElementById('role').value.trim();
             const audience = document.getElementById('audience').value.trim();
             const tone = document.getElementById('tone').value.trim();
+            const format = document.getElementById('format').value.trim();
+            const constraints = document.getElementById('constraints').value.trim();
             
             let score = 0;
             let clarity = 'Low';
@@ -1024,7 +1348,7 @@
             }
             
             // Specificity (based on detail words)
-            const detailWords = ['specific', 'detailed', 'comprehensive', 'analyze', 'create', 'develop', 'design'];
+            const detailWords = ['specific', 'detailed', 'comprehensive', 'analyze', 'create', 'develop', 'design', 'generate', 'build'];
             const hasDetailWords = detailWords.some(word => coreGoal.toLowerCase().includes(word));
             if (hasDetailWords) {
                 score += 25;
@@ -1040,16 +1364,20 @@
             if (role) filledFields++;
             if (audience) filledFields++;
             if (tone) filledFields++;
+            if (format) filledFields++;
+            if (constraints) filledFields++;
             
-            if (filledFields >= 3) {
+            if (filledFields >= 5) {
                 score += 30;
                 completeness = 'High';
-            } else if (filledFields >= 2) {
-                score += 15;
+            } else if (filledFields >= 3) {
+                score += 20;
                 completeness = 'Medium';
+            } else if (filledFields >= 2) {
+                score += 10;
+                completeness = 'Low';
             }
             
-            // Cap at 100
             score = Math.min(score, 100);
             
             // Update UI
@@ -1067,33 +1395,37 @@
                 qualityBar.className = 'quality-fill bg-gradient-to-r from-purple-600 to-indigo-600';
             }
             
-            // Update badges
             document.getElementById('clarityBadge').textContent = clarity;
+            document.getElementById('clarityBadge').className = `badge badge-${clarity === 'High' ? 'success' : clarity === 'Medium' ? 'warning' : 'info'}`;
+            
             document.getElementById('specificityBadge').textContent = specificity;
+            document.getElementById('specificityBadge').className = `badge badge-${specificity === 'High' ? 'success' : specificity === 'Medium' ? 'warning' : 'info'}`;
+            
             document.getElementById('completenessBadge').textContent = completeness;
+            document.getElementById('completenessBadge').className = `badge badge-${completeness === 'High' ? 'success' : completeness === 'Medium' ? 'warning' : 'info'}`;
             
             return score;
         }
 
         // ========================================
-        // AI ENHANCEMENT LOGIC
+        // AI ENHANCEMENT LOGIC (PROFESSIONAL DEFAULTS)
         // ========================================
         
         const enhanceInput = (value, type) => {
             if (!value || value.trim().length < 3) {
                 switch(type) {
                     case 'role':
-                        return 'Expert Specialist with deep domain knowledge and proven track record';
+                        return 'Expert Consultant with deep domain knowledge and proven track record';
                     case 'audience':
                         return 'Professionals and decision-makers seeking authoritative insights';
                     case 'tone':
-                        return 'Professional, analytical, insightful, and authoritative';
+                        return 'Analytical, concise, and professional';
                     case 'format':
-                        return 'Well-structured format with clear hierarchy, actionable sections, and scannable layout';
+                        return 'Well-structured format with clear hierarchy and actionable sections';
                     case 'constraints':
-                        return 'Maintain highest accuracy standards, cite authoritative sources, avoid speculation';
+                        return 'Maintain highest accuracy standards, cite sources when applicable';
                     case 'context':
-                        return 'Consider current industry best practices, emerging trends, and proven methodologies';
+                        return 'Consider current best practices and proven methodologies';
                     default:
                         return value;
                 }
@@ -1107,10 +1439,10 @@
         };
 
         // ========================================
-        // BUILD PROMPT FUNCTION
+        // BUILD PROMPT FUNCTION (PLATFORM-AWARE)
         // ========================================
         
-        buildBtn.addEventListener('click', () => {
+        buildBtn.addEventListener('click', async () => {
             const coreGoal = coreGoalInput.value.trim();
             
             if (!coreGoal) {
@@ -1119,6 +1451,13 @@
                 return;
             }
 
+            // Show loading state
+            buildBtn.disabled = true;
+            buildBtn.innerHTML = '<div class="spinner mr-2"></div> Building...';
+            
+            // Simulate processing (smooth UX)
+            await new Promise(resolve => setTimeout(resolve, 600));
+
             const role = enhanceInput(document.getElementById('role').value.trim(), 'role');
             const audience = enhanceInput(document.getElementById('audience').value.trim(), 'audience');
             const tone = enhanceInput(document.getElementById('tone').value.trim(), 'tone');
@@ -1126,35 +1465,62 @@
             const constraints = enhanceInput(document.getElementById('constraints').value.trim(), 'constraints');
             const context = enhanceInput(document.getElementById('context').value.trim(), 'context');
 
-            let prompt = `# PROFESSIONAL AI INSTRUCTION\n\n`;
-            prompt += `## ROLE & EXPERTISE\nYou are ${role}.\n\n`;
-            prompt += `## PRIMARY OBJECTIVE\n${coreGoal}\n\n`;
-            prompt += `## TARGET AUDIENCE\n${audience}\n\n`;
-            prompt += `## COMMUNICATION STYLE\n${tone}\n\n`;
-            prompt += `## OUTPUT FORMAT\n${format}\n\n`;
-            prompt += `## CRITICAL CONSTRAINTS\n${constraints}\n\n`;
-            prompt += `## CONTEXTUAL INTELLIGENCE\n${context}\n\n`;
-            prompt += `## EXECUTION PROTOCOL\nAnalyze the objective thoroughly, apply domain expertise, and deliver a response that exceeds professional standards. Ensure accuracy, clarity, and actionable value in every aspect of your response.`;
+            let prompt = '';
+            const style = styles[currentPlatform];
+            
+            if (currentPlatform === 'claude') {
+                // Claude XML format
+                prompt = style.wrapper(
+                    `${style.sectionHeader('ROLE')}You are ${role}.${style.sectionFooter('ROLE')}` +
+                    `${style.sectionHeader('OBJECTIVE')}${coreGoal}${style.sectionFooter('OBJECTIVE')}` +
+                    `${style.sectionHeader('AUDIENCE')}${audience}${style.sectionFooter('AUDIENCE')}` +
+                    `${style.sectionHeader('TONE')}${tone}${style.sectionFooter('TONE')}` +
+                    `${style.sectionHeader('FORMAT')}${format}${style.sectionFooter('FORMAT')}` +
+                    `${style.sectionHeader('CONSTRAINTS')}${constraints}${style.sectionFooter('CONSTRAINTS')}` +
+                    `${style.sectionHeader('CONTEXT')}${context}${style.sectionFooter('CONTEXT')}` +
+                    `${style.sectionHeader('EXECUTION')}Analyze thoroughly, apply expertise, and deliver excellence.${style.sectionFooter('EXECUTION')}`
+                );
+            } else {
+                // ChatGPT, Gemini, Generic formats (Markdown-based)
+                prompt = style.wrapper(
+                    `${style.sectionHeader('ROLE & EXPERTISE')}You are ${role}.\n\n` +
+                    `${style.sectionHeader('PRIMARY OBJECTIVE')}${coreGoal}\n\n` +
+                    `${style.sectionHeader('TARGET AUDIENCE')}${audience}\n\n` +
+                    `${style.sectionHeader('COMMUNICATION STYLE')}${tone}\n\n` +
+                    `${style.sectionHeader('OUTPUT FORMAT')}${format}\n\n` +
+                    `${style.sectionHeader('CRITICAL CONSTRAINTS')}${constraints}\n\n` +
+                    `${style.sectionHeader('CONTEXTUAL INTELLIGENCE')}${context}\n\n` +
+                    `${style.sectionHeader('EXECUTION PROTOCOL')}Analyze the objective thoroughly, apply domain expertise, and deliver a response that exceeds professional standards. Ensure accuracy, clarity, and actionable value.`
+                );
+            }
 
             currentPrompt = prompt;
             outputText.textContent = prompt;
             outputSection.classList.remove('hidden');
             outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
+            // Update platform badge
+            document.getElementById('platformBadge').textContent = 
+                currentPlatform.charAt(0).toUpperCase() + currentPlatform.slice(1);
+            
             // Update analytics
+            const qualityScore = updateQualityScore();
             analyticsData.totalPrompts++;
             analyticsData.thisWeek++;
             analyticsData.thisMonth++;
-            
-            const qualityScore = updateQualityScore();
             analyticsData.qualityScores.push(qualityScore);
             
             saveAnalytics();
             updateStats();
+            
+            // Reset button
+            buildBtn.disabled = false;
+            buildBtn.innerHTML = '<i data-lucide="wand-2" class="w-5 h-5"></i> Build Professional Prompt';
+            lucide.createIcons();
         });
 
         // ========================================
-        // COPY TO CLIPBOARD
+        // COPY TO CLIPBOARD (WITH PULSE ANIMATION)
         // ========================================
         
         copyBtn.addEventListener('click', async () => {
@@ -1163,10 +1529,9 @@
             try {
                 await navigator.clipboard.writeText(text);
                 
-                const icon = copyBtn.querySelector('i');
+                copyBtn.classList.add('pulse-success');
                 const originalHTML = copyBtn.innerHTML;
                 
-                copyBtn.classList.add('pulse-success');
                 copyBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Copied!';
                 lucide.createIcons();
                 
@@ -1179,6 +1544,43 @@
             } catch (err) {
                 alert('Failed to copy. Please try manually selecting the text.');
             }
+        });
+
+        // ========================================
+        // FOCUS MODE
+        // ========================================
+        
+        focusModeBtn.addEventListener('click', () => {
+            const focusMode = document.createElement('div');
+            focusMode.className = 'focus-mode';
+            focusMode.innerHTML = `
+                <div class="focus-mode-content">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-bold text-slate-800">Focus Mode</h3>
+                        <button onclick="this.closest('.focus-mode').remove()" class="text-slate-400 hover:text-slate-600" aria-label="Close focus mode">
+                            <i data-lucide="x" class="w-8 h-8"></i>
+                        </button>
+                    </div>
+                    <div class="bg-slate-50 border-2 border-slate-200 rounded-xl p-8">
+                        <pre class="whitespace-pre-wrap text-base text-slate-700 leading-relaxed font-mono">${outputText.textContent}</pre>
+                    </div>
+                    <div class="mt-6 flex gap-3 justify-center">
+                        <button onclick="navigator.clipboard.writeText(\`${outputText.textContent.replace(/`/g, '\\`')}\`); alert('Copied!')" class="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-all">
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(focusMode);
+            lucide.createIcons();
+            
+            // Close on Escape
+            focusMode.addEventListener('click', (e) => {
+                if (e.target === focusMode) {
+                    focusMode.remove();
+                }
+            });
         });
 
         // ========================================
@@ -1197,6 +1599,7 @@
                 content: prompt,
                 timestamp: timestamp,
                 quality: qualityScore,
+                platform: currentPlatform,
                 category: 'custom'
             };
             
@@ -1205,13 +1608,13 @@
             
             renderSavedPrompts();
             
+            saveBtn.classList.add('pulse-success');
             saveBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Saved!';
-            saveBtn.classList.add('bg-emerald-700');
             lucide.createIcons();
             
             setTimeout(() => {
                 saveBtn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Save to Library';
-                saveBtn.classList.remove('bg-emerald-700');
+                saveBtn.classList.remove('pulse-success');
                 lucide.createIcons();
             }, 2000);
         });
@@ -1263,8 +1666,9 @@
             if (format === 'json') {
                 content = JSON.stringify({
                     prompt: prompt,
+                    platform: currentPlatform,
                     created: new Date().toISOString(),
-                    tool: 'OPAL Prompt Engine'
+                    tool: 'OPAL Prompt Engine v5.0'
                 }, null, 2);
                 mimeType = 'application/json';
             }
@@ -1281,10 +1685,16 @@
         };
 
         // ========================================
-        // CLEAR FORM
+        // CLEAR FORM (WITH CONFIRMATION)
         // ========================================
         
         clearBtn.addEventListener('click', () => {
+            if (coreGoalInput.value.trim().length > 10) {
+                if (!confirm('Clear all fields? This cannot be undone.')) {
+                    return;
+                }
+            }
+            
             document.getElementById('coreGoal').value = '';
             document.getElementById('role').value = '';
             document.getElementById('audience').value = '';
@@ -1310,9 +1720,9 @@
                 : templates.filter(t => t.category === category);
             
             grid.innerHTML = filtered.map(template => `
-                <div class="template-card bg-white border-2 border-slate-200 rounded-xl p-6 shadow-sm" onclick="loadTemplate(${template.id})">
+                <div class="template-card bg-white border-2 border-slate-200 rounded-xl p-6 shadow-sm slide-in" onclick="loadTemplate(${template.id})" role="listitem">
                     <div class="flex items-start gap-4 mb-4">
-                        <div class="bg-purple-100 p-3 rounded-lg">
+                        <div class="bg-purple-100 p-3 rounded-lg" aria-hidden="true">
                             <i data-lucide="${template.icon}" class="w-6 h-6 text-purple-600"></i>
                         </div>
                         <div class="flex-1">
@@ -1338,7 +1748,6 @@
             const template = templates.find(t => t.id === id);
             if (!template) return;
             
-            // Fill in the form
             document.getElementById('coreGoal').value = template.prompt.coreGoal;
             document.getElementById('role').value = template.prompt.role;
             document.getElementById('audience').value = template.prompt.audience;
@@ -1347,22 +1756,19 @@
             document.getElementById('constraints').value = template.prompt.constraints;
             document.getElementById('context').value = template.prompt.context;
             
-            // Enable expert mode
             if (!expertMode) {
                 expertMode = true;
                 expertFields.classList.add('active');
                 modeIcon.style.transform = 'rotate(180deg)';
                 modeText.textContent = 'Simple Mode';
+                modeToggle.setAttribute('aria-expanded', 'true');
             }
             
-            // Switch to builder tab
             tabBtns[0].click();
             
-            // Update counters
             const event = new Event('input');
             coreGoalInput.dispatchEvent(event);
             
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
@@ -1374,13 +1780,14 @@
             if (e.target.classList.contains('category-filter-btn')) {
                 const category = e.target.dataset.category;
                 
-                // Update active state
                 document.querySelectorAll('.category-filter-btn').forEach(btn => {
                     btn.classList.remove('bg-purple-600', 'text-white');
                     btn.classList.add('bg-slate-200', 'text-slate-700');
+                    btn.setAttribute('aria-pressed', 'false');
                 });
                 e.target.classList.add('bg-purple-600', 'text-white');
                 e.target.classList.remove('bg-slate-200', 'text-slate-700');
+                e.target.setAttribute('aria-pressed', 'true');
                 
                 renderTemplates(category);
             }
@@ -1393,13 +1800,14 @@
         function renderSavedPrompts() {
             if (savedPromptsArray.length === 0) {
                 emptyState.style.display = 'block';
+                lucide.createIcons();
                 return;
             }
             
             emptyState.style.display = 'none';
             
             savedPrompts.innerHTML = savedPromptsArray.map(prompt => `
-                <div class="bg-white border-2 border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                <div class="bg-white border-2 border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all slide-in">
                     <div class="flex items-start justify-between mb-3 flex-wrap gap-3">
                         <div class="flex-1 min-w-0">
                             <h4 class="font-semibold text-slate-800 mb-1 truncate">${prompt.title}</h4>
@@ -1413,6 +1821,11 @@
                                     Quality: ${prompt.quality}%
                                 </span>
                                 ` : ''}
+                                ${prompt.platform ? `
+                                <span class="badge badge-info">
+                                    ${prompt.platform}
+                                </span>
+                                ` : ''}
                             </div>
                         </div>
                         <div class="flex gap-2">
@@ -1420,6 +1833,7 @@
                                 onclick="copyPrompt(${prompt.id})" 
                                 class="p-2 hover:bg-slate-100 rounded-lg transition-all"
                                 title="Copy prompt"
+                                aria-label="Copy prompt"
                             >
                                 <i data-lucide="copy" class="w-4 h-4 text-slate-600"></i>
                             </button>
@@ -1427,6 +1841,7 @@
                                 onclick="deletePrompt(${prompt.id})" 
                                 class="p-2 hover:bg-red-50 rounded-lg transition-all"
                                 title="Delete"
+                                aria-label="Delete prompt"
                             >
                                 <i data-lucide="trash-2" class="w-4 h-4 text-red-600"></i>
                             </button>
@@ -1471,17 +1886,25 @@
             searchBar.classList.toggle('hidden');
             if (!searchBar.classList.contains('hidden')) {
                 document.getElementById('searchInput').focus();
+            } else {
+                document.getElementById('searchInput').value = '';
+                renderSavedPrompts();
             }
         });
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
+            
+            if (!query) {
+                renderSavedPrompts();
+                return;
+            }
+            
             const filtered = savedPromptsArray.filter(p => 
                 p.title.toLowerCase().includes(query) || 
                 p.content.toLowerCase().includes(query)
             );
             
-            // Render filtered results
             if (filtered.length === 0) {
                 savedPrompts.innerHTML = `
                     <div class="text-center py-16">
@@ -1543,7 +1966,6 @@
         }
 
         document.getElementById('analyticsBtn').addEventListener('click', () => {
-            // Update analytics modal data
             document.getElementById('analyticsTotal').textContent = analyticsData.totalPrompts;
             document.getElementById('analyticsMonth').textContent = analyticsData.thisMonth;
             
@@ -1579,9 +2001,32 @@
             });
         });
 
-        // Help Modal
         document.getElementById('helpBtn').addEventListener('click', () => {
             document.getElementById('helpModal').classList.add('active');
+        });
+
+        // ========================================
+        // KEYBOARD SHORTCUTS
+        // ========================================
+        
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + Enter = Build Prompt
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                buildBtn.click();
+            }
+            
+            // Ctrl/Cmd + K = Clear Form
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                clearBtn.click();
+            }
+            
+            // Escape = Close Modals & Focus Mode
+            if (e.key === 'Escape') {
+                modals.forEach(modal => modal.classList.remove('active'));
+                document.querySelectorAll('.focus-mode').forEach(fm => fm.remove());
+            }
         });
 
         // ========================================
@@ -1592,11 +2037,20 @@
         updateStats();
         lucide.createIcons();
 
-        // Reset week/month counters (simplified - in production use proper date tracking)
-        setTimeout(() => {
-            analyticsData.thisWeek = 0;
-            saveAnalytics();
-        }, 7 * 24 * 60 * 60 * 1000); // Reset weekly
+        // Periodic analytics reset (simplified)
+        setInterval(() => {
+            const now = new Date();
+            const lastReset = localStorage.getItem('opalLastReset');
+            
+            if (!lastReset || (now - new Date(lastReset)) > 7 * 24 * 60 * 60 * 1000) {
+                analyticsData.thisWeek = 0;
+                localStorage.setItem('opalLastReset', now.toISOString());
+                saveAnalytics();
+            }
+        }, 60 * 60 * 1000); // Check hourly
+
+        console.log('%c🎉 OPAL v5.0 Loaded Successfully', 'color: #667eea; font-size: 16px; font-weight: bold;');
+        console.log('%cProfessional Prompt Engineering Suite', 'color: #764ba2; font-size: 12px;');
 
     </script>
 
