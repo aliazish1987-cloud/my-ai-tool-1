@@ -3,28 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPAL - Professional Prompt Engineering Suite</title>
+    <title>OPAL - Professional AI Prompt Engineering Suite</title>
+    <meta name="description" content="Professional-grade prompt builder with templates, analytics, and AI enhancement">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        
         * {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        
         .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
         
         .glass-effect {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .mode-toggle {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .expert-fields {
@@ -46,7 +53,7 @@
         
         @keyframes pulseGreen {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); background-color: #10b981; }
+            50% { transform: scale(1.05); background-color: var(--success); }
         }
         
         .fade-in {
@@ -58,57 +65,117 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .empty-state {
-            opacity: 0.4;
-            transition: opacity 0.3s;
+        .tab-active {
+            background: var(--primary);
+            color: white;
         }
         
-        .empty-state:hover {
-            opacity: 0.6;
-        }
-        
-        .prompt-card {
+        .template-card {
+            cursor: pointer;
             transition: all 0.3s ease;
         }
         
-        .prompt-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        .template-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
         }
         
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        .stat-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
         }
         
-        .tooltip {
-            position: relative;
+        .token-counter {
+            font-variant-numeric: tabular-nums;
         }
         
-        .tooltip:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 0.5rem 1rem;
-            background: #1f2937;
-            color: white;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            white-space: nowrap;
+        .quality-indicator {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .quality-fill {
+            height: 100%;
+            transition: all 0.5s ease;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
             z-index: 1000;
-            margin-bottom: 0.5rem;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        /* Responsive tweaks */
+        @media (max-width: 768px) {
+            .stat-card {
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
     
-    <!-- Header -->
-    <header class="gradient-bg text-white py-6 shadow-2xl">
+    <!-- Header with Stats -->
+    <header class="gradient-bg text-white py-6 shadow-2xl sticky top-0 z-50">
         <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center space-x-3">
                     <div class="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
                         <i data-lucide="gem" class="w-8 h-8"></i>
@@ -118,9 +185,31 @@
                         <p class="text-sm text-purple-100">Professional Prompt Engineering Suite</p>
                     </div>
                 </div>
-                <div class="hidden md:flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-lg">
-                    <i data-lucide="zap" class="w-4 h-4"></i>
-                    <span class="text-sm font-medium">AI-Enhanced</span>
+                <div class="flex items-center gap-3">
+                    <button id="analyticsBtn" class="hidden md:flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition-all">
+                        <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                        <span class="text-sm font-medium">Analytics</span>
+                    </button>
+                    <button id="helpBtn" class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition-all">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i>
+                        <span class="text-sm font-medium hidden sm:inline">Help</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-3 gap-3 mt-4">
+                <div class="stat-card bg-white/10 rounded-lg p-3 text-center backdrop-blur-sm">
+                    <div class="text-2xl font-bold" id="totalPromptsCount">0</div>
+                    <div class="text-xs text-purple-100">Total Prompts</div>
+                </div>
+                <div class="stat-card bg-white/10 rounded-lg p-3 text-center backdrop-blur-sm">
+                    <div class="text-2xl font-bold" id="thisWeekCount">0</div>
+                    <div class="text-xs text-purple-100">This Week</div>
+                </div>
+                <div class="stat-card bg-white/10 rounded-lg p-3 text-center backdrop-blur-sm">
+                    <div class="text-2xl font-bold" id="qualityScore">-</div>
+                    <div class="text-xs text-purple-100">Avg Quality</div>
                 </div>
             </div>
         </div>
@@ -129,192 +218,347 @@
     <!-- Main Container -->
     <main class="container mx-auto px-4 py-8 max-w-7xl">
         
-        <!-- Builder Section -->
-        <section class="glass-effect rounded-2xl shadow-2xl p-6 md:p-8 mb-8 fade-in">
-            
-            <!-- Mode Toggle -->
-            <div class="flex items-center justify-between mb-6 pb-6 border-b border-slate-200">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                        <i data-lucide="sparkles" class="w-6 h-6 text-purple-600"></i>
-                        Build Your Prompt
-                    </h2>
-                    <p class="text-sm text-slate-500 mt-1">Professional-grade AI instructions in seconds</p>
-                </div>
-                <button 
-                    id="modeToggle" 
-                    class="mode-toggle flex items-center space-x-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all"
-                    data-tooltip="Toggle advanced options"
-                >
-                    <i data-lucide="settings" class="w-4 h-4"></i>
-                    <span id="modeText" class="text-sm font-medium">Expert Mode</span>
-                    <i data-lucide="chevron-down" id="modeIcon" class="w-4 h-4 transition-transform"></i>
-                </button>
-            </div>
+        <!-- Tab Navigation -->
+        <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+            <button class="tab-btn tab-active px-6 py-3 rounded-lg font-semibold whitespace-nowrap transition-all" data-tab="builder">
+                <i data-lucide="wand-2" class="w-4 h-4 inline mr-2"></i>Builder
+            </button>
+            <button class="tab-btn px-6 py-3 rounded-lg font-semibold bg-white hover:bg-slate-50 whitespace-nowrap transition-all" data-tab="templates">
+                <i data-lucide="layout-template" class="w-4 h-4 inline mr-2"></i>Templates
+            </button>
+            <button class="tab-btn px-6 py-3 rounded-lg font-semibold bg-white hover:bg-slate-50 whitespace-nowrap transition-all" data-tab="library">
+                <i data-lucide="library" class="w-4 h-4 inline mr-2"></i>Library
+            </button>
+        </div>
 
-            <!-- Simple Mode - Always Visible -->
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                        <i data-lucide="target" class="w-4 h-4 text-purple-600"></i>
-                        Core Goal
-                        <span class="text-xs font-normal text-slate-400 ml-1">(What do you want the AI to do?)</span>
-                    </label>
-                    <textarea 
-                        id="coreGoal" 
-                        rows="4" 
-                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all resize-none focus:ring-2 focus:ring-purple-500"
-                        placeholder="Example: Create a marketing strategy for a sustainable fashion brand targeting Gen-Z consumers..."
-                    ></textarea>
-                </div>
-            </div>
+        <!-- TAB 1: Builder Section -->
+        <section id="builderTab" class="tab-content">
+            <div class="grid lg:grid-cols-3 gap-6">
+                
+                <!-- Left: Input Form -->
+                <div class="lg:col-span-2">
+                    <div class="glass-effect rounded-2xl shadow-2xl p-6 md:p-8 fade-in">
+                        
+                        <!-- Mode Toggle -->
+                        <div class="flex items-center justify-between mb-6 pb-6 border-b border-slate-200">
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                                    <i data-lucide="sparkles" class="w-6 h-6 text-purple-600"></i>
+                                    Build Your Prompt
+                                </h2>
+                                <p class="text-sm text-slate-500 mt-1">Professional AI instructions in seconds</p>
+                            </div>
+                            <button 
+                                id="modeToggle" 
+                                class="flex items-center space-x-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all"
+                            >
+                                <i data-lucide="settings" class="w-4 h-4"></i>
+                                <span id="modeText" class="text-sm font-medium">Expert Mode</span>
+                                <i data-lucide="chevron-down" id="modeIcon" class="w-4 h-4 transition-transform"></i>
+                            </button>
+                        </div>
 
-            <!-- Expert Mode - Collapsible -->
-            <div id="expertFields" class="expert-fields">
-                <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Simple Mode - Always Visible -->
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                    <i data-lucide="target" class="w-4 h-4 text-purple-600"></i>
+                                    Core Goal
+                                    <span class="text-xs font-normal text-slate-400 ml-1">(What do you want the AI to do?)</span>
+                                </label>
+                                <textarea 
+                                    id="coreGoal" 
+                                    rows="5" 
+                                    class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all resize-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                    placeholder="Example: Create a comprehensive marketing strategy for a sustainable fashion brand targeting Gen-Z consumers..."
+                                ></textarea>
+                                <div class="flex items-center justify-between mt-2 text-xs text-slate-500">
+                                    <span class="token-counter">Characters: <strong id="charCount">0</strong></span>
+                                    <span>Est. tokens: <strong id="tokenCount">0</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Expert Mode - Collapsible -->
+                        <div id="expertFields" class="expert-fields">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                        <i data-lucide="user-circle" class="w-4 h-4 text-purple-600"></i>
+                                        AI Role
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="role" 
+                                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                        placeholder="e.g., Marketing Strategist, Developer..."
+                                    />
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                        <i data-lucide="users" class="w-4 h-4 text-purple-600"></i>
+                                        Target Audience
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="audience" 
+                                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                        placeholder="e.g., Beginners, Professionals..."
+                                    />
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                        <i data-lucide="message-circle" class="w-4 h-4 text-purple-600"></i>
+                                        Tone & Style
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="tone" 
+                                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                        placeholder="e.g., Professional, Casual, Technical..."
+                                    />
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                        <i data-lucide="sliders" class="w-4 h-4 text-purple-600"></i>
+                                        Format & Structure
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="format" 
+                                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                        placeholder="e.g., Bullet points, Detailed essay..."
+                                    />
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                        <i data-lucide="alert-circle" class="w-4 h-4 text-purple-600"></i>
+                                        Constraints & Rules
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="constraints" 
+                                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                        placeholder="e.g., Under 500 words, No jargon..."
+                                    />
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                                        <i data-lucide="lightbulb" class="w-4 h-4 text-purple-600"></i>
+                                        Additional Context
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="context" 
+                                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                        placeholder="e.g., Industry trends, Examples..."
+                                    />
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+                            <button 
+                                id="buildBtn" 
+                                class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+                            >
+                                <i data-lucide="wand-2" class="w-5 h-5"></i>
+                                Build Professional Prompt
+                            </button>
+                            <button 
+                                id="clearBtn" 
+                                class="px-6 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+                            >
+                                <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                                Clear
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right: Quality Metrics & Tips -->
+                <div class="space-y-6">
                     
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                            <i data-lucide="user-circle" class="w-4 h-4 text-purple-600"></i>
-                            AI Role
-                        </label>
-                        <input 
-                            type="text" 
-                            id="role" 
-                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all"
-                            placeholder="e.g., Marketing Strategist, Developer..."
-                        />
+                    <!-- Quality Score -->
+                    <div class="glass-effect rounded-2xl shadow-xl p-6">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i data-lucide="gauge" class="w-5 h-5 text-purple-600"></i>
+                            Prompt Quality
+                        </h3>
+                        <div class="mb-3">
+                            <div class="quality-indicator">
+                                <div id="qualityBar" class="quality-fill bg-gradient-to-r from-purple-600 to-indigo-600" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-slate-800" id="qualityPercent">0%</div>
+                            <div class="text-sm text-slate-500" id="qualityLabel">Start typing to analyze</div>
+                        </div>
+                        
+                        <!-- Quality Breakdown -->
+                        <div class="mt-4 space-y-2 text-xs">
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-600">Clarity</span>
+                                <span class="badge badge-info" id="clarityBadge">-</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-600">Specificity</span>
+                                <span class="badge badge-info" id="specificityBadge">-</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-600">Completeness</span>
+                                <span class="badge badge-info" id="completenessBadge">-</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                            <i data-lucide="users" class="w-4 h-4 text-purple-600"></i>
-                            Target Audience
-                        </label>
-                        <input 
-                            type="text" 
-                            id="audience" 
-                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all"
-                            placeholder="e.g., Beginners, Professionals..."
-                        />
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                            <i data-lucide="message-circle" class="w-4 h-4 text-purple-600"></i>
-                            Tone & Style
-                        </label>
-                        <input 
-                            type="text" 
-                            id="tone" 
-                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all"
-                            placeholder="e.g., Professional, Casual, Technical..."
-                        />
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                            <i data-lucide="sliders" class="w-4 h-4 text-purple-600"></i>
-                            Format & Structure
-                        </label>
-                        <input 
-                            type="text" 
-                            id="format" 
-                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all"
-                            placeholder="e.g., Bullet points, Detailed essay..."
-                        />
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                            <i data-lucide="alert-circle" class="w-4 h-4 text-purple-600"></i>
-                            Constraints & Rules
-                        </label>
-                        <input 
-                            type="text" 
-                            id="constraints" 
-                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all"
-                            placeholder="e.g., Under 500 words, No jargon..."
-                        />
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                            <i data-lucide="lightbulb" class="w-4 h-4 text-purple-600"></i>
-                            Additional Context
-                        </label>
-                        <input 
-                            type="text" 
-                            id="context" 
-                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl transition-all"
-                            placeholder="e.g., Industry trends, Examples..."
-                        />
+                    <!-- Pro Tips -->
+                    <div class="glass-effect rounded-2xl shadow-xl p-6">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i data-lucide="lightbulb" class="w-5 h-5 text-amber-500"></i>
+                            Pro Tips
+                        </h3>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Be specific about your desired outcome</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Define the target audience clearly</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Include examples when possible</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0"></i>
+                                <span>Set clear constraints and boundaries</span>
+                            </li>
+                        </ul>
                     </div>
 
                 </div>
+
             </div>
 
-            <!-- Action Button -->
-            <div class="mt-8 flex flex-col sm:flex-row gap-3">
-                <button 
-                    id="buildBtn" 
-                    class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
-                >
-                    <i data-lucide="wand-2" class="w-5 h-5"></i>
-                    Build Professional Prompt
-                </button>
-                <button 
-                    id="clearBtn" 
-                    class="px-6 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
-                >
-                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
-                    Clear
-                </button>
+            <!-- Output Section -->
+            <div id="outputSection" class="mt-6 glass-effect rounded-2xl shadow-2xl p-6 md:p-8 hidden fade-in">
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="file-text" class="w-5 h-5 text-purple-600"></i>
+                        Your Professional Prompt
+                    </h3>
+                    <div class="flex gap-2 flex-wrap">
+                        <button 
+                            id="copyBtn" 
+                            class="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-all"
+                        >
+                            <i data-lucide="copy" class="w-4 h-4"></i>
+                            Copy
+                        </button>
+                        <button 
+                            id="exportBtn" 
+                            class="flex items-center gap-2 px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-lg transition-all"
+                        >
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-slate-50 border-2 border-slate-200 rounded-xl p-6 min-h-[200px]">
+                    <pre id="outputText" class="whitespace-pre-wrap text-sm text-slate-700 leading-relaxed font-mono"></pre>
+                </div>
+                <div class="mt-4 flex gap-3 flex-wrap">
+                    <button 
+                        id="saveBtn" 
+                        class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-all"
+                    >
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        Save to Library
+                    </button>
+                    <button 
+                        id="shareBtn" 
+                        class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all"
+                    >
+                        <i data-lucide="share-2" class="w-4 h-4"></i>
+                        Share
+                    </button>
+                </div>
             </div>
-
         </section>
 
-        <!-- Output Section -->
-        <section id="outputSection" class="glass-effect rounded-2xl shadow-2xl p-6 md:p-8 mb-8 hidden fade-in">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                    <i data-lucide="file-text" class="w-5 h-5 text-purple-600"></i>
-                    Your Professional Prompt
-                </h3>
-                <button 
-                    id="copyBtn" 
-                    class="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-all"
-                >
-                    <i data-lucide="copy" class="w-4 h-4"></i>
-                    Copy
-                </button>
-            </div>
-            <div class="bg-slate-50 border-2 border-slate-200 rounded-xl p-6 min-h-[200px]">
-                <pre id="outputText" class="whitespace-pre-wrap text-sm text-slate-700 leading-relaxed font-mono"></pre>
-            </div>
-            <div class="mt-4 flex gap-3">
-                <button 
-                    id="saveBtn" 
-                    class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-all"
-                >
-                    <i data-lucide="save" class="w-4 h-4"></i>
-                    Save to Library
-                </button>
+        <!-- TAB 2: Templates Section -->
+        <section id="templatesTab" class="tab-content hidden">
+            <div class="glass-effect rounded-2xl shadow-2xl p-6 md:p-8">
+                <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <i data-lucide="layout-template" class="w-6 h-6 text-purple-600"></i>
+                    Professional Templates
+                </h2>
+                
+                <!-- Category Filter -->
+                <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+                    <button class="category-filter-btn badge bg-purple-600 text-white" data-category="all">All</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="marketing">Marketing</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="coding">Coding</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="writing">Writing</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="business">Business</button>
+                    <button class="category-filter-btn badge bg-slate-200 text-slate-700 hover:bg-slate-300" data-category="education">Education</button>
+                </div>
+
+                <!-- Templates Grid -->
+                <div id="templatesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Templates will be dynamically inserted here -->
+                </div>
             </div>
         </section>
 
-        <!-- Saved Prompts Library -->
-        <section class="glass-effect rounded-2xl shadow-2xl p-6 md:p-8">
-            <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <i data-lucide="library" class="w-5 h-5 text-purple-600"></i>
-                Saved Prompts Library
-            </h3>
-            <div id="savedPrompts" class="space-y-4">
-                <!-- Empty State -->
-                <div id="emptyState" class="empty-state text-center py-16">
-                    <i data-lucide="folder-open" class="w-16 h-16 mx-auto mb-4 text-slate-300"></i>
-                    <p class="text-slate-400 text-lg font-medium">Your professional library is currently empty</p>
-                    <p class="text-slate-300 text-sm mt-2">Build a masterpiece to see it here</p>
+        <!-- TAB 3: Library Section -->
+        <section id="libraryTab" class="tab-content hidden">
+            <div class="glass-effect rounded-2xl shadow-2xl p-6 md:p-8">
+                <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="library" class="w-5 h-5 text-purple-600"></i>
+                        Saved Prompts Library
+                    </h3>
+                    <div class="flex gap-2">
+                        <button id="sortBtn" class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all text-sm">
+                            <i data-lucide="arrow-down-up" class="w-4 h-4"></i>
+                            Sort
+                        </button>
+                        <button id="searchToggleBtn" class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all text-sm">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                            Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Bar (Hidden by default) -->
+                <div id="searchBar" class="mb-4 hidden">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search your prompts..." 
+                        class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    />
+                </div>
+
+                <div id="savedPrompts" class="space-y-4">
+                    <!-- Empty State -->
+                    <div id="emptyState" class="text-center py-16">
+                        <i data-lucide="folder-open" class="w-16 h-16 mx-auto mb-4 text-slate-300"></i>
+                        <p class="text-slate-400 text-lg font-medium">Your professional library is currently empty</p>
+                        <p class="text-slate-300 text-sm mt-2">Build a masterpiece to see it here</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -323,18 +567,351 @@
 
     <!-- Footer -->
     <footer class="text-center py-8 text-slate-500 text-sm">
-        <p>OPAL Prompt Engine v3.0 • Engineered for Excellence</p>
+        <div class="container mx-auto px-4">
+            <p class="mb-2">OPAL Prompt Engine v4.0 • Engineered for Excellence</p>
+            <div class="flex items-center justify-center gap-4 text-xs">
+                <a href="#" class="hover:text-purple-600 transition-colors">Privacy Policy</a>
+                <span>•</span>
+                <a href="#" class="hover:text-purple-600 transition-colors">Terms of Service</a>
+                <span>•</span>
+                <a href="#" class="hover:text-purple-600 transition-colors">Contact</a>
+            </div>
+        </div>
     </footer>
+
+    <!-- Modal: Export Options -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-slate-800">Export Prompt</h3>
+                <button class="modal-close text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <button onclick="exportAs('txt')" class="w-full flex items-center gap-3 px-4 py-3 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all">
+                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                    <span class="font-medium">Export as TXT</span>
+                </button>
+                <button onclick="exportAs('md')" class="w-full flex items-center gap-3 px-4 py-3 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all">
+                    <i data-lucide="file-code" class="w-5 h-5"></i>
+                    <span class="font-medium">Export as Markdown</span>
+                </button>
+                <button onclick="exportAs('json')" class="w-full flex items-center gap-3 px-4 py-3 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all">
+                    <i data-lucide="braces" class="w-5 h-5"></i>
+                    <span class="font-medium">Export as JSON</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Analytics -->
+    <div id="analyticsModal" class="modal">
+        <div class="modal-content p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-slate-800">Analytics Dashboard</h3>
+                <button class="modal-close text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i data-lucide="trending-up" class="w-5 h-5 text-purple-600"></i>
+                        <h4 class="font-semibold text-slate-700">Total Prompts Created</h4>
+                    </div>
+                    <div class="text-3xl font-bold text-slate-800" id="analyticsTotal">0</div>
+                </div>
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i data-lucide="calendar" class="w-5 h-5 text-emerald-600"></i>
+                        <h4 class="font-semibold text-slate-700">This Month</h4>
+                    </div>
+                    <div class="text-3xl font-bold text-slate-800" id="analyticsMonth">0</div>
+                </div>
+                <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i data-lucide="star" class="w-5 h-5 text-amber-600"></i>
+                        <h4 class="font-semibold text-slate-700">Most Used Category</h4>
+                    </div>
+                    <div class="text-2xl font-bold text-slate-800" id="analyticsCategory">-</div>
+                </div>
+                <div class="bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i data-lucide="zap" class="w-5 h-5 text-rose-600"></i>
+                        <h4 class="font-semibold text-slate-700">Avg Quality Score</h4>
+                    </div>
+                    <div class="text-3xl font-bold text-slate-800" id="analyticsQuality">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Help Guide -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-slate-800">Quick Start Guide</h3>
+                <button class="modal-close text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="space-y-4 text-sm text-slate-600">
+                <div class="flex gap-3">
+                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">1</div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-1">Enter Your Core Goal</h4>
+                        <p>Describe what you want the AI to accomplish. Be specific and clear.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">2</div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-1">Toggle Expert Mode (Optional)</h4>
+                        <p>Add advanced parameters like role, audience, tone, and constraints.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">3</div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-1">Build & Copy</h4>
+                        <p>Click "Build Professional Prompt" and copy the result to use with any AI.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="bg-purple-100 text-purple-600 rounded-full w-8 h-8 flex items-center justify-center font-bold flex-shrink-0">4</div>
+                    <div>
+                        <h4 class="font-semibold text-slate-800 mb-1">Save & Organize</h4>
+                        <p>Save your best prompts to the library for future use and reference.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
 
-        // State Management
+        // ========================================
+        // STATE MANAGEMENT
+        // ========================================
+        
         let expertMode = false;
         let savedPromptsArray = JSON.parse(localStorage.getItem('opalPrompts')) || [];
+        let analyticsData = JSON.parse(localStorage.getItem('opalAnalytics')) || {
+            totalPrompts: 0,
+            thisWeek: 0,
+            thisMonth: 0,
+            categories: {},
+            qualityScores: []
+        };
+        let currentPrompt = '';
+        let currentTab = 'builder';
 
-        // DOM Elements
+        // ========================================
+        // PROFESSIONAL TEMPLATES
+        // ========================================
+        
+        const templates = [
+            {
+                id: 1,
+                category: 'marketing',
+                title: 'SEO Content Strategy',
+                description: 'Generate comprehensive SEO-optimized content',
+                icon: 'search',
+                prompt: {
+                    coreGoal: 'Create a comprehensive SEO content strategy for [TOPIC] that ranks in the top 3 search results',
+                    role: 'SEO Content Strategist with 10+ years of experience',
+                    audience: 'Website owners and digital marketers',
+                    tone: 'Professional, data-driven, actionable',
+                    format: 'Structured strategy with keyword research, content calendar, and optimization checklist',
+                    constraints: 'Focus on white-hat SEO techniques, include competitor analysis',
+                    context: 'Current Google algorithm best practices and E-E-A-T principles'
+                }
+            },
+            {
+                id: 2,
+                category: 'marketing',
+                title: 'Social Media Campaign',
+                description: 'Plan viral-worthy social campaigns',
+                icon: 'megaphone',
+                prompt: {
+                    coreGoal: 'Design a 30-day social media campaign for [PRODUCT/SERVICE] to increase engagement by 200%',
+                    role: 'Social Media Marketing Expert specializing in viral campaigns',
+                    audience: 'Brand managers and marketing teams',
+                    tone: 'Creative, trend-aware, strategic',
+                    format: 'Day-by-day content calendar with post examples and engagement tactics',
+                    constraints: 'Multi-platform strategy (Instagram, TikTok, LinkedIn), budget-conscious',
+                    context: 'Latest social media trends and algorithm changes for 2024'
+                }
+            },
+            {
+                id: 3,
+                category: 'coding',
+                title: 'Code Review & Optimization',
+                description: 'Get expert code analysis and improvements',
+                icon: 'code',
+                prompt: {
+                    coreGoal: 'Review the following code for bugs, performance issues, and best practices, then provide optimized version',
+                    role: 'Senior Software Engineer with expertise in [LANGUAGE/FRAMEWORK]',
+                    audience: 'Developers seeking code quality improvements',
+                    tone: 'Technical, constructive, educational',
+                    format: 'Issue breakdown, line-by-line analysis, refactored code with comments',
+                    constraints: 'Follow [LANGUAGE] style guide, prioritize readability and maintainability',
+                    context: 'Modern software engineering principles and design patterns'
+                }
+            },
+            {
+                id: 4,
+                category: 'coding',
+                title: 'Bug Diagnosis & Fix',
+                description: 'Identify and resolve coding errors',
+                icon: 'bug',
+                prompt: {
+                    coreGoal: 'Diagnose the root cause of [ERROR/BUG] and provide a working solution',
+                    role: 'Debugging Specialist with deep knowledge of [TECHNOLOGY]',
+                    audience: 'Developers troubleshooting issues',
+                    tone: 'Methodical, clear, solution-focused',
+                    format: 'Problem analysis, root cause explanation, step-by-step fix with code',
+                    constraints: 'Explain why the bug occurred and how to prevent similar issues',
+                    context: 'Common pitfalls in [LANGUAGE/FRAMEWORK] and debugging best practices'
+                }
+            },
+            {
+                id: 5,
+                category: 'writing',
+                title: 'Professional Blog Post',
+                description: 'Create engaging, SEO-friendly articles',
+                icon: 'file-text',
+                prompt: {
+                    coreGoal: 'Write a 2000-word blog post about [TOPIC] that educates and engages readers',
+                    role: 'Professional Content Writer with expertise in [INDUSTRY]',
+                    audience: '[TARGET READER PERSONA]',
+                    tone: 'Informative, engaging, conversational yet authoritative',
+                    format: 'Intro hook, H2/H3 subheadings, bullet points, conclusion with CTA',
+                    constraints: 'Include LSI keywords, internal linking opportunities, meta description',
+                    context: 'Current trends in [INDUSTRY] and reader search intent'
+                }
+            },
+            {
+                id: 6,
+                category: 'writing',
+                title: 'Email Copywriting',
+                description: 'Craft high-converting email sequences',
+                icon: 'mail',
+                prompt: {
+                    coreGoal: 'Create a 5-email welcome sequence for [PRODUCT/SERVICE] that converts subscribers to customers',
+                    role: 'Email Marketing Copywriter with proven conversion track record',
+                    audience: 'New email subscribers interested in [NICHE]',
+                    tone: 'Friendly, persuasive, value-focused',
+                    format: 'Subject line, preview text, body copy, CTA for each email',
+                    constraints: 'Follow email best practices, avoid spam triggers, mobile-optimized',
+                    context: 'Email marketing psychology and customer journey mapping'
+                }
+            },
+            {
+                id: 7,
+                category: 'business',
+                title: 'Business Plan Generator',
+                description: 'Develop comprehensive business plans',
+                icon: 'briefcase',
+                prompt: {
+                    coreGoal: 'Create a complete business plan for [BUSINESS IDEA] suitable for investor presentation',
+                    role: 'Business Strategy Consultant with MBA and startup experience',
+                    audience: 'Entrepreneurs and investors',
+                    tone: 'Professional, data-driven, visionary',
+                    format: 'Executive summary, market analysis, financial projections, go-to-market strategy',
+                    constraints: 'Include competitive analysis, realistic projections, risk assessment',
+                    context: 'Current market conditions and investor expectations'
+                }
+            },
+            {
+                id: 8,
+                category: 'business',
+                title: 'SWOT Analysis',
+                description: 'Analyze strengths, weaknesses, opportunities, threats',
+                icon: 'target',
+                prompt: {
+                    coreGoal: 'Conduct a comprehensive SWOT analysis for [COMPANY/PROJECT]',
+                    role: 'Business Analyst with strategic planning expertise',
+                    audience: 'Leadership teams and decision-makers',
+                    tone: 'Analytical, objective, strategic',
+                    format: 'Detailed breakdown of each SWOT element with actionable insights',
+                    constraints: 'Include industry benchmarking and competitive positioning',
+                    context: 'Current market dynamics and business environment'
+                }
+            },
+            {
+                id: 9,
+                category: 'education',
+                title: 'Lesson Plan Creator',
+                description: 'Design engaging educational content',
+                icon: 'book-open',
+                prompt: {
+                    coreGoal: 'Create a detailed lesson plan for teaching [SUBJECT/TOPIC] to [GRADE LEVEL/AUDIENCE]',
+                    role: 'Educational Designer with curriculum development expertise',
+                    audience: 'Teachers and educators',
+                    tone: 'Clear, structured, pedagogically sound',
+                    format: 'Learning objectives, activities, assessments, differentiation strategies',
+                    constraints: 'Align with educational standards, include diverse learning styles',
+                    context: 'Modern teaching methodologies and student engagement techniques'
+                }
+            },
+            {
+                id: 10,
+                category: 'education',
+                title: 'Study Guide Builder',
+                description: 'Create comprehensive study materials',
+                icon: 'graduation-cap',
+                prompt: {
+                    coreGoal: 'Develop a complete study guide for [EXAM/COURSE] covering all key concepts',
+                    role: 'Educational Content Expert specializing in [SUBJECT]',
+                    audience: 'Students preparing for [EXAM/CERTIFICATION]',
+                    tone: 'Clear, supportive, comprehensive',
+                    format: 'Topic summaries, key concepts, practice questions, memory aids',
+                    constraints: 'Focus on high-yield information, include self-assessment tools',
+                    context: 'Learning science principles and effective study strategies'
+                }
+            },
+            {
+                id: 11,
+                category: 'marketing',
+                title: 'Product Launch Strategy',
+                description: 'Plan successful product launches',
+                icon: 'rocket',
+                prompt: {
+                    coreGoal: 'Design a comprehensive product launch strategy for [PRODUCT] targeting [MARKET]',
+                    role: 'Product Marketing Manager with successful launch experience',
+                    audience: 'Product teams and marketing departments',
+                    tone: 'Strategic, detailed, action-oriented',
+                    format: 'Pre-launch, launch, and post-launch phases with timelines and tactics',
+                    constraints: 'Include metrics, budget allocation, risk mitigation',
+                    context: 'Current market trends and customer acquisition strategies'
+                }
+            },
+            {
+                id: 12,
+                category: 'coding',
+                title: 'API Documentation',
+                description: 'Write clear, developer-friendly API docs',
+                icon: 'book',
+                prompt: {
+                    coreGoal: 'Create comprehensive API documentation for [API/SERVICE]',
+                    role: 'Technical Writer with software development background',
+                    audience: 'Developers integrating with the API',
+                    tone: 'Technical, precise, user-friendly',
+                    format: 'Endpoint descriptions, parameters, examples, error handling',
+                    constraints: 'Include authentication details, rate limits, best practices',
+                    context: 'API documentation standards and developer experience principles'
+                }
+            }
+        ];
+
+        // ========================================
+        // DOM ELEMENTS
+        // ========================================
+        
         const modeToggle = document.getElementById('modeToggle');
         const expertFields = document.getElementById('expertFields');
         const modeText = document.getElementById('modeText');
@@ -343,41 +920,62 @@
         const clearBtn = document.getElementById('clearBtn');
         const copyBtn = document.getElementById('copyBtn');
         const saveBtn = document.getElementById('saveBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const exportBtn = document.getElementById('exportBtn');
         const outputSection = document.getElementById('outputSection');
         const outputText = document.getElementById('outputText');
         const savedPrompts = document.getElementById('savedPrompts');
         const emptyState = document.getElementById('emptyState');
+        const coreGoalInput = document.getElementById('coreGoal');
+        const charCount = document.getElementById('charCount');
+        const tokenCount = document.getElementById('tokenCount');
+        const qualityBar = document.getElementById('qualityBar');
+        const qualityPercent = document.getElementById('qualityPercent');
+        const qualityLabel = document.getElementById('qualityLabel');
 
-        // AI Enhancement Logic - "Magic Enhance"
-        const enhanceInput = (value, type) => {
-            if (!value || value.trim().length < 3) {
-                switch(type) {
-                    case 'role':
-                        return 'Global Expert Specialist with 20+ years of domain mastery';
-                    case 'audience':
-                        return 'Intelligent professionals seeking world-class insights';
-                    case 'tone':
-                        return 'Professional, Analytical, Insightful, and Authoritative';
-                    case 'format':
-                        return 'Structured, scannable format with clear hierarchy and actionable sections';
-                    case 'constraints':
-                        return 'Maintain highest standards of accuracy, cite authoritative sources, avoid speculation';
-                    case 'context':
-                        return 'Consider current industry best practices and cutting-edge methodologies';
-                    default:
-                        return value;
+        // Tab Elements
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Modal Elements
+        const modals = document.querySelectorAll('.modal');
+        const modalCloses = document.querySelectorAll('.modal-close');
+
+        // ========================================
+        // TAB NAVIGATION
+        // ========================================
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.dataset.tab;
+                
+                // Update active tab button
+                tabBtns.forEach(b => {
+                    b.classList.remove('tab-active', 'bg-purple-600', 'text-white');
+                    b.classList.add('bg-white', 'hover:bg-slate-50');
+                });
+                btn.classList.add('tab-active', 'bg-purple-600', 'text-white');
+                btn.classList.remove('bg-white', 'hover:bg-slate-50');
+                
+                // Show target tab content
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(`${targetTab}Tab`).classList.remove('hidden');
+                
+                currentTab = targetTab;
+                
+                // Load templates if switching to templates tab
+                if (targetTab === 'templates') {
+                    renderTemplates();
                 }
-            }
-            
-            // Smart Enhancement - if input is too basic, upgrade it
-            if (type === 'role' && value.length < 20) {
-                return `Expert ${value} with deep specialization and proven track record`;
-            }
-            
-            return value;
-        };
+            });
+        });
 
-        // Mode Toggle
+        // ========================================
+        // MODE TOGGLE
+        // ========================================
+        
         modeToggle.addEventListener('click', () => {
             expertMode = !expertMode;
             expertFields.classList.toggle('active');
@@ -385,16 +983,142 @@
             modeText.textContent = expertMode ? 'Simple Mode' : 'Expert Mode';
         });
 
-        // Build Prompt Function
+        // ========================================
+        // LIVE CHARACTER & TOKEN COUNTER
+        // ========================================
+        
+        coreGoalInput.addEventListener('input', () => {
+            const text = coreGoalInput.value;
+            const chars = text.length;
+            const tokens = Math.ceil(chars / 4); // Rough estimate
+            
+            charCount.textContent = chars;
+            tokenCount.textContent = tokens;
+            
+            updateQualityScore();
+        });
+
+        // ========================================
+        // QUALITY SCORE CALCULATOR
+        // ========================================
+        
+        function updateQualityScore() {
+            const coreGoal = coreGoalInput.value.trim();
+            const role = document.getElementById('role').value.trim();
+            const audience = document.getElementById('audience').value.trim();
+            const tone = document.getElementById('tone').value.trim();
+            
+            let score = 0;
+            let clarity = 'Low';
+            let specificity = 'Low';
+            let completeness = 'Low';
+            
+            // Clarity (based on core goal length and structure)
+            if (coreGoal.length > 50) {
+                score += 20;
+                clarity = 'Medium';
+            }
+            if (coreGoal.length > 100) {
+                score += 15;
+                clarity = 'High';
+            }
+            
+            // Specificity (based on detail words)
+            const detailWords = ['specific', 'detailed', 'comprehensive', 'analyze', 'create', 'develop', 'design'];
+            const hasDetailWords = detailWords.some(word => coreGoal.toLowerCase().includes(word));
+            if (hasDetailWords) {
+                score += 25;
+                specificity = 'High';
+            } else if (coreGoal.length > 75) {
+                specificity = 'Medium';
+                score += 15;
+            }
+            
+            // Completeness (based on filled fields)
+            let filledFields = 0;
+            if (coreGoal) filledFields++;
+            if (role) filledFields++;
+            if (audience) filledFields++;
+            if (tone) filledFields++;
+            
+            if (filledFields >= 3) {
+                score += 30;
+                completeness = 'High';
+            } else if (filledFields >= 2) {
+                score += 15;
+                completeness = 'Medium';
+            }
+            
+            // Cap at 100
+            score = Math.min(score, 100);
+            
+            // Update UI
+            qualityBar.style.width = score + '%';
+            qualityPercent.textContent = score + '%';
+            
+            if (score < 40) {
+                qualityLabel.textContent = 'Needs improvement';
+                qualityBar.className = 'quality-fill bg-red-500';
+            } else if (score < 70) {
+                qualityLabel.textContent = 'Good quality';
+                qualityBar.className = 'quality-fill bg-amber-500';
+            } else {
+                qualityLabel.textContent = 'Excellent quality';
+                qualityBar.className = 'quality-fill bg-gradient-to-r from-purple-600 to-indigo-600';
+            }
+            
+            // Update badges
+            document.getElementById('clarityBadge').textContent = clarity;
+            document.getElementById('specificityBadge').textContent = specificity;
+            document.getElementById('completenessBadge').textContent = completeness;
+            
+            return score;
+        }
+
+        // ========================================
+        // AI ENHANCEMENT LOGIC
+        // ========================================
+        
+        const enhanceInput = (value, type) => {
+            if (!value || value.trim().length < 3) {
+                switch(type) {
+                    case 'role':
+                        return 'Expert Specialist with deep domain knowledge and proven track record';
+                    case 'audience':
+                        return 'Professionals and decision-makers seeking authoritative insights';
+                    case 'tone':
+                        return 'Professional, analytical, insightful, and authoritative';
+                    case 'format':
+                        return 'Well-structured format with clear hierarchy, actionable sections, and scannable layout';
+                    case 'constraints':
+                        return 'Maintain highest accuracy standards, cite authoritative sources, avoid speculation';
+                    case 'context':
+                        return 'Consider current industry best practices, emerging trends, and proven methodologies';
+                    default:
+                        return value;
+                }
+            }
+            
+            if (type === 'role' && value.length < 20) {
+                return `Expert ${value} with specialized knowledge and extensive experience`;
+            }
+            
+            return value;
+        };
+
+        // ========================================
+        // BUILD PROMPT FUNCTION
+        // ========================================
+        
         buildBtn.addEventListener('click', () => {
-            const coreGoal = document.getElementById('coreGoal').value.trim();
+            const coreGoal = coreGoalInput.value.trim();
             
             if (!coreGoal) {
                 alert('❗ Please enter your core goal to build a professional prompt.');
+                coreGoalInput.focus();
                 return;
             }
 
-            // Get values with AI enhancement
             const role = enhanceInput(document.getElementById('role').value.trim(), 'role');
             const audience = enhanceInput(document.getElementById('audience').value.trim(), 'audience');
             const tone = enhanceInput(document.getElementById('tone').value.trim(), 'tone');
@@ -402,35 +1126,47 @@
             const constraints = enhanceInput(document.getElementById('constraints').value.trim(), 'constraints');
             const context = enhanceInput(document.getElementById('context').value.trim(), 'context');
 
-            // Build Professional Prompt
             let prompt = `# PROFESSIONAL AI INSTRUCTION\n\n`;
-            prompt += `## ROLE & EXPERTISE\nYou are a ${role}.\n\n`;
+            prompt += `## ROLE & EXPERTISE\nYou are ${role}.\n\n`;
             prompt += `## PRIMARY OBJECTIVE\n${coreGoal}\n\n`;
             prompt += `## TARGET AUDIENCE\n${audience}\n\n`;
             prompt += `## COMMUNICATION STYLE\n${tone}\n\n`;
             prompt += `## OUTPUT FORMAT\n${format}\n\n`;
             prompt += `## CRITICAL CONSTRAINTS\n${constraints}\n\n`;
             prompt += `## CONTEXTUAL INTELLIGENCE\n${context}\n\n`;
-            prompt += `## EXECUTION PROTOCOL\nAnalyze the objective thoroughly, apply domain expertise, and deliver a response that exceeds professional standards.`;
+            prompt += `## EXECUTION PROTOCOL\nAnalyze the objective thoroughly, apply domain expertise, and deliver a response that exceeds professional standards. Ensure accuracy, clarity, and actionable value in every aspect of your response.`;
 
-            // Display Output
+            currentPrompt = prompt;
             outputText.textContent = prompt;
             outputSection.classList.remove('hidden');
             outputSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Update analytics
+            analyticsData.totalPrompts++;
+            analyticsData.thisWeek++;
+            analyticsData.thisMonth++;
+            
+            const qualityScore = updateQualityScore();
+            analyticsData.qualityScores.push(qualityScore);
+            
+            saveAnalytics();
+            updateStats();
         });
 
-        // Copy to Clipboard with Animation
+        // ========================================
+        // COPY TO CLIPBOARD
+        // ========================================
+        
         copyBtn.addEventListener('click', async () => {
             const text = outputText.textContent;
             
             try {
                 await navigator.clipboard.writeText(text);
                 
-                // Success Animation
-                copyBtn.classList.add('pulse-success');
                 const icon = copyBtn.querySelector('i');
                 const originalHTML = copyBtn.innerHTML;
                 
+                copyBtn.classList.add('pulse-success');
                 copyBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Copied!';
                 lucide.createIcons();
                 
@@ -441,21 +1177,27 @@
                 }, 2000);
                 
             } catch (err) {
-                alert('Failed to copy. Please try again.');
+                alert('Failed to copy. Please try manually selecting the text.');
             }
         });
 
-        // Save Prompt
+        // ========================================
+        // SAVE PROMPT
+        // ========================================
+        
         saveBtn.addEventListener('click', () => {
             const prompt = outputText.textContent;
             const timestamp = new Date().toLocaleString();
-            const coreGoal = document.getElementById('coreGoal').value.trim().substring(0, 60);
+            const coreGoal = coreGoalInput.value.trim().substring(0, 60);
+            const qualityScore = updateQualityScore();
             
             const savedPrompt = {
                 id: Date.now(),
-                title: coreGoal + '...',
+                title: coreGoal + (coreGoal.length >= 60 ? '...' : ''),
                 content: prompt,
-                timestamp: timestamp
+                timestamp: timestamp,
+                quality: qualityScore,
+                category: 'custom'
             };
             
             savedPromptsArray.unshift(savedPrompt);
@@ -463,16 +1205,85 @@
             
             renderSavedPrompts();
             
-            // Success feedback
             saveBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Saved!';
+            saveBtn.classList.add('bg-emerald-700');
             lucide.createIcons();
+            
             setTimeout(() => {
                 saveBtn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Save to Library';
+                saveBtn.classList.remove('bg-emerald-700');
                 lucide.createIcons();
             }, 2000);
         });
 
-        // Clear Form
+        // ========================================
+        // SHARE FUNCTION
+        // ========================================
+        
+        shareBtn.addEventListener('click', async () => {
+            const prompt = outputText.textContent;
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'OPAL Prompt',
+                        text: prompt
+                    });
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        copyToClipboardFallback(prompt);
+                    }
+                }
+            } else {
+                copyToClipboardFallback(prompt);
+            }
+        });
+
+        function copyToClipboardFallback(text) {
+            navigator.clipboard.writeText(text);
+            alert('✓ Prompt copied to clipboard! Share it anywhere.');
+        }
+
+        // ========================================
+        // EXPORT FUNCTION
+        // ========================================
+        
+        exportBtn.addEventListener('click', () => {
+            document.getElementById('exportModal').classList.add('active');
+        });
+
+        window.exportAs = (format) => {
+            const prompt = outputText.textContent;
+            const filename = `opal-prompt-${Date.now()}`;
+            
+            let content = prompt;
+            let mimeType = 'text/plain';
+            let extension = format;
+            
+            if (format === 'json') {
+                content = JSON.stringify({
+                    prompt: prompt,
+                    created: new Date().toISOString(),
+                    tool: 'OPAL Prompt Engine'
+                }, null, 2);
+                mimeType = 'application/json';
+            }
+            
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filename}.${extension}`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            document.getElementById('exportModal').classList.remove('active');
+        };
+
+        // ========================================
+        // CLEAR FORM
+        // ========================================
+        
         clearBtn.addEventListener('click', () => {
             document.getElementById('coreGoal').value = '';
             document.getElementById('role').value = '';
@@ -482,9 +1293,103 @@
             document.getElementById('constraints').value = '';
             document.getElementById('context').value = '';
             outputSection.classList.add('hidden');
+            
+            charCount.textContent = '0';
+            tokenCount.textContent = '0';
+            updateQualityScore();
         });
 
-        // Render Saved Prompts
+        // ========================================
+        // RENDER TEMPLATES
+        // ========================================
+        
+        function renderTemplates(category = 'all') {
+            const grid = document.getElementById('templatesGrid');
+            const filtered = category === 'all' 
+                ? templates 
+                : templates.filter(t => t.category === category);
+            
+            grid.innerHTML = filtered.map(template => `
+                <div class="template-card bg-white border-2 border-slate-200 rounded-xl p-6 shadow-sm" onclick="loadTemplate(${template.id})">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="bg-purple-100 p-3 rounded-lg">
+                            <i data-lucide="${template.icon}" class="w-6 h-6 text-purple-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-slate-800 mb-1">${template.title}</h4>
+                            <p class="text-sm text-slate-600">${template.description}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
+                        <span class="badge badge-info">${template.category}</span>
+                        <span class="text-xs text-slate-400">Click to use</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            lucide.createIcons();
+        }
+
+        // ========================================
+        // LOAD TEMPLATE
+        // ========================================
+        
+        window.loadTemplate = (id) => {
+            const template = templates.find(t => t.id === id);
+            if (!template) return;
+            
+            // Fill in the form
+            document.getElementById('coreGoal').value = template.prompt.coreGoal;
+            document.getElementById('role').value = template.prompt.role;
+            document.getElementById('audience').value = template.prompt.audience;
+            document.getElementById('tone').value = template.prompt.tone;
+            document.getElementById('format').value = template.prompt.format;
+            document.getElementById('constraints').value = template.prompt.constraints;
+            document.getElementById('context').value = template.prompt.context;
+            
+            // Enable expert mode
+            if (!expertMode) {
+                expertMode = true;
+                expertFields.classList.add('active');
+                modeIcon.style.transform = 'rotate(180deg)';
+                modeText.textContent = 'Simple Mode';
+            }
+            
+            // Switch to builder tab
+            tabBtns[0].click();
+            
+            // Update counters
+            const event = new Event('input');
+            coreGoalInput.dispatchEvent(event);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // ========================================
+        // CATEGORY FILTER
+        // ========================================
+        
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('category-filter-btn')) {
+                const category = e.target.dataset.category;
+                
+                // Update active state
+                document.querySelectorAll('.category-filter-btn').forEach(btn => {
+                    btn.classList.remove('bg-purple-600', 'text-white');
+                    btn.classList.add('bg-slate-200', 'text-slate-700');
+                });
+                e.target.classList.add('bg-purple-600', 'text-white');
+                e.target.classList.remove('bg-slate-200', 'text-slate-700');
+                
+                renderTemplates(category);
+            }
+        });
+
+        // ========================================
+        // RENDER SAVED PROMPTS
+        // ========================================
+        
         function renderSavedPrompts() {
             if (savedPromptsArray.length === 0) {
                 emptyState.style.display = 'block';
@@ -494,31 +1399,41 @@
             emptyState.style.display = 'none';
             
             savedPrompts.innerHTML = savedPromptsArray.map(prompt => `
-                <div class="prompt-card bg-white border-2 border-slate-200 rounded-xl p-6 shadow-sm">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-slate-800 mb-1">${prompt.title}</h4>
-                            <p class="text-xs text-slate-400">${prompt.timestamp}</p>
+                <div class="bg-white border-2 border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                    <div class="flex items-start justify-between mb-3 flex-wrap gap-3">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-semibold text-slate-800 mb-1 truncate">${prompt.title}</h4>
+                            <div class="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="calendar" class="w-3 h-3"></i>
+                                    ${prompt.timestamp}
+                                </span>
+                                ${prompt.quality ? `
+                                <span class="badge ${prompt.quality >= 70 ? 'badge-success' : prompt.quality >= 40 ? 'badge-warning' : 'badge-info'}">
+                                    Quality: ${prompt.quality}%
+                                </span>
+                                ` : ''}
+                            </div>
                         </div>
                         <div class="flex gap-2">
                             <button 
                                 onclick="copyPrompt(${prompt.id})" 
-                                class="p-2 hover:bg-slate-100 rounded-lg transition-all tooltip"
-                                data-tooltip="Copy prompt"
+                                class="p-2 hover:bg-slate-100 rounded-lg transition-all"
+                                title="Copy prompt"
                             >
                                 <i data-lucide="copy" class="w-4 h-4 text-slate-600"></i>
                             </button>
                             <button 
                                 onclick="deletePrompt(${prompt.id})" 
-                                class="p-2 hover:bg-red-50 rounded-lg transition-all tooltip"
-                                data-tooltip="Delete"
+                                class="p-2 hover:bg-red-50 rounded-lg transition-all"
+                                title="Delete"
                             >
                                 <i data-lucide="trash-2" class="w-4 h-4 text-red-600"></i>
                             </button>
                         </div>
                     </div>
                     <div class="bg-slate-50 rounded-lg p-4 max-h-32 overflow-y-auto">
-                        <pre class="text-xs text-slate-600 whitespace-pre-wrap font-mono">${prompt.content.substring(0, 200)}...</pre>
+                        <pre class="text-xs text-slate-600 whitespace-pre-wrap font-mono">${prompt.content.substring(0, 250)}${prompt.content.length > 250 ? '...' : ''}</pre>
                     </div>
                 </div>
             `).join('');
@@ -526,7 +1441,10 @@
             lucide.createIcons();
         }
 
-        // Copy Saved Prompt
+        // ========================================
+        // COPY/DELETE SAVED PROMPTS
+        // ========================================
+        
         window.copyPrompt = async (id) => {
             const prompt = savedPromptsArray.find(p => p.id === id);
             if (prompt) {
@@ -535,17 +1453,151 @@
             }
         };
 
-        // Delete Prompt
         window.deletePrompt = (id) => {
             if (confirm('Delete this prompt from your library?')) {
                 savedPromptsArray = savedPromptsArray.filter(p => p.id !== id);
                 localStorage.setItem('opalPrompts', JSON.stringify(savedPromptsArray));
                 renderSavedPrompts();
+                updateStats();
             }
         };
 
-        // Initialize
+        // ========================================
+        // SEARCH FUNCTIONALITY
+        // ========================================
+        
+        document.getElementById('searchToggleBtn').addEventListener('click', () => {
+            const searchBar = document.getElementById('searchBar');
+            searchBar.classList.toggle('hidden');
+            if (!searchBar.classList.contains('hidden')) {
+                document.getElementById('searchInput').focus();
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = savedPromptsArray.filter(p => 
+                p.title.toLowerCase().includes(query) || 
+                p.content.toLowerCase().includes(query)
+            );
+            
+            // Render filtered results
+            if (filtered.length === 0) {
+                savedPrompts.innerHTML = `
+                    <div class="text-center py-16">
+                        <i data-lucide="search-x" class="w-16 h-16 mx-auto mb-4 text-slate-300"></i>
+                        <p class="text-slate-400 text-lg font-medium">No prompts found</p>
+                    </div>
+                `;
+                lucide.createIcons();
+            } else {
+                const originalArray = savedPromptsArray;
+                savedPromptsArray = filtered;
+                renderSavedPrompts();
+                savedPromptsArray = originalArray;
+            }
+        });
+
+        // ========================================
+        // SORT FUNCTIONALITY
+        // ========================================
+        
+        let sortOrder = 'newest';
+        document.getElementById('sortBtn').addEventListener('click', () => {
+            sortOrder = sortOrder === 'newest' ? 'oldest' : sortOrder === 'oldest' ? 'quality' : 'newest';
+            
+            if (sortOrder === 'newest') {
+                savedPromptsArray.sort((a, b) => b.id - a.id);
+            } else if (sortOrder === 'oldest') {
+                savedPromptsArray.sort((a, b) => a.id - b.id);
+            } else {
+                savedPromptsArray.sort((a, b) => (b.quality || 0) - (a.quality || 0));
+            }
+            
+            renderSavedPrompts();
+            
+            const sortBtn = document.getElementById('sortBtn');
+            const labels = { newest: 'Newest First', oldest: 'Oldest First', quality: 'Best Quality' };
+            sortBtn.innerHTML = `<i data-lucide="arrow-down-up" class="w-4 h-4"></i> ${labels[sortOrder]}`;
+            lucide.createIcons();
+        });
+
+        // ========================================
+        // ANALYTICS
+        // ========================================
+        
+        function saveAnalytics() {
+            localStorage.setItem('opalAnalytics', JSON.stringify(analyticsData));
+        }
+
+        function updateStats() {
+            document.getElementById('totalPromptsCount').textContent = analyticsData.totalPrompts;
+            document.getElementById('thisWeekCount').textContent = analyticsData.thisWeek;
+            
+            if (analyticsData.qualityScores.length > 0) {
+                const avgQuality = Math.round(
+                    analyticsData.qualityScores.reduce((a, b) => a + b, 0) / analyticsData.qualityScores.length
+                );
+                document.getElementById('qualityScore').textContent = avgQuality + '%';
+            }
+        }
+
+        document.getElementById('analyticsBtn').addEventListener('click', () => {
+            // Update analytics modal data
+            document.getElementById('analyticsTotal').textContent = analyticsData.totalPrompts;
+            document.getElementById('analyticsMonth').textContent = analyticsData.thisMonth;
+            
+            if (analyticsData.qualityScores.length > 0) {
+                const avgQuality = Math.round(
+                    analyticsData.qualityScores.reduce((a, b) => a + b, 0) / analyticsData.qualityScores.length
+                );
+                document.getElementById('analyticsQuality').textContent = avgQuality + '%';
+            } else {
+                document.getElementById('analyticsQuality').textContent = 'N/A';
+            }
+            
+            document.getElementById('analyticsCategory').textContent = 'Custom';
+            
+            document.getElementById('analyticsModal').classList.add('active');
+        });
+
+        // ========================================
+        // MODAL CONTROLS
+        // ========================================
+        
+        modalCloses.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modals.forEach(modal => modal.classList.remove('active'));
+            });
+        });
+
+        modals.forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Help Modal
+        document.getElementById('helpBtn').addEventListener('click', () => {
+            document.getElementById('helpModal').classList.add('active');
+        });
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        
         renderSavedPrompts();
+        updateStats();
+        lucide.createIcons();
+
+        // Reset week/month counters (simplified - in production use proper date tracking)
+        setTimeout(() => {
+            analyticsData.thisWeek = 0;
+            saveAnalytics();
+        }, 7 * 24 * 60 * 60 * 1000); // Reset weekly
+
     </script>
 
 </body>
