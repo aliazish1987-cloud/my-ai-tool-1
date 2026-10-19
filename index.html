@@ -1,1464 +1,857 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Phone Check Pro — Certified Mobile QC & Anti-Scam Forensic Platform</title>
-  <style>
-    /* ==========================================================================
-       ENTERPRISE DESIGN SYSTEM & CSS VARIABLES (SLATE & SAPPHIRE)
-       ========================================================================== */
-    :root {
-      --bg-main: #0a0f1d;
-      --bg-card: #111827;
-      --bg-card-hover: #172033;
-      --bg-elevated: #1f293d;
-      --border-subtle: #243049;
-      --border-focus: #3b82f6;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Phone Check Pro — Enterprise QC Platform</title>
+<style>
+:root{
+  --bg:#0A0E1A; --bg2:#0D1220; --surface:#131A2B; --surface2:#1A2338;
+  --border:#232C42; --border-l:#2D3752;
+  --text:#F1F5F9; --dim:#94A3B8; --faint:#5B6782;
+  --primary:#6366F1; --primary-d:#4F46E5; --primary-l:#818CF8; --accent:#22D3EE;
+  --success:#10B981; --danger:#EF4444; --warning:#F59E0B;
+  --grad:linear-gradient(135deg,#6366F1 0%,#22D3EE 100%);
+  --radius:14px; --shadow:0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;min-height:100vh;padding-bottom:80px;}
+a{color:inherit;text-decoration:none;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:var(--border-l);border-radius:8px;}
 
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
+/* Topbar */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(10,14,26,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:14px 22px;}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.3px;}
+.brand .mark{width:30px;height:30px;border-radius:9px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 4px 14px rgba(99,102,241,.4);}
+.brand .pro{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.top-right{display:flex;gap:10px;align-items:center;}
+.shop-chip{background:var(--surface2);border:1px solid var(--border-l);padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--primary-l);}
+.lock-btn{background:var(--surface2);border:1px solid var(--border-l);color:var(--dim);padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;}
+.lock-btn:hover{color:var(--text);border-color:var(--primary);}
 
-      --brand-blue: #2563eb;
-      --brand-blue-hover: #1d4ed8;
-      --brand-cyan: #38bdf8;
+/* Layout */
+main{max-width:1000px;margin:0 auto;padding:26px 20px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:20px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.card-title{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.card-sub{color:var(--dim);font-size:12.5px;margin-top:2px;}
 
-      --status-pass: #10b981;
-      --status-pass-bg: rgba(16, 185, 129, 0.12);
-      --status-fail: #ef4444;
-      --status-fail-bg: rgba(239, 68, 68, 0.12);
-      --status-warn: #f59e0b;
-      --status-warn-bg: rgba(245, 158, 11, 0.12);
-      --status-na: #64748b;
-      --status-na-bg: rgba(100, 116, 139, 0.12);
+/* Form */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:680px){.grid2{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.field label{font-size:12.5px;font-weight:600;color:var(--dim);}
+.field input,.field select,.field textarea{background:var(--bg2);border:1px solid var(--border-l);color:var(--text);padding:11px 13px;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:.15s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.15);}
+.field input::placeholder{color:var(--faint);}
+.err{color:var(--danger);font-size:11.5px;margin-top:3px;display:none;}
 
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-    }
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 18px;border-radius:11px;font-weight:700;font-size:14px;cursor:pointer;border:none;transition:.15s;}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 6px 18px rgba(99,102,241,.35);width:100%;}
+.btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.btn-ghost{background:var(--surface2);border:1px solid var(--border-l);color:var(--text);}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary-l);}
+.btn-outline{background:transparent;border:1px solid var(--primary);color:var(--primary-l);padding:8px 14px;font-size:12.5px;}
+.btn-sm{padding:7px 12px;font-size:12px;}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-block{width:100%;}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg-main); color: var(--text-primary); line-height: 1.5; min-height: 100vh; padding-bottom: 85px; }
+/* Dashboard */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+@media(max-width:680px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
+.stat .n{font-size:26px;font-weight:800;}
+.stat .l{font-size:11.5px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:.4px;}
+.stat.g-a .n{color:var(--success);}
+.stat.g-x .n{color:var(--danger);}
+.stat.g-p .n{color:var(--accent);}
 
-    /* Layout Containers */
-    .app-shell { max-width: 1000px; margin: 0 auto; padding: 16px; }
+/* Nav bottom */
+.bottomnav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,18,32,.92);backdrop-filter:blur(14px);border-top:1px solid var(--border);display:flex;z-index:50;}
+.navbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 12px;color:var(--faint);cursor:pointer;font-size:11px;font-weight:600;}
+.navbtn.active{color:var(--primary-l);}
+.navbtn .ic{font-size:18px;}
 
-    /* Sticky Header */
-    header { background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; z-index: 50; padding: 12px 18px; }
-    .header-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-    .brand-mark { font-size: 1.25rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; }
-    .brand-mark span { color: var(--brand-cyan); }
-    .shop-badge-header { background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--brand-cyan); font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+/* Checklist */
+.cat-block{margin-bottom:18px;}
+.cat-header{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--border-l);border-radius:12px 12px 0 0;padding:13px 18px;cursor:pointer;}
+.cat-title{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:9px;}
+.cat-progress{font-size:11.5px;color:var(--dim);font-weight:600;}
+.cat-body{border:1px solid var(--border-l);border-top:none;border-radius:0 0 12px 12px;background:var(--surface);}
+.item-row{padding:16px 18px;border-bottom:1px solid var(--border);}
+.item-row:last-child{border-bottom:none;}
+.item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+.item-label{font-weight:650;font-size:13.5px;}
+.item-desc{color:var(--dim);font-size:12px;margin-top:4px;line-height:1.5;}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;margin-left:7px;letter-spacing:.3px;vertical-align:middle;}
+.tag-crit{background:rgba(239,68,68,.15);color:#FCA5A5;border:1px solid rgba(239,68,68,.35);}
+.tag-red{background:rgba(245,158,11,.14);color:#FCD34D;border:1px solid rgba(245,158,11,.3);}
+.seg{display:flex;gap:6px;flex-shrink:0;}
+.seg-btn{padding:7px 13px;border-radius:8px;font-size:11.5px;font-weight:700;background:var(--bg2);border:1px solid var(--border-l);color:var(--dim);cursor:pointer;}
+.seg-btn.pass.on{background:rgba(16,185,129,.18);border-color:var(--success);color:#6EE7B7;}
+.seg-btn.fail.on{background:rgba(239,68,68,.18);border-color:var(--danger);color:#FCA5A5;}
+.seg-btn.na.on{background:rgba(148,163,184,.18);border-color:var(--faint);color:var(--dim);}
+.item-extra{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center;}
+.item-extra textarea{flex:1;min-width:180px;background:var(--bg2);border:1px solid var(--border-l);border-radius:8px;color:var(--text);padding:8px 10px;font-size:12px;font-family:inherit;resize:vertical;min-height:34px;}
+.tool-btn{background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.4);color:var(--primary-l);padding:7px 12px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.photo-label{background:var(--surface2);border:1px solid var(--border-l);padding:7px 12px;border-radius:8px;font-size:11.5px;font-weight:600;cursor:pointer;color:var(--dim);}
+.photo-thumb{width:34px;height:34px;object-fit:cover;border-radius:6px;border:1px solid var(--border-l);}
 
-    /* Bottom Navigation */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-around; padding: 8px 0; z-index: 60; }
-    .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 6px 14px; border-radius: var(--radius-sm); transition: all 0.2s; }
-    .nav-btn.active { color: var(--brand-cyan); background: rgba(56, 189, 248, 0.1); }
-    .nav-btn span { font-size: 1.2rem; }
+/* Sticky summary bar */
+.sticky-bar{position:sticky;top:64px;z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;box-shadow:var(--shadow);}
+.sb-stats{display:flex;gap:18px;flex-wrap:wrap;}
+.sb-stat{font-size:12px;color:var(--dim);}
+.sb-stat b{color:var(--text);font-size:14px;}
 
-    /* Cards */
-    .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 22px; margin-bottom: 18px; box-shadow: var(--shadow-soft); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle); }
-    .card-title { font-size: 1.15rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; }
+/* Modal (tools) */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;}
+.modal-box{background:var(--surface);border:1px solid var(--border-l);border-radius:16px;padding:22px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.modal-box h3{margin-bottom:6px;font-size:16px;}
+.modal-box p{color:var(--dim);font-size:12.5px;margin-bottom:16px;}
+.pixel-flash{position:fixed;inset:0;z-index:200;cursor:pointer;}
+.grid-canvas-wrap{background:#000;border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.stopwatch-num{font-size:40px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums;color:var(--primary-l);margin:14px 0;}
 
-    /* Interactive Hardware Test Launcher Bar */
-    .diag-launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
-    @media (max-width: 640px) { .diag-launcher-grid { grid-template-columns: 1fr 1fr; } }
-    .diag-tool-card { background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; text-align: center; cursor: pointer; transition: transform 0.15s, border-color 0.2s; }
-    .diag-tool-card:hover { transform: translateY(-2px); border-color: var(--brand-cyan); }
-    .diag-tool-icon { font-size: 1.5rem; margin-bottom: 4px; }
-    .diag-tool-name { font-size: 0.8rem; font-weight: 700; color: #fff; }
-    .diag-tool-sub { font-size: 0.7rem; color: var(--text-muted); }
+/* Report */
+.hero-score{text-align:center;padding:30px 20px;border-radius:16px;margin-bottom:20px;background:var(--surface2);border:1px solid var(--border-l);}
+.hero-pct{font-size:52px;font-weight:900;line-height:1;}
+.grade-badge{display:inline-block;padding:6px 20px;border-radius:999px;font-weight:800;font-size:15px;margin-top:12px;}
+.grade-A{background:rgba(16,185,129,.18);color:#6EE7B7;border:1px solid var(--success);}
+.grade-B{background:rgba(34,211,238,.18);color:#67E8F9;border:1px solid var(--accent);}
+.grade-C{background:rgba(245,158,11,.18);color:#FCD34D;border:1px solid var(--warning);}
+.grade-D{background:rgba(249,115,22,.18);color:#FDBA74;border:1px solid #F97316;}
+.grade-F,.grade-X{background:rgba(239,68,68,.2);color:#FCA5A5;border:1px solid var(--danger);}
+.risk-banner{padding:16px 18px;border-radius:12px;margin-bottom:20px;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:10px;}
+.risk-critical{background:rgba(239,68,68,.15);border:1px solid var(--danger);color:#FCA5A5;}
+.risk-high{background:rgba(249,115,22,.15);border:1px solid #F97316;color:#FDBA74;}
+.risk-medium{background:rgba(245,158,11,.15);border:1px solid var(--warning);color:#FCD34D;}
+.risk-low{background:rgba(16,185,129,.15);border:1px solid var(--success);color:#6EE7B7;}
+.fail-item{background:var(--bg2);border-left:3px solid var(--danger);border-radius:8px;padding:12px 14px;margin-bottom:8px;}
+.fail-item .ft{font-weight:700;font-size:13px;}
+.fail-item .fd{color:var(--dim);font-size:12px;margin-top:3px;}
+.det-cat{font-weight:700;font-size:13.5px;margin:18px 0 8px;color:var(--primary-l);border-bottom:1px solid var(--border);padding-bottom:6px;}
+.det-row{display:flex;justify-content:space-between;padding:7px 0;font-size:12.5px;border-bottom:1px solid var(--border);}
+.det-pass{color:#6EE7B7;}
+.det-fail{color:#FCA5A5;}
+.det-na{color:var(--faint);}
 
-    /* Form Fields */
-    .form-group { margin-bottom: 14px; }
-    label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; }
-    input, select, textarea { width: 100%; background: var(--bg-main); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px 12px; color: var(--text-primary); font-size: 0.95rem; transition: border-color 0.2s, box-shadow 0.2s; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--brand-blue); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-    @media (max-width: 640px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+/* Dashboard history */
+.hist-row{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--bg2);cursor:pointer;}
+.hist-row:hover{border-color:var(--primary);}
+.hist-left b{font-size:13.5px;}
+.hist-left div{color:var(--dim);font-size:11.5px;margin-top:2px;}
 
-    /* Buttons */
-    .btn { background: var(--brand-blue); color: #fff; border: none; border-radius: var(--radius-sm); padding: 12px 18px; font-weight: 800; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s, transform 0.1s; }
-    .btn:hover { background: var(--brand-blue-hover); }
-    .btn:active { transform: scale(0.98); }
-    .btn-secondary { background: var(--bg-elevated); color: #fff; border: 1px solid var(--border-subtle); }
-    .btn-secondary:hover { background: #28354f; }
-    .btn-success { background: var(--status-pass); }
-    .btn-success:hover { background: #059669; }
-    .btn-danger { background: var(--status-fail); }
-    .btn-danger:hover { background: #dc2626; }
-    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
-    .btn-block { width: 100%; }
+/* PIN overlay */
+#pinOverlay{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+#pinOverlay input{width:200px;text-align:center;font-size:22px;letter-spacing:8px;padding:12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border-l);color:var(--text);}
 
-    /* Feedback Badges */
-    .val-msg { font-size: 0.8rem; margin-top: 4px; display: flex; align-items: center; gap: 4px; font-weight: 700; }
-    .val-pass { color: var(--status-pass); }
-    .val-fail { color: var(--status-fail); }
-    .val-warn { color: var(--status-warn); }
-
-    /* Checklist Groups */
-    .cat-group { margin-bottom: 20px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; }
-    .cat-header { background: var(--bg-elevated); padding: 12px 16px; font-weight: 800; font-size: 0.95rem; color: var(--brand-cyan); border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
-    .cat-body { padding: 12px; background: var(--bg-card); }
-    
-    .chk-item { background: var(--bg-main); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 10px; }
-    .chk-item:last-child { margin-bottom: 0; }
-    .chk-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-    .chk-title { font-weight: 700; font-size: 0.95rem; color: #fff; }
-    .pill { font-size: 0.68rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
-    .pill-crit { background: var(--status-fail-bg); color: var(--status-fail); border: 1px solid var(--status-fail); }
-    .pill-red { background: var(--status-warn-bg); color: var(--status-warn); border: 1px solid var(--status-warn); }
-    .chk-desc { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px; }
-
-    .toggle-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 8px; }
-    .t-btn { background: var(--bg-elevated); border: 1px solid var(--border-subtle); color: var(--text-muted); padding: 8px; font-weight: 800; font-size: 0.85rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 4px; transition: all 0.15s; }
-    .t-btn.active-pass { background: var(--status-pass); color: #fff; border-color: var(--status-pass); }
-    .t-btn.active-fail { background: var(--status-fail); color: #fff; border-color: var(--status-fail); }
-    .t-btn.active-na { background: var(--status-na); color: #fff; border-color: var(--status-na); }
-
-    .chk-bottom { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin-top: 8px; }
-    .thumb-prev { width: 34px; height: 34px; border-radius: 4px; border: 1px solid var(--border-subtle); object-fit: cover; cursor: pointer; display: none; }
-
-    /* Report Summary Card */
-    .report-hero { background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-card) 100%); border: 2px solid var(--brand-blue); border-radius: var(--radius-lg); padding: 24px; text-align: center; margin-bottom: 18px; }
-    .score-big { font-size: 3.5rem; font-weight: 900; line-height: 1; color: var(--brand-cyan); margin: 8px 0; }
-    .grade-badge { font-size: 1.15rem; font-weight: 900; padding: 6px 16px; border-radius: var(--radius-sm); display: inline-block; }
-    .grade-A { background: var(--status-pass-bg); color: var(--status-pass); border: 1px solid var(--status-pass); }
-    .grade-B { background: rgba(37, 99, 235, 0.2); color: var(--brand-cyan); border: 1px solid var(--brand-blue); }
-    .grade-C { background: var(--status-warn-bg); color: var(--status-warn); border: 1px solid var(--status-warn); }
-    .grade-X { background: var(--status-fail); color: #fff; font-weight: 900; }
-
-    .risk-box { padding: 14px; border-radius: var(--radius-md); margin-bottom: 18px; font-size: 0.9rem; }
-    .risk-crit { background: var(--status-fail-bg); border: 1px solid var(--status-fail); color: #fca5a5; }
-    .risk-med { background: var(--status-warn-bg); border: 1px solid var(--status-warn); color: #fcd34d; }
-    .risk-low { background: var(--status-pass-bg); border: 1px solid var(--status-pass); color: #86efac; }
-
-    .stats-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 18px; }
-    .stat-mini { background: var(--bg-main); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
-    .stat-val { font-size: 1.4rem; font-weight: 800; }
-    .stat-lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
-
-    .failed-card { background: rgba(239, 68, 68, 0.08); border-left: 4px solid var(--status-fail); padding: 10px 12px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-bottom: 8px; }
-    .failed-title { font-weight: 700; color: #fca5a5; font-size: 0.9rem; }
-    .failed-cat { font-size: 0.75rem; color: var(--text-muted); }
-    .failed-note { font-size: 0.85rem; color: #fff; margin-top: 2px; }
-
-    /* Modals & Fullscreen Test Overlays */
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
-    .modal-body { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); width: 100%; max-width: 440px; padding: 22px; text-align: center; }
-
-    /* Pixel Test Fullscreen Canvas */
-    #pixelTestOverlay { position: fixed; inset: 0; background: #ff0000; z-index: 2000; display: none; justify-content: center; align-items: center; cursor: pointer; color: rgba(255,255,255,0.7); font-weight: 800; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-
-    /* Touch Grid Canvas Container */
-    #touchGridModal .modal-body { max-width: 600px; padding: 14px; }
-    #touchCanvas { background: #000; border: 2px solid var(--border-subtle); border-radius: var(--radius-sm); touch-action: none; width: 100%; height: 320px; }
-
-    /* Toast Notification */
-    #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
-    .toast { background: var(--bg-elevated); color: #fff; border: 1px solid var(--border-subtle); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; box-shadow: var(--shadow-soft); transform: translateY(-10px); opacity: 0; transition: all 0.25s ease; pointer-events: auto; }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast-success { border-left: 4px solid var(--status-pass); }
-    .toast-error { border-left: 4px solid var(--status-fail); }
-    .toast-info { border-left: 4px solid var(--brand-cyan); }
-
-    /* ==========================================================================
-       OFFICIAL PDF / PRINT STYLESHEET
-       ========================================================================== */
-    @media print {
-      body { background: #fff !important; color: #000 !important; padding-bottom: 0 !important; }
-      header, .bottom-nav, .no-print, .btn, #toastContainer, .diag-launcher-grid { display: none !important; }
-      .app-shell { max-width: 100% !important; padding: 0 !important; }
-      .card { background: #fff !important; border: 1px solid #ccc !important; box-shadow: none !important; color: #000 !important; page-break-inside: avoid; margin-bottom: 12px !important; padding: 14px !important; }
-      .report-hero { background: #f8fafc !important; border-color: #000 !important; }
-      .score-big { color: #000 !important; }
-      .grade-badge { border-color: #000 !important; color: #000 !important; }
-      .stat-mini { background: #f8fafc !important; border-color: #ccc !important; }
-      .failed-card { background: #fee2e2 !important; border-left-color: #b91c1c !important; color: #7f1d1d !important; }
-      .failed-title { color: #991b1b !important; }
-      .failed-note { color: #000 !important; }
-      .cat-header { background: #e2e8f0 !important; color: #000 !important; }
-      .chk-item { background: #fff !important; border-color: #ddd !important; }
-      .chk-title { color: #000 !important; }
-    }
-  </style>
+@media print{
+  .topbar,.bottomnav,.sticky-bar,.no-print,.tool-btn,.photo-label,.seg,.btn{display:none !important;}
+  body{background:#fff;color:#000;padding:0;}
+  .card{box-shadow:none;border:1px solid #ccc;background:#fff;color:#000;}
+  main{max-width:100%;padding:10px;}
+  .hero-score,.risk-banner,.fail-item,.det-row{background:#f5f5f5 !important;color:#000 !important;border-color:#ccc !important;}
+}
+</style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="header-inner">
-      <div class="brand-mark" onclick="PCP.nav('dash')">
-        📱 Phone Check <span>PRO</span>
+<div id="pinOverlay" style="display:none;">
+  <div class="brand"><span class="mark">📱</span> Phone Check <span class="pro">PRO</span></div>
+  <div style="color:var(--dim);font-size:13px;">Enter PIN to unlock</div>
+  <input type="password" id="pinInput" maxlength="6" inputmode="numeric">
+  <div id="pinErr" style="color:var(--danger);font-size:12px;display:none;">Incorrect PIN</div>
+  <button class="btn btn-primary" style="width:200px;" onclick="PCP.unlock()">Unlock</button>
+</div>
+
+<div class="topbar">
+  <div class="brand"><span class="mark">📱</span> Phone Check <span class="pro">PRO</span></div>
+  <div class="top-right">
+    <span class="shop-chip" id="shopChip">Set Up Shop Profile</span>
+    <button class="lock-btn" onclick="PCP.lock()">🔒 Lock</button>
+  </div>
+</div>
+
+<main id="app"></main>
+
+<div class="bottomnav">
+  <div class="navbtn" data-v="dashboard" onclick="PCP.go('dashboard')"><span class="ic">📊</span>Dashboard</div>
+  <div class="navbtn" data-v="deviceid" onclick="PCP.go('deviceid')"><span class="ic">🔍</span>New QC Check</div>
+  <div class="navbtn" data-v="shop" onclick="PCP.go('shop')"><span class="ic">🏪</span>Shop Profile</div>
+</div>
+
+<div id="modalRoot"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ===================== CHECKLIST DATA ===================== */
+const CHECKLIST = [
+{id:'sec',title:'Critical Security & Account Locks',icon:'🔐',items:[
+ {id:'SEC_IMEI',label:'IMEI Blacklist Status',desc:'Verify IMEI is not reported lost, stolen, or blacklisted via carrier/GSMA database.',critical:true,red:true},
+ {id:'SEC_FRP',label:'Google FRP Lock (Factory Reset Protection)',desc:'Confirm Android FRP lock is cleared with no residual Google account lock.',critical:true,red:true},
+ {id:'SEC_ICLOUD',label:'iCloud / Find My iPhone Lock',desc:'Confirm Apple ID fully signed out, Find My disabled, no Activation Lock.',critical:true,red:true},
+ {id:'SEC_MDM',label:'MDM / Enterprise Supervision Lock',desc:'Check device is not enrolled in a corporate Mobile Device Management profile.',critical:true,red:true},
+ {id:'SEC_ROOT',label:'Root / Jailbreak Detection',desc:'Inspect for unauthorized root or jailbreak modification of the OS.',critical:false,red:true}
+]},
+{id:'for',title:'Tamper & Repair Forensics (Opened / Non-Genuine Parts)',icon:'🔎',items:[
+ {id:'FOR_SCREWS',label:'Screw Head Tamper Marks',desc:'Inspect internal screw heads for stripping/rotation marks indicating prior disassembly.',critical:false,red:true},
+ {id:'FOR_SEAMS',label:'Chassis Seam & Glue Seal Integrity',desc:'Check chassis seams and factory adhesive for gaps indicating the device was opened before.',critical:false,red:true},
+ {id:'FOR_SCREEN',label:'Screen Assembly Originality & Adhesive',desc:'Check screen adhesive freshness and bezel gap consistency for prior screen replacement.',critical:false,red:true},
+ {id:'FOR_BATTERY',label:'Battery Pull-Tab / Adhesive Seal',desc:'Check battery adhesive/pull-tab condition for signs of prior battery replacement.',critical:false,red:true},
+ {id:'FOR_GENUINE',label:'Genuine vs. Aftermarket Parts Cross-Check',desc:'Cross-check screen, battery & camera module serials against diagnostics to detect non-OEM / unofficial "market fitted" parts.',critical:false,red:true},
+ {id:'FOR_LCI',label:'Liquid Contact Indicator (Water Damage)',desc:'Check LCI stickers in SIM tray / charging port for a triggered (red/pink) water damage indicator.',critical:true,red:true}
+]},
+{id:'dsp',title:'Display & Touch Panel',icon:'📱',items:[
+ {id:'DSP_POWER',label:'Display Power-On & Backlight Uniformity',desc:'Confirm screen powers on with even backlight, no shadowing or discoloration.',critical:false,red:false},
+ {id:'DSP_PIXELS',label:'Dead / Stuck Pixel Test',desc:'Run full-screen color cycle to detect dead, stuck, or discolored pixels.',critical:false,red:false,tool:'pixel'},
+ {id:'DSP_GRID',label:'Touch Digitizer Grid Response',desc:'Run the multi-zone touch grid to confirm full digitizer responsiveness with no dead zones.',critical:false,red:false,tool:'grid'},
+ {id:'DSP_BURNIN',label:'OLED Burn-In / Ghosting Check',desc:'Check for permanent image retention or burn-in on a full grey/white screen.',critical:false,red:true},
+ {id:'DSP_GLASS',label:'Glass Surface Cracks / Scratches',desc:'Inspect front glass for cracks, chips, or deep scratches affecting visibility.',critical:false,red:false}
+]},
+{id:'aud',title:'Audio System (Speaker, Receiver, Microphones)',icon:'🔊',items:[
+ {id:'AUD_EARPIECE',label:'Earpiece / Call Receiver + Distortion Test',desc:'Play tone through earpiece at max volume; confirm clear audio with no crackle, rattle or distortion.',critical:false,red:false,tool:'tone'},
+ {id:'AUD_LOUD',label:'Loudspeaker + Distortion Test',desc:'Play 1kHz tone through main loudspeaker at full volume; confirm no rattling, muffling or distortion.',critical:false,red:false,tool:'tone'},
+ {id:'AUD_MIC_PRI',label:'Primary Microphone & Voice Clarity',desc:'Record a voice memo; confirm clear pickup with no muffling, clipping, or distortion.',critical:false,red:false},
+ {id:'AUD_MIC_SEC',label:'Secondary / Noise-Cancelling Microphone',desc:'Test secondary mic (top/back) used for call noise cancellation.',critical:false,red:false}
+]},
+{id:'cam',title:'Camera System',icon:'📷',items:[
+ {id:'CAM_REAR',label:'Rear Primary Camera — Focus & Clarity',desc:'Capture a test photo; confirm correct autofocus, clarity, and color accuracy.',critical:false,red:false},
+ {id:'CAM_OIS',label:'Optical Image Stabilization (OIS)',desc:'Check stabilization function and absence of unusual rattle from the OIS module.',critical:false,red:false},
+ {id:'CAM_SEC',label:'Secondary Lenses (Ultra-Wide / Telephoto / Macro)',desc:'Test all secondary rear lenses for focus, clarity, and switching function.',critical:false,red:false},
+ {id:'CAM_FRONT',label:'Front / Selfie Camera',desc:'Capture a test photo via front camera; confirm clarity and correct exposure.',critical:false,red:false},
+ {id:'CAM_FLASH',label:'LED Flash / Flashlight Function',desc:'Confirm camera flash fires correctly and flashlight toggle works.',critical:false,red:false}
+]},
+{id:'sns',title:'Sensors & Biometrics',icon:'🧿',items:[
+ {id:'SNS_PROX',label:'Proximity Sensor',desc:'Confirm screen blanks during calls when held near ear and relights when moved away.',critical:false,red:false},
+ {id:'SNS_FINGER',label:'Fingerprint Sensor Enrollment & Unlock',desc:'Enroll a test fingerprint and confirm consistent, fast unlock recognition.',critical:false,red:false},
+ {id:'SNS_FACE',label:'Face Recognition / Depth Sensor',desc:'Enroll and test facial unlock; a failed/disabled array may indicate prior repair damage.',critical:false,red:true},
+ {id:'SNS_ACCEL',label:'Accelerometer / Gyroscope',desc:'Confirm screen auto-rotation and motion-based functions respond correctly.',critical:false,red:false}
+]},
+{id:'net',title:'Connectivity & Signal',icon:'📶',items:[
+ {id:'NET_CELL',label:'Cellular Network / Signal Strength',desc:'Insert active SIM; confirm stable signal bars and successful call/data connection.',critical:false,red:true},
+ {id:'NET_SIM',label:'SIM Card Tray & Reader',desc:'Test SIM tray ejector mechanism and confirm reliable SIM card detection.',critical:false,red:false},
+ {id:'NET_SD',label:'MicroSD / Memory Card Slot',desc:'If supported, test card insertion, detection, and read/write. Mark N/A if device has no card slot.',critical:false,red:false,naAllowed:true},
+ {id:'NET_WIFI',label:'Wi-Fi Connectivity & Signal Strength',desc:'Connect to 2.4GHz & 5GHz networks; confirm stable connection and strong signal at distance.',critical:false,red:false},
+ {id:'NET_BT',label:'Bluetooth Pairing & Audio Streaming',desc:'Pair with a Bluetooth accessory and confirm stable streaming without dropouts.',critical:false,red:false},
+ {id:'NET_GPS',label:'GPS Location Lock',desc:'Confirm device acquires accurate GPS location lock outdoors within reasonable time.',critical:false,red:false},
+ {id:'NET_NFC',label:'NFC Read / Write',desc:'Test NFC tap function (payment or tag read) to confirm the chip is operational.',critical:false,red:false}
+]},
+{id:'btn',title:'Buttons & Physical Controls',icon:'🔘',items:[
+ {id:'BTN_PWR',label:'Power / Sleep Button',desc:'Confirm power button responds consistently with no sticking or double-press issue.',critical:false,red:false},
+ {id:'BTN_VOL',label:'Volume Up / Down Buttons',desc:'Confirm both volume buttons register presses reliably.',critical:false,red:false},
+ {id:'BTN_MUTE',label:'Side Keys / Mute-Silent Switch',desc:'Confirm mute switch / action button toggles correctly and feels mechanically sound.',critical:false,red:false}
+]},
+{id:'bat',title:'Battery & Charging',icon:'🔋',items:[
+ {id:'BAT_HEALTH',label:'Battery Health (≥80% Required)',desc:'Check battery health % in diagnostics; below 80% must be disclosed to the buyer.',critical:false,red:true},
+ {id:'BAT_PORT',label:'Charging Port — Physical & Connection',desc:'Inspect port for debris/corrosion/bent pins; confirm secure cable connection.',critical:false,red:false},
+ {id:'BAT_FAST',label:'Fast Charging Function',desc:'Confirm device accepts rated fast-charging wattage with a compatible charger.',critical:false,red:false},
+ {id:'BAT_DATA',label:'USB Data Transfer Function',desc:'Confirm cable/port also passes data when connected to a computer.',critical:false,red:false},
+ {id:'BAT_WIRELESS',label:'Wireless Charging (If Supported)',desc:'Confirm wireless coil engages correctly on a Qi charging pad.',critical:false,red:false,naAllowed:true}
+]},
+{id:'prf',title:'Performance & Thermal Stability',icon:'🌡️',items:[
+ {id:'PRF_HEAT',label:'Overheating / Thermal Stress Test',desc:'Run camera 4K recording or a graphics-heavy app for 10 minutes; device should not become uncomfortably hot or throttle excessively.',critical:false,red:true,tool:'stopwatch'},
+ {id:'PRF_LAG',label:'System Lag / Freeze / Hang Test',desc:'Rapidly multitask across 5+ apps and scroll heavy content; confirm no freezing, force-closes, or unresponsive hangs.',critical:false,red:true,tool:'stopwatch'},
+ {id:'PRF_BENCH',label:'General Responsiveness & App Launch Speed',desc:'Confirm apps open and animations run smoothly without stutter versus expected device spec.',critical:false,red:false}
+]},
+{id:'vib',title:'Haptics & Vibration',icon:'📳',items:[
+ {id:'VIB_MOTOR',label:'Vibration Motor / Haptic Engine',desc:'Trigger vibration test; confirm strong, consistent haptic feedback with no rattling buzz.',critical:false,red:false,tool:'vibrate'}
+]},
+{id:'chs',title:'Chassis & Cosmetic Condition',icon:'🧱',items:[
+ {id:'CHS_BEND',label:'Frame Bend / Structural Warping',desc:'Check chassis frame for bending, warping, or twisting under light pressure.',critical:false,red:true},
+ {id:'CHS_REAR',label:'Rear Panel / Back Glass Condition',desc:'Inspect rear panel for cracks, discoloration, or adhesive lifting.',critical:false,red:false},
+ {id:'CHS_LENS',label:'Camera Lens Glass Condition',desc:'Inspect camera lens covers for cracks or deep scratches affecting image quality.',critical:false,red:false}
+]},
+{id:'fin',title:'Ownership & Financial Verification',icon:'💳',items:[
+ {id:'FIN_LEASE',label:'Active Installment / EMI Finance Lock',desc:'Verify via carrier/retailer records the device is not under an active, unpaid installment or lease plan.',critical:true,red:true},
+ {id:'FIN_CARRIER',label:'Carrier-Lock Status',desc:'Confirm whether device is carrier-locked vs factory unlocked, matching buyer expectation.',critical:false,red:true}
+]},
+{id:'new',title:'Sealed / New Device Authenticity',icon:'📦',items:[
+ {id:'NEW_IMEI_MATCH',label:'IMEI Triple-Match (Box / Tray / Device)',desc:'Confirm IMEI printed on retail box, SIM tray, and in-device settings all match exactly.',critical:true,red:true},
+ {id:'NEW_CYCLES',label:'Battery Cycle Count / Activation Date Consistency',desc:'For devices claimed "sealed/new", confirm battery cycle count and activation date are consistent with an unused device.',critical:false,red:true}
+]}
+];
+const ALL_ITEMS = CHECKLIST.flatMap(c=>c.items.map(i=>({...i,cat:c.id,catTitle:c.title})));
+
+/* ===================== STATE ===================== */
+const CFG_KEY='pcp_gh_cfg', HIST_KEY='pcp_gh_hist', DRAFT_KEY='pcp_gh_draft';
+let S={cfg:null, hist:[], draft:null, view:'dashboard', toolOpen:null};
+
+function loadAll(){
+  try{S.cfg=JSON.parse(localStorage.getItem(CFG_KEY))||null;}catch(e){S.cfg=null;}
+  try{S.hist=JSON.parse(localStorage.getItem(HIST_KEY))||[];}catch(e){S.hist=[];}
+  try{S.draft=JSON.parse(localStorage.getItem(DRAFT_KEY))||null;}catch(e){S.draft=null;}
+}
+function saveCfg(){localStorage.setItem(CFG_KEY,JSON.stringify(S.cfg));}
+function saveHist(){localStorage.setItem(HIST_KEY,JSON.stringify(S.hist));}
+function saveDraft(){localStorage.setItem(DRAFT_KEY,JSON.stringify(S.draft));}
+function clearDraft(){S.draft=null;localStorage.removeItem(DRAFT_KEY);}
+
+function newDraft(){
+  return {id:'RPT-'+Date.now(), createdAt:new Date().toISOString(), device:{}, results:{}, finalized:false};
+}
+
+/* ===================== HELPERS ===================== */
+function esc(s){return (s||'').toString().replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function luhnIMEI(imei){
+  const d=(imei||'').replace(/\D/g,'');
+  if(d.length!==15) return false;
+  let sum=0;
+  for(let i=0;i<15;i++){
+    let n=parseInt(d[i],10);
+    if((i%2)===1){ n*=2; if(n>9) n-=9; }
+    sum+=n;
+  }
+  return sum%10===0;
+}
+function storageAnomaly(stated,detected){
+  if(!stated||!detected) return null;
+  const ratio=detected/stated;
+  if(ratio<0.70) return {level:'severe',msg:'⚠ Severe mismatch — possible counterfeit/fake storage chip.'};
+  if(ratio>1.05) return {level:'impossible',msg:'⚠ Detected capacity exceeds stated — data inconsistency.'};
+  if(ratio<0.85) return {level:'mild',msg:'Note: some capacity loss is normal (OS/system reserved space).'};
+  return {level:'normal',msg:'Storage capacity within normal range.'};
+}
+function grade(pct,criticalFail){
+  if(criticalFail) return 'X';
+  if(pct>=95) return 'A';
+  if(pct>=85) return 'B';
+  if(pct>=70) return 'C';
+  if(pct>=50) return 'D';
+  return 'F';
+}
+const GRADE_LABEL={A:'Excellent — Like New',B:'Very Good — Minor Issues',C:'Good — Notable Issues',D:'Fair — Needs Disclosure',F:'Poor — Significant Faults',X:'CRITICAL FAIL — Override'};
+
+function computeSummary(draft){
+  let pass=0,fail=0,na=0,total=0;
+  let criticalFails=[], redFlags=[];
+  ALL_ITEMS.forEach(it=>{
+    const r=draft.results[it.id];
+    if(!r || !r.status) return;
+    total++;
+    if(r.status==='pass') pass++;
+    else if(r.status==='na') na++;
+    else if(r.status==='fail'){
+      fail++;
+      if(it.critical) criticalFails.push(it);
+      if(it.red) redFlags.push(it);
+    }
+  });
+  const scored=pass+fail;
+  const pct=scored>0?Math.round((pass/scored)*100):0;
+  const critical=criticalFails.length>0;
+  const g=grade(pct,critical);
+  let risk='low';
+  if(critical) risk='critical';
+  else if(redFlags.length>=2) risk='high';
+  else if(redFlags.length===1) risk='medium';
+  return {pass,fail,na,total,pct,grade:g,criticalFails,redFlags,risk};
+}
+
+/* ===================== RENDER ROOT ===================== */
+function render(){
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.v===S.view || (S.view==='checklist'&&b.dataset.v==='deviceid') || (S.view==='report'&&b.dataset.v==='deviceid')));
+  document.getElementById('shopChip').textContent = S.cfg? (S.cfg.name||'Shop Profile') : 'Set Up Shop Profile';
+  const app=document.getElementById('app');
+  if(S.view==='dashboard') app.innerHTML=renderDashboard();
+  else if(S.view==='shop') app.innerHTML=renderShop();
+  else if(S.view==='deviceid') app.innerHTML=renderDeviceId();
+  else if(S.view==='checklist') app.innerHTML=renderChecklist();
+  else if(S.view==='report') app.innerHTML=renderReport();
+}
+
+/* ===================== DASHBOARD ===================== */
+function renderDashboard(){
+  const total=S.hist.length;
+  const gA=S.hist.filter(h=>h.summary.grade==='A').length;
+  const gX=S.hist.filter(h=>h.summary.grade==='X').length;
+  const passRate= total>0? Math.round(S.hist.reduce((a,h)=>a+h.summary.pct,0)/total):0;
+  let rows = S.hist.slice().reverse().map(h=>`
+    <div class="hist-row" onclick="PCP.viewHistory('${h.id}')">
+      <div class="hist-left">
+        <b>${esc(h.device.brand||'')} ${esc(h.device.model||'')}</b>
+        <div>IMEI: ${esc(h.device.imei||'—')} · ${new Date(h.createdAt).toLocaleString()}</div>
       </div>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <div id="shopHeaderName" class="shop-badge-header">QuickFix Lab</div>
-        <button class="btn btn-secondary btn-sm no-print" onclick="PCP.lockApp()">🔒 Lock</button>
-      </div>
-    </div>
-  </header>
+      <div class="grade-badge grade-${h.summary.grade}">${h.summary.grade} · ${h.summary.pct}%</div>
+    </div>`).join('') || `<div style="color:var(--dim);padding:20px;text-align:center;">No reports yet. Start your first QC check →</div>`;
 
-  <main class="app-shell">
-
-    <!-- ==========================================================================
-         VIEW 1: DASHBOARD & ACTIVE DIAGNOSTICS LAUNCHER
-         ========================================================================== -->
-    <div id="view-dash" class="view-panel" style="display: none;">
-      
-      <!-- Banner -->
-      <div class="card" style="background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); border-color: #3b82f6;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-          <div>
-            <h2 style="font-size: 1.35rem; font-weight: 900; color: #fff;">Certified Hardware QC & Anti-Scam Platform</h2>
-            <p style="color: #bfdbfe; font-size: 0.85rem; margin-top: 4px;">14-Category Physical & Firmware Diagnostic Lab</p>
-          </div>
-          <button class="btn btn-success" onclick="PCP.nav('device')">+ Start New Inspection</button>
-        </div>
-      </div>
-
-      <!-- Quick Interactive Diagnostic Tools Launcher -->
-      <div class="card" style="padding: 16px;">
-        <div class="card-title" style="margin-bottom: 12px; font-size: 1rem;">
-          ⚡ Built-in Interactive Web Diagnostics
-        </div>
-        <div class="diag-launcher-grid">
-          <div class="diag-tool-card" onclick="PCP.launchPixelTest()">
-            <div class="diag-tool-icon">📺</div>
-            <div class="diag-tool-name">Dead Pixel Test</div>
-            <div class="diag-tool-sub">RGB Fullscreen Flasher</div>
-          </div>
-          <div class="diag-tool-card" onclick="PCP.launchTouchTest()">
-            <div class="diag-tool-icon">✋</div>
-            <div class="diag-tool-name">Touch Digitizer Grid</div>
-            <div class="diag-tool-sub">Screen Deadzone Canvas</div>
-          </div>
-          <div class="diag-tool-card" onclick="PCP.playAudioTone()">
-            <div class="diag-tool-icon">🔊</div>
-            <div class="diag-tool-name">Speaker Freq Sweep</div>
-            <div class="diag-tool-sub">1kHz Acoustic Sine Wave</div>
-          </div>
-          <div class="diag-tool-card" onclick="PCP.triggerVibrate()">
-            <div class="diag-tool-icon">📳</div>
-            <div class="diag-tool-name">Haptic Vibe Check</div>
-            <div class="diag-tool-sub">Taptic Motor Pulse</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Metrics Row -->
-      <div class="stats-4">
-        <div class="stat-mini">
-          <div class="stat-val" id="metTotal">0</div>
-          <div class="stat-lbl">Total Checks</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-val" style="color: var(--status-pass);" id="metGradeA">0</div>
-          <div class="stat-lbl">Grade A Passed</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-val" style="color: var(--status-fail);" id="metGradeX">0</div>
-          <div class="stat-lbl">Critical Fails</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-val" style="color: var(--brand-cyan);" id="metPassRate">100%</div>
-          <div class="stat-lbl">Pass Rate</div>
-        </div>
-      </div>
-
-      <!-- Inspection Records Table -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">📜 Historical Inspection Certificates</div>
-          <div style="display: flex; gap: 8px;">
-            <input type="text" id="histSearch" placeholder="Search IMEI / Model..." style="width: 180px; padding: 6px 10px; font-size: 0.85rem;" oninput="PCP.renderHistory()" />
-            <button class="btn btn-secondary btn-sm" onclick="PCP.triggerJsonImport()">📥 Import</button>
-            <input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="PCP.handleJsonFile(event)" />
-          </div>
-        </div>
-        <div id="histContainer"></div>
-      </div>
-
-    </div>
-
-    <!-- ==========================================================================
-         VIEW 2: SHOP PROFILE SETUP
-         ========================================================================== -->
-    <div id="view-setup" class="view-panel" style="display: none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">🏢 Certified Shop Profile & PDF Branding</div>
-        </div>
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">
-          These company credentials and legal terms will be locked into the header and signature line of every official inspection certificate.
-        </p>
-
-        <div class="form-group">
-          <label>Company / Diagnostic Shop Name *</label>
-          <input type="text" id="cfgName" placeholder="e.g. Apex Mobile Lab & Diagnostics" />
-        </div>
-
-        <div class="form-group">
-          <label>Facility Address *</label>
-          <input type="text" id="cfgAddr" placeholder="e.g. 742 Tech District, Suite 100" />
-        </div>
-
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Customer Support Hotline *</label>
-            <input type="text" id="cfgPhone" placeholder="e.g. +1 (555) 019-2834" />
-          </div>
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" id="cfgEmail" placeholder="e.g. verify@apexmobilelab.com" />
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Session PIN Lock (4-6 digits)</label>
-            <input type="password" id="cfgPin" placeholder="e.g. 1234" maxlength="6" />
-          </div>
-          <div class="form-group">
-            <label>Certificate ID Prefix</label>
-            <input type="text" id="cfgPfx" placeholder="PCP" maxlength="6" value="PCP" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Legal Inspection Disclaimer & Warranty Terms</label>
-          <textarea id="cfgDisc" rows="3">This certified quality inspection reflects the physical, electronic, and forensic state of the mobile device strictly at the recorded date and time. The testing laboratory is not liable for latent hardware defects, software account locks, or physical damage incurred subsequent to this audit.</textarea>
-        </div>
-
-        <button class="btn btn-block btn-success" onclick="PCP.saveConfig()">💾 Save Shop Profile & Return</button>
-      </div>
-    </div>
-
-    <!-- ==========================================================================
-         VIEW 3: STEP 1 - DEVICE IDENTIFICATION
-         ========================================================================== -->
-    <div id="view-device" class="view-panel" style="display: none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">🔍 Step 1: Device Fingerprinting & IMEI Binding</div>
-          <!-- One-Click Demo Mode for Instant Presentations -->
-          <button class="btn btn-secondary btn-sm" onclick="PCP.loadDemoData()" style="border-color: var(--brand-cyan); color: var(--brand-cyan);">
-            ⚡ Quick Demo Fill
-          </button>
-        </div>
-
-        <div class="form-group">
-          <label>Inspection Context *</label>
-          <select id="devContext">
-            <option>Pre-Purchase Inspection (Used / Secondary Market)</option>
-            <option>Post-Repair Quality Assurance Check (Return to Customer)</option>
-            <option>Trade-In & Buyback Valuation Check</option>
-            <option>Warranty Claim Assessment</option>
-            <option>Stock Inventory Grading</option>
-          </select>
-        </div>
-
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Brand / Manufacturer *</label>
-            <input type="text" id="devBrand" placeholder="e.g. Apple, Samsung, Google" />
-          </div>
-          <div class="form-group">
-            <label>Marketing Model Name *</label>
-            <input type="text" id="devModel" placeholder="e.g. iPhone 14 Pro Max" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Primary IMEI (15 Digits) *</label>
-          <input type="text" id="devImei" maxlength="15" placeholder="Enter 15-digit IMEI" oninput="PCP.handleImeiInput()" />
-          <div id="imeiFeedback" class="val-msg"></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Serial Number (Settings / Tray) *</label>
-            <input type="text" id="devSerial" placeholder="e.g. F2LDC012N6T4" style="text-transform: uppercase;" />
-          </div>
-          <div class="form-group">
-            <label>Hardware SKU Code (Optional)</label>
-            <input type="text" id="devSku" placeholder="e.g. A2894, SM-S918B" />
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Stated Storage (GB) *</label>
-            <select id="devStatedStorage" onchange="PCP.handleStorageCheck()">
-              <option value="64">64 GB</option>
-              <option value="128" selected>128 GB</option>
-              <option value="256">256 GB</option>
-              <option value="512">512 GB</option>
-              <option value="1024">1 TB (1024 GB)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Detected Total Capacity in OS (GB) *</label>
-            <input type="number" id="devDetectedStorage" placeholder="Total seen in Settings" oninput="PCP.handleStorageCheck()" />
-          </div>
-        </div>
-        <div id="storageFeedback" class="val-msg" style="margin-bottom: 14px;"></div>
-
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Chassis Color & Finish *</label>
-            <input type="text" id="devColor" placeholder="e.g. Space Black, Deep Purple" />
-          </div>
-          <div class="form-group">
-            <label>Lead Inspector *</label>
-            <input type="text" id="devTech" placeholder="e.g. Alex Vance (Tech #04)" />
-          </div>
-        </div>
-
-        <button class="btn btn-block btn-primary" onclick="PCP.proceedToChecklist()">
-          Proceed to 14-Category Diagnostic Checklist ➔
-        </button>
-      </div>
-    </div>
-
-    <!-- ==========================================================================
-         VIEW 4: STEP 2 - CHECKLIST ENGINE
-         ========================================================================== -->
-    <div id="view-checklist" class="view-panel" style="display: none;">
-      
-      <!-- Sticky Summary Header -->
-      <div class="card" style="padding: 12px; margin-bottom: 14px; position: sticky; top: 60px; z-index: 40; background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(10px);">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <div>
-            <div style="font-weight: 800; font-size: 0.95rem;" id="chkDevTitle">iPhone 14 Pro Max (128GB)</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);" id="chkDevMeta">IMEI: 358241092837465</div>
-          </div>
-          <div style="display: flex; gap: 6px;">
-            <button class="btn btn-secondary btn-sm" onclick="PCP.bulkPassAll()">✓ Pass All Remaining</button>
-            <button class="btn btn-success btn-sm" onclick="PCP.finalizeReport()">📊 Finalize Report</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Checklist Items Container -->
-      <div id="checklistRoot"></div>
-
-      <button class="btn btn-block btn-success" style="margin-top: 20px; padding: 16px;" onclick="PCP.finalizeReport()">
-        ✓ Finalize & Generate Certified Audit Certificate
-      </button>
-    </div>
-
-    <!-- ==========================================================================
-         VIEW 5: STEP 3 - OFFICIAL REPORT & CERTIFICATE
-         ========================================================================== -->
-    <div id="view-report" class="view-panel" style="display: none;">
-      <div class="card">
-        
-        <!-- Action Buttons -->
-        <div class="no-print" style="display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;">
-          <button class="btn btn-secondary" onclick="window.print()">🖨️ Print / Save Official PDF</button>
-          <button class="btn btn-secondary" onclick="PCP.exportJson()">💾 Export JSON</button>
-          <button class="btn btn-primary" onclick="PCP.nav('device')">+ New Inspection</button>
-          <button class="btn btn-secondary" onclick="PCP.nav('dash')">📜 All Records</button>
-        </div>
-
-        <!-- Official Header -->
-        <div style="border-bottom: 2px solid var(--border-subtle); padding-bottom: 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: flex-start;">
-          <div>
-            <h1 id="repShopName" style="color: var(--brand-cyan); font-size: 1.4rem; font-weight: 900;">Apex Mobile Lab</h1>
-            <div id="repShopAddress" style="font-size: 0.85rem; color: var(--text-secondary);">742 Tech District</div>
-            <div id="repShopContact" style="font-size: 0.85rem; color: var(--text-secondary);">Phone: +1 555-019-2834</div>
-          </div>
-          <div style="text-align: right;">
-            <div style="font-weight: 900; font-size: 0.95rem; color: #fff;" id="repReportId">#PCP-20241024-001</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted);" id="repTimestamp">2024-10-24 14:32 UTC</div>
-            <span style="background: var(--status-pass-bg); color: var(--status-pass); border: 1px solid var(--status-pass); font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">CRYPTOGRAPHICALLY VERIFIED</span>
-          </div>
-        </div>
-
-        <!-- Device Specs Grid -->
-        <div style="background: var(--bg-main); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; margin-bottom: 18px; font-size: 0.85rem;">
-          <div class="grid-3">
-            <div><strong style="color: var(--text-muted);">Device:</strong> <span id="repDevName" style="color: #fff; font-weight: 700;">Apple iPhone 14 Pro Max</span></div>
-            <div><strong style="color: var(--text-muted);">IMEI:</strong> <span id="repImei" style="color: #fff; font-weight: 700;">358241092837465</span></div>
-            <div><strong style="color: var(--text-muted);">Serial:</strong> <span id="repSerial" style="color: #fff; font-weight: 700;">F2LDC012N6T4</span></div>
-            <div><strong style="color: var(--text-muted);">Storage:</strong> <span id="repStorage" style="color: #fff; font-weight: 700;">128 GB</span></div>
-            <div><strong style="color: var(--text-muted);">Inspection:</strong> <span id="repContext" style="color: #fff; font-weight: 700;">Pre-Purchase QC</span></div>
-            <div><strong style="color: var(--text-muted);">Inspector:</strong> <span id="repTech" style="color: #fff; font-weight: 700;">Alex Vance</span></div>
-          </div>
-        </div>
-
-        <!-- Score & Certified Grade Display -->
-        <div class="report-hero">
-          <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary);">
-            Certified Quality Assurance Score
-          </div>
-          <div class="score-big" id="repScorePercent">92.4%</div>
-          <div id="repGradeBadge" class="grade-badge grade-A">GRADE A — EXCELLENT</div>
-        </div>
-
-        <!-- Anti-Scam / Buyer Risk Verdict Banner -->
-        <div id="repRiskBanner" class="risk-box risk-med">
-          <strong id="repRiskTitle" style="font-size: 0.95rem; display: block; margin-bottom: 2px;">⚠ BUYER RISK VERDICT: MEDIUM RISK</strong>
-          <p id="repRiskDesc" style="font-size: 0.85rem;">Device passed technical checks but shows 1 forensic red flag regarding component originality.</p>
-        </div>
-
-        <!-- Quantitative Counters -->
-        <div class="stats-4">
-          <div class="stat-mini"><div class="stat-val" id="repStatTotal">68</div><div class="stat-lbl">TOTAL</div></div>
-          <div class="stat-mini"><div class="stat-val" style="color: var(--status-pass);" id="repStatPass">62</div><div class="stat-lbl">PASSED</div></div>
-          <div class="stat-mini"><div class="stat-val" style="color: var(--status-fail);" id="repStatFail">6</div><div class="stat-lbl">FAILED</div></div>
-          <div class="stat-mini"><div class="stat-val" style="color: var(--status-na);" id="repStatNa">0</div><div class="stat-lbl">N/A</div></div>
-        </div>
-
-        <!-- FAILED TESTS SUMMARY -->
-        <div style="margin-bottom: 20px;">
-          <h3 style="color: #f87171; font-size: 1.05rem; font-weight: 800; margin-bottom: 10px;">
-            ⚠ Failed Hardware & Forensic Exceptions Summary
-          </h3>
-          <div id="repFailedContainer"></div>
-        </div>
-
-        <!-- Signature & Legal Footer -->
-        <div style="border-top: 1px solid var(--border-subtle); padding-top: 14px; margin-top: 18px; font-size: 0.75rem; color: var(--text-muted);">
-          <p id="repDisclaimer"></p>
-          <div style="margin-top: 24px; display: flex; justify-content: space-between; gap: 20px;">
-            <div style="border-top: 1px solid var(--border-subtle); width: 200px; padding-top: 4px; text-align: center;">Lead Technician Signature</div>
-            <div style="border-top: 1px solid var(--border-subtle); width: 200px; padding-top: 4px; text-align: center;">Customer / Buyer Acknowledgment</div>
-          </div>
-        </div>
-
+  return `
+  <div class="stat-grid">
+    <div class="stat"><div class="n">${total}</div><div class="l">Total Checks</div></div>
+    <div class="stat g-a"><div class="n">${gA}</div><div class="l">Grade A Devices</div></div>
+    <div class="stat g-x"><div class="n">${gX}</div><div class="l">Critical Fails</div></div>
+    <div class="stat g-p"><div class="n">${passRate}%</div><div class="l">Avg Pass Rate</div></div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">📁 Inspection History</div><div class="card-sub">Search or re-open any past report</div></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="PCP.exportJSON()">⬇ Export</button>
+        <label class="btn btn-outline" style="cursor:pointer;">⬆ Import<input type="file" accept="application/json" style="display:none" onchange="PCP.importJSON(this)"></label>
       </div>
     </div>
+    <input class="field-search" placeholder="Search by IMEI, model, or report ID..." oninput="PCP.filterHist(this.value)" style="width:100%;background:var(--bg2);border:1px solid var(--border-l);color:var(--text);padding:11px 13px;border-radius:10px;margin-bottom:14px;">
+    <div id="histList">${rows}</div>
+  </div>`;
+}
+window.PCP=window.PCP||{};
+PCP.filterHist=function(q){
+  q=q.toLowerCase();
+  const filtered=S.hist.filter(h=> (h.device.brand||'').toLowerCase().includes(q) || (h.device.model||'').toLowerCase().includes(q) || (h.device.imei||'').includes(q) || h.id.toLowerCase().includes(q));
+  document.getElementById('histList').innerHTML = filtered.slice().reverse().map(h=>`
+    <div class="hist-row" onclick="PCP.viewHistory('${h.id}')">
+      <div class="hist-left"><b>${esc(h.device.brand||'')} ${esc(h.device.model||'')}</b><div>IMEI: ${esc(h.device.imei||'—')} · ${new Date(h.createdAt).toLocaleString()}</div></div>
+      <div class="grade-badge grade-${h.summary.grade}">${h.summary.grade} · ${h.summary.pct}%</div>
+    </div>`).join('') || `<div style="color:var(--dim);padding:20px;text-align:center;">No matches.</div>`;
+};
+PCP.viewHistory=function(id){
+  const h=S.hist.find(x=>x.id===id); if(!h) return;
+  S.draft=JSON.parse(JSON.stringify(h));
+  S.view='report'; render();
+};
 
-  </main>
+/* ===================== SHOP PROFILE ===================== */
+function renderShop(){
+  const c=S.cfg||{};
+  return `
+  <div class="card">
+    <div class="card-head"><div><div class="card-title">🏪 Shop Profile</div><div class="card-sub">Appears on every report you generate — set once.</div></div></div>
+    <div class="grid2">
+      <div class="field"><label>Shop / Business Name *</label><input id="shName" value="${esc(c.name)}" placeholder="e.g. Apex Mobile Lab & Diagnostics"></div>
+      <div class="field"><label>Contact Phone *</label><input id="shPhone" value="${esc(c.phone)}" placeholder="e.g. +1 234 567 8900"></div>
+      <div class="field"><label>Address</label><input id="shAddr" value="${esc(c.address)}" placeholder="Street, City, Country"></div>
+      <div class="field"><label>Email</label><input id="shEmail" value="${esc(c.email)}" placeholder="shop@example.com"></div>
+    </div>
+    <div class="field"><label>Report Disclaimer Footer</label><textarea id="shDisc" rows="3" placeholder="This report reflects the condition of the device at the time of inspection...">${esc(c.disclaimer)}</textarea></div>
+    <div class="field"><label>Security PIN (4–6 digits, protects app access)</label><input id="shPin" value="${esc(c.pin)}" maxlength="6" placeholder="1234"></div>
+    <button class="btn btn-primary" onclick="PCP.saveShop()">💾 Save Shop Profile</button>
+  </div>`;
+}
+PCP.saveShop=function(){
+  S.cfg={
+    name:document.getElementById('shName').value.trim()||'Unnamed Shop',
+    phone:document.getElementById('shPhone').value.trim(),
+    address:document.getElementById('shAddr').value.trim(),
+    email:document.getElementById('shEmail').value.trim(),
+    disclaimer:document.getElementById('shDisc').value.trim()||'This inspection reflects device condition at time of testing only. Results may vary with future use.',
+    pin:document.getElementById('shPin').value.trim()||'1234'
+  };
+  saveCfg(); render();
+  alert('✅ Shop profile saved.');
+};
 
-  <!-- BOTTOM PERSISTENT NAVIGATION -->
-  <nav class="bottom-nav no-print">
-    <button class="nav-btn active" id="btn-nav-dash" onclick="PCP.nav('dash')">
-      <span>📊</span>Dashboard
-    </button>
-    <button class="nav-btn" id="btn-nav-device" onclick="PCP.nav('device')">
-      <span>🔍</span>New QC Check
-    </button>
-    <button class="nav-btn" id="btn-nav-setup" onclick="PCP.nav('setup')">
-      <span>🏢</span>Shop Profile
-    </button>
-  </nav>
-
-  <!-- TOAST CONTAINER -->
-  <div id="toastContainer"></div>
-
-  <!-- INTERACTIVE TOUCH DIGITIZER GRID MODAL -->
-  <div id="touchGridModal" class="modal-backdrop">
-    <div class="modal-body">
-      <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 6px;">✋ Touch Digitizer Grid Test</h3>
-      <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">Drag your finger across the whole screen. Fill all squares to confirm zero deadzones.</p>
-      <canvas id="touchCanvas"></canvas>
-      <div style="display: flex; gap: 8px; margin-top: 12px;">
-        <button class="btn btn-secondary btn-sm" style="flex: 1;" onclick="PCP.clearTouchCanvas()">Clear Canvas</button>
-        <button class="btn btn-success btn-sm" style="flex: 1;" onclick="PCP.closeTouchTest()">Done / Pass Grid</button>
+/* ===================== DEVICE ID ===================== */
+function renderDeviceId(){
+  const d=(S.draft&&S.draft.device)||{};
+  return `
+  <div class="card">
+    <div class="card-head">
+      <div><div class="card-title">🔍 Step 1: Device Fingerprinting &amp; IMEI Binding</div><div class="card-sub">Identify the exact unit before running the 14-category diagnostic</div></div>
+      <button class="btn-outline btn" onclick="PCP.quickDemo()">⚡ Quick Demo Fill</button>
+    </div>
+    <div class="field"><label>Inspection Context *</label>
+      <select id="dCtx">
+        <option ${d.ctx==='pre'?'selected':''} value="pre">Pre-Purchase Inspection (Used / Secondary Market)</option>
+        <option ${d.ctx==='repair'?'selected':''} value="repair">Post-Repair Quality Check</option>
+        <option ${d.ctx==='new'?'selected':''} value="new">Sealed / New Unit Verification</option>
+        <option ${d.ctx==='trade'?'selected':''} value="trade">Trade-In Valuation Check</option>
+      </select>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Brand / Manufacturer *</label><input id="dBrand" value="${esc(d.brand)}" placeholder="e.g. Apple, Samsung, Google"></div>
+      <div class="field"><label>Marketing Model Name *</label><input id="dModel" value="${esc(d.model)}" placeholder="e.g. iPhone 14 Pro Max"></div>
+    </div>
+    <div class="field"><label>Primary IMEI (15 Digits) *</label><input id="dImei" value="${esc(d.imei)}" maxlength="17" placeholder="Enter 15-digit IMEI" oninput="PCP.liveImeiCheck(this.value)"><div class="err" id="imeiErr">Invalid IMEI (checksum failed)</div></div>
+    <div class="grid2">
+      <div class="field"><label>Serial Number *</label><input id="dSerial" value="${esc(d.serial)}" placeholder="e.g. F2LDC012N6T4"></div>
+      <div class="field"><label>Hardware SKU Code (Optional)</label><input id="dSku" value="${esc(d.sku)}" placeholder="e.g. A2894, SM-S918B"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Stated Storage (GB) *</label>
+        <select id="dStated">
+          ${[64,128,256,512,1024].map(v=>`<option value="${v}" ${d.stated==v?'selected':''}>${v} GB</option>`).join('')}
+        </select>
       </div>
+      <div class="field"><label>Detected Total Capacity in OS (GB) *</label><input id="dDetected" type="number" value="${esc(d.detected)}" placeholder="Total seen in Settings" oninput="PCP.liveStorageCheck()"></div>
+    </div>
+    <div id="storageNote" style="margin-bottom:14px;font-size:12px;color:var(--dim);"></div>
+    <div class="grid2">
+      <div class="field"><label>Chassis Color & Finish *</label><input id="dColor" value="${esc(d.color)}" placeholder="e.g. Space Black, Deep Purple"></div>
+      <div class="field"><label>Lead Inspector *</label><input id="dTech" value="${esc(d.tech)}" placeholder="e.g. Alex Vance (Tech #04)"></div>
+    </div>
+    <button class="btn btn-primary" onclick="PCP.proceedChecklist()">Proceed to 14-Category Diagnostic Checklist →</button>
+  </div>`;
+}
+PCP.liveImeiCheck=function(v){
+  const el=document.getElementById('imeiErr');
+  const digits=v.replace(/\D/g,'');
+  el.style.display = (digits.length===15 && !luhnIMEI(v)) ? 'block':'none';
+};
+PCP.liveStorageCheck=function(){
+  const stated=parseInt(document.getElementById('dStated').value,10);
+  const detected=parseFloat(document.getElementById('dDetected').value);
+  const note=document.getElementById('storageNote');
+  const a=storageAnomaly(stated,detected);
+  if(!a){note.textContent='';return;}
+  note.textContent=a.msg;
+  note.style.color = a.level==='severe'||a.level==='impossible' ? 'var(--danger)' : (a.level==='mild'?'var(--warning)':'var(--success)');
+};
+PCP.quickDemo=function(){
+  if(!S.draft) S.draft=newDraft();
+  S.draft.device={ctx:'pre',brand:'Apple',model:'iPhone 14 Pro Max',imei:'358241092837465',serial:'F2LDC012N6T4',sku:'A2894',stated:128,detected:118,color:'Space Black',tech:'Alex Vance (Lead QC)'};
+  render();
+};
+PCP.proceedChecklist=function(){
+  const imei=document.getElementById('dImei').value.trim();
+  const brand=document.getElementById('dBrand').value.trim();
+  const model=document.getElementById('dModel').value.trim();
+  const serial=document.getElementById('dSerial').value.trim();
+  const tech=document.getElementById('dTech').value.trim();
+  if(!brand||!model||!serial||!tech){ alert('Please complete all required (*) fields.'); return; }
+  if(imei.replace(/\D/g,'').length!==15 || !luhnIMEI(imei)){ alert('Please enter a valid 15-digit IMEI.'); return; }
+  if(!S.draft) S.draft=newDraft();
+  S.draft.device={
+    ctx:document.getElementById('dCtx').value, brand, model, imei,
+    serial, sku:document.getElementById('dSku').value.trim(),
+    stated:parseInt(document.getElementById('dStated').value,10),
+    detected:parseFloat(document.getElementById('dDetected').value)||0,
+    color:document.getElementById('dColor').value.trim(), tech
+  };
+  if(!S.draft.id) S.draft.id='RPT-'+Date.now();
+  if(!S.draft.createdAt) S.draft.createdAt=new Date().toISOString();
+  saveDraft();
+  S.view='checklist'; render();
+};
+
+/* ===================== CHECKLIST ===================== */
+PCP.setResult=function(id,status){
+  if(!S.draft.results[id]) S.draft.results[id]={};
+  S.draft.results[id].status = (S.draft.results[id].status===status)? null : status;
+  saveDraft(); render();
+};
+PCP.saveNote=function(id,val){
+  if(!S.draft.results[id]) S.draft.results[id]={};
+  S.draft.results[id].note=val; saveDraft();
+};
+PCP.attachPhoto=function(id,input){
+  const file=input.files[0]; if(!file) return;
+  const img=new Image();
+  const reader=new FileReader();
+  reader.onload=e=>{
+    img.onload=()=>{
+      const maxW=640; const scale=Math.min(1,maxW/img.width);
+      const canvas=document.createElement('canvas');
+      canvas.width=img.width*scale; canvas.height=img.height*scale;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl=canvas.toDataURL('image/jpeg',0.6);
+      if(!S.draft.results[id]) S.draft.results[id]={};
+      S.draft.results[id].photo=dataUrl;
+      saveDraft(); render();
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+PCP.bulkPass=function(){
+  if(!confirm('Mark ALL remaining untested items as PASS? Already-set items are kept.')) return;
+  ALL_ITEMS.forEach(it=>{
+    if(!S.draft.results[it.id] || !S.draft.results[it.id].status){
+      S.draft.results[it.id]={...(S.draft.results[it.id]||{}),status:'pass'};
+    }
+  });
+  saveDraft(); render();
+};
+
+function renderChecklist(){
+  const sum=computeSummary(S.draft);
+  const catBlocks = CHECKLIST.map(cat=>{
+    const done=cat.items.filter(i=>S.draft.results[i.id]&&S.draft.results[i.id].status).length;
+    const rows=cat.items.map(it=>{
+      const r=S.draft.results[it.id]||{};
+      const tags = (it.critical?'<span class="tag tag-crit">CRITICAL</span>':'') + (it.red?'<span class="tag tag-red">RED FLAG</span>':'');
+      const toolBtn = it.tool? `<button class="tool-btn" onclick="PCP.openTool('${it.tool}','${it.id}')">▶ Run Test</button>`:'';
+      const photoThumb = r.photo? `<img class="photo-thumb" src="${r.photo}">`:'';
+      return `
+      <div class="item-row">
+        <div class="item-top">
+          <div style="flex:1;min-width:200px;">
+            <span class="item-label">${esc(it.label)}</span>${tags}
+            <div class="item-desc">${esc(it.desc)}</div>
+          </div>
+          <div class="seg">
+            <button class="seg-btn pass ${r.status==='pass'?'on':''}" onclick="PCP.setResult('${it.id}','pass')">PASS</button>
+            <button class="seg-btn fail ${r.status==='fail'?'on':''}" onclick="PCP.setResult('${it.id}','fail')">FAIL</button>
+            <button class="seg-btn na ${r.status==='na'?'on':''}" onclick="PCP.setResult('${it.id}','na')">N/A</button>
+          </div>
+        </div>
+        <div class="item-extra">
+          ${toolBtn}
+          <label class="photo-label">📷 Attach Photo<input type="file" accept="image/*" capture="environment" style="display:none" onchange="PCP.attachPhoto('${it.id}',this)"></label>
+          ${photoThumb}
+          <textarea placeholder="Technician note (optional)" oninput="PCP.saveNote('${it.id}',this.value)">${esc(r.note)}</textarea>
+        </div>
+      </div>`;
+    }).join('');
+    return `
+    <div class="cat-block">
+      <div class="cat-header">
+        <div class="cat-title">${cat.icon} ${esc(cat.title)}</div>
+        <div class="cat-progress">${done}/${cat.items.length} tested</div>
+      </div>
+      <div class="cat-body">${rows}</div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="sticky-bar">
+    <div class="sb-stats">
+      <div class="sb-stat"><b>${sum.pass}</b> Passed</div>
+      <div class="sb-stat"><b>${sum.fail}</b> Failed</div>
+      <div class="sb-stat"><b>${sum.na}</b> N/A</div>
+      <div class="sb-stat"><b>${sum.total}/${ALL_ITEMS.length}</b> Tested</div>
+      <div class="sb-stat"><b>${sum.pct}%</b> Current Score</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost btn-sm" onclick="PCP.bulkPass()">Mark Remaining Pass</button>
+      <button class="btn btn-primary btn-sm" onclick="PCP.finalize()">✅ Finalize Report</button>
+    </div>
+  </div>
+  ${catBlocks}
+  <div style="text-align:center;margin-top:10px;"><button class="btn btn-primary" onclick="PCP.finalize()">✅ Finalize Report &amp; Generate Grade</button></div>
+  `;
+}
+PCP.finalize=function(){
+  const sum=computeSummary(S.draft);
+  if(sum.total < ALL_ITEMS.length){
+    if(!confirm(`${ALL_ITEMS.length - sum.total} item(s) are untested. Finalize anyway (untested items are excluded from scoring)?`)) return;
+  }
+  S.draft.summary=sum;
+  S.draft.finalized=true;
+  S.draft.finalizedAt=new Date().toISOString();
+  const existingIdx=S.hist.findIndex(h=>h.id===S.draft.id);
+  if(existingIdx>=0) S.hist[existingIdx]=JSON.parse(JSON.stringify(S.draft));
+  else S.hist.push(JSON.parse(JSON.stringify(S.draft)));
+  saveHist(); clearDraft();
+  S.view='report'; render();
+};
+
+/* ===================== REPORT ===================== */
+function renderReport(){
+  const d=S.draft; const c=S.cfg||{}; const sum=d.summary||computeSummary(d);
+  const riskText={critical:'⛔ CRITICAL RISK — DO NOT PURCHASE without resolving critical issues.',high:'🟠 HIGH RISK — Multiple tamper/aftermarket indicators found. Negotiate heavily or decline.',medium:'🟡 MEDIUM RISK — One flagged issue found. Recommend price negotiation.',low:'🟢 LOW RISK — Clean provenance, no red flags detected.'}[sum.risk];
+
+  const failList = ALL_ITEMS.filter(it=> d.results[it.id] && d.results[it.id].status==='fail')
+    .map(it=>`<div class="fail-item"><div class="ft">${esc(it.label)} ${it.critical?'<span class="tag tag-crit">CRITICAL</span>':''}${it.red?'<span class="tag tag-red">RED FLAG</span>':''}</div><div class="fd">${esc(it.catTitle)} — ${esc(it.desc)}${d.results[it.id].note? ' | Note: '+esc(d.results[it.id].note):''}</div></div>`).join('') || '<div style="color:var(--dim);">No failed items — all tested components passed.</div>';
+
+  const detailCats = CHECKLIST.map(cat=>{
+    const rows=cat.items.map(it=>{
+      const r=d.results[it.id]||{};
+      const cls = r.status==='pass'?'det-pass':r.status==='fail'?'det-fail':'det-na';
+      const label = r.status==='pass'?'PASS':r.status==='fail'?'FAIL':r.status==='na'?'N/A':'—';
+      return `<div class="det-row"><span>${esc(it.label)}</span><span class="${cls}">${label}</span></div>`;
+    }).join('');
+    return `<div class="det-cat">${cat.icon} ${esc(cat.title)}</div>${rows}`;
+  }).join('');
+
+  return `
+  <div class="card no-print" style="display:flex;justify-content:flex-end;gap:10px;">
+    <button class="btn btn-outline" onclick="window.print()">🖨 Print / Save PDF</button>
+    <button class="btn btn-outline" onclick="PCP.go('dashboard')">← Back to Dashboard</button>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;">
+      <div><b style="font-size:17px;">${esc(c.name||'Independent Inspection')}</b><div style="color:var(--dim);font-size:12px;">${esc(c.address||'')} ${c.phone?'· '+esc(c.phone):''} ${c.email?'· '+esc(c.email):''}</div></div>
+      <div style="text-align:right;color:var(--dim);font-size:12px;">Report ID: ${esc(d.id)}<br>${new Date(d.finalizedAt||d.createdAt).toLocaleString()}<br>Technician: ${esc(d.device.tech)}</div>
+    </div>
+    <div class="grid2">
+      <div><b>${esc(d.device.brand)} ${esc(d.device.model)}</b><div style="color:var(--dim);font-size:12px;">IMEI: ${esc(d.device.imei)} · S/N: ${esc(d.device.serial)}</div></div>
+      <div style="text-align:right;color:var(--dim);font-size:12px;">${esc(d.device.color)} · ${d.device.stated}GB stated / ${d.device.detected}GB detected</div>
     </div>
   </div>
 
-  <!-- FULLSCREEN PIXEL FLASHER OVERLAY -->
-  <div id="pixelTestOverlay" onclick="PCP.nextPixelColor()">
-    <div id="pixelTestLabel">TAP TO CYCLE RGBW / DOUBLE TAP TO EXIT</div>
+  <div class="hero-score">
+    <div class="hero-pct">${sum.pct}%</div>
+    <div class="grade-badge grade-${sum.grade}">Grade ${sum.grade} — ${GRADE_LABEL[sum.grade]}</div>
   </div>
 
-  <!-- PIN LOCKOUT MODAL -->
-  <div id="pinModal" class="modal-backdrop">
-    <div class="modal-body">
-      <div style="font-size: 2rem; margin-bottom: 6px;">🔒</div>
-      <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 4px;">Session Locked</h3>
-      <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 14px;">Enter Shop PIN to unlock.</p>
-      <input type="password" id="modalPinInput" maxlength="6" placeholder="PIN" style="text-align: center; font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 12px;" />
-      <button class="btn btn-block btn-primary" onclick="PCP.unlockApp()">Unlock</button>
+  <div class="risk-banner risk-${sum.risk}">${riskText}</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px;">🚩 Failed Hardware / Non-Cleared Tests Summary</div>
+    <div class="stat-grid" style="margin-bottom:16px;">
+      <div class="stat"><div class="n">${sum.total}</div><div class="l">Total Tested</div></div>
+      <div class="stat g-a"><div class="n">${sum.pass}</div><div class="l">Passed</div></div>
+      <div class="stat g-x"><div class="n">${sum.fail}</div><div class="l">Failed</div></div>
+      <div class="stat"><div class="n">${sum.na}</div><div class="l">N/A</div></div>
     </div>
+    ${failList}
   </div>
 
-  <!-- JAVASCRIPT MASTER ENGINE -->
-  <script>
-    /**
-     * PHONE CHECK PRO — MASTER DIAGNOSTIC ENGINE
-     */
-    const PCP = (function() {
-
-      // Master 14-Category Specification
-      const CHECKLIST_SPEC = [
-        {
-          cat: "1. Critical Security & Account Locks",
-          items: [
-            { id: "SEC_IMEI", title: "IMEI Blacklist / Lost / Stolen Registry Check", desc: "Verify IMEIs across international telecom databases.", isCrit: true, isRed: true },
-            { id: "SEC_FRP", title: "Google Factory Reset Protection (FRP) Lock", desc: "Confirm no persistent Google account credentials block reset.", isCrit: true, isRed: true },
-            { id: "SEC_ICLOUD", title: "iCloud Lock / Find My iPhone Status", desc: "Confirm Find My iPhone is fully disabled and account detached.", isCrit: true, isRed: true },
-            { id: "SEC_MDM", title: "MDM / Corporate Supervision Profile", desc: "Inspect for enterprise management payloads or remote locks.", isCrit: true, isRed: true }
-          ]
-        },
-        {
-          cat: "2. Display & Touch Subsystem",
-          items: [
-            { id: "DSP_POWER", title: "Matrix Illumination & Backlight Uniformity", desc: "Even brightness across full white/gray canvas." },
-            { id: "DSP_PIXELS", title: "Dead / Stuck Sub-Pixel Integrity", desc: "Zero dead or discolored pixels on RGB cycle." },
-            { id: "DSP_GRID", title: "Touch Digitizer Grid & Edge Responsiveness", desc: "All screen sectors register touch with zero broken strokes." },
-            { id: "DSP_BURNIN", title: "OLED Burn-In & Static Image Retention", desc: "Look for ghost keyboard or status bar outlines.", isRed: true },
-            { id: "DSP_GLASS", title: "Glass Structural Integrity & Delamination", desc: "Zero cracks, chips, or glass lifting from mid-frame." }
-          ]
-        },
-        {
-          cat: "3. Audio & Acoustic Systems",
-          items: [
-            { id: "AUD_EAR", title: "Earpiece Receiver Speaker (Call Audio)", desc: "Clear conversational audio with zero distortion." },
-            { id: "AUD_LOUD", title: "Loudspeaker (Media & Ringtone)", desc: "Dynamic output with zero buzzing at 100% volume." },
-            { id: "AUD_MIC_PRI", title: "Primary Voice Microphone (Bottom)", desc: "Crisp recording on voice memo test." },
-            { id: "AUD_MIC_SEC", title: "Secondary Noise-Cancel Microphone", desc: "Clean noise dampening on video recording." }
-          ]
-        },
-        {
-          cat: "4. Optical & Camera Systems",
-          items: [
-            { id: "CAM_REAR", title: "Rear Primary Camera & Autofocus Actuator", desc: "Instant focus lock at 10cm and 3m distance." },
-            { id: "CAM_OIS", title: "Optical Image Stabilization (OIS) Motor", desc: "Smooth video stabilization without mechanical rattle." },
-            { id: "CAM_SEC", title: "Ultra-Wide / Telephoto Secondary Lenses", desc: "Clean switching across all optical focal lengths." },
-            { id: "CAM_FRONT", title: "Front Selfie Camera", desc: "Sharp portrait exposure, zero sensor dust." },
-            { id: "CAM_FLASH", title: "LED True Tone Flash & High Torch", desc: "Full illumination in sync with camera shutter." }
-          ]
-        },
-        {
-          cat: "5. Sensor & Biometric Array",
-          items: [
-            { id: "SNS_PROX", title: "Infrared Proximity Sensor", desc: "Screen turns off instantly when covered during call." },
-            { id: "SNS_FINGER", title: "Biometric Fingerprint Scanner", desc: "Enrolls and unlocks reliably." },
-            { id: "SNS_FACE", title: "Facial Biometrics (Face ID / Face Unlock)", desc: "Smooth enrollment and reliable unlock.", isRed: true },
-            { id: "SNS_ACCEL", title: "Accelerometer & Screen Rotation", desc: "Smooth orientation tracking." }
-          ]
-        },
-        {
-          cat: "6. Wireless & Network Connectivity",
-          items: [
-            { id: "NET_CELL", title: "Cellular SIM Detection & Test Call", desc: "Locks 4G/5G signal and completes call.", isRed: true },
-            { id: "NET_WIFI", title: "Wi-Fi (2.4GHz & 5GHz Dual-Band)", desc: "Fast discovery and stable data throughput." },
-            { id: "NET_BT", title: "Bluetooth Peripheral Link", desc: "Pairs with audio receivers reliably at 5m." },
-            { id: "NET_GPS", title: "GPS Satellite Accuracy Fix", desc: "Acquires location within 10 meters." },
-            { id: "NET_NFC", title: "NFC Reader & Contactless Controller", desc: "Detects NFC test cards." }
-          ]
-        },
-        {
-          cat: "7. Physical Buttons & Controls",
-          items: [
-            { id: "BTN_PWR", title: "Power / Sleep / Wake Switch", desc: "Crisp tactile click on 10 clicks." },
-            { id: "BTN_VOL", title: "Volume Up / Down Rockers", desc: "Volume increments accurately." },
-            { id: "BTN_MUTE", title: "Mute Switch / Action Button", desc: "Clear mechanical detent." }
-          ]
-        },
-        {
-          cat: "8. Battery, Charging & Power",
-          items: [
-            { id: "BAT_HEALTH", title: "Battery Health Capacity (>= 80%)", desc: "Maximum capacity percentage check.", isRed: true },
-            { id: "BAT_PORT", title: "USB / Lightning Port Integrity", desc: "Pins clean, cable connector seats firmly." },
-            { id: "BAT_FAST", title: "Fast Charging Steady Power Draw", desc: "Sustained high power intake without disconnects." },
-            { id: "BAT_DATA", title: "USB PC Data Transfer Link", desc: "Computer recognizes device storage." },
-            { id: "BAT_WIRELESS", title: "Qi / MagSafe Wireless Induction", desc: "Charges on wireless pad within 3s." }
-          ]
-        },
-        {
-          cat: "9. Vibration & Haptics",
-          items: [
-            { id: "VIB_MOTOR", title: "Linear Resonant Haptic Actuator", desc: "Sharp localized tactile tap, zero hollow buzzing." }
-          ]
-        },
-        {
-          cat: "10. Physical Chassis & Cosmetics",
-          items: [
-            { id: "CHS_BEND", title: "Mid-Frame Straightness (Bend Test)", desc: "Zero frame curvature or warping.", isRed: true },
-            { id: "CHS_REAR", title: "Rear Glass / Housing Cosmetic Condition", desc: "Free of structural cracks or deep gouges." },
-            { id: "CHS_LENS", title: "Camera Outer Protective Glass Covers", desc: "Clean glass, zero cracks over lenses." }
-          ]
-        },
-        {
-          cat: "11. Repair History & Originality Forensics (Anti-Scam)",
-          items: [
-            { id: "FOR_SCREWS", title: "Bottom Disassembly Screw Integrity", desc: "Check for stripped heads or tool burrs.", isRed: true },
-            { id: "FOR_SEAMS", title: "Frame Adhesive Seams & Gap Uniformity", desc: "Look for glue residue or lifting glass.", isRed: true },
-            { id: "FOR_SCREEN", title: "Screen Assembly OEM Originality", desc: "Check True Tone / color profiles intact.", isRed: true },
-            { id: "FOR_BATTERY", title: "Battery OEM Serialization Match", desc: "Genuine OEM battery serial bindings.", isRed: true },
-            { id: "FOR_LCI", title: "Liquid Contact Indicators (LCI)", desc: "Indicators must be white (no pink/red).", isCrit: true, isRed: true }
-          ]
-        },
-        {
-          cat: "12. Ownership & Financial Verification",
-          items: [
-            { id: "FIN_LEASE", title: "Financial Installment / Lease Lien Lock", desc: "Device 100% paid off; zero active EMI liens.", isCrit: true, isRed: true },
-            { id: "FIN_CARRIER", title: "Carrier Network Lock Status", desc: "Factory unlocked for all worldwide operators.", isRed: true }
-          ]
-        },
-        {
-          cat: "13. Sealed / New Authenticity",
-          items: [
-            { id: "NEW_IMEI_MATCH", title: "Box Label vs SIM Tray vs Settings IMEI", desc: "All 3 identifiers match 100% identically.", isCrit: true, isRed: true },
-            { id: "NEW_CYCLES", title: "Hardware Battery Cycles (<= 3 for New)", desc: "Charge cycles confirm claimed unused state.", isRed: true }
-          ]
-        }
-      ];
-
-      // Reactive State
-      let state = {
-        config: {
-          name: "Apex Mobile Lab & Diagnostics",
-          addr: "742 Tech District, Suite 100",
-          phone: "+1 (555) 019-2834",
-          email: "verify@apexmobilelab.com",
-          pin: "1234",
-          pfx: "PCP",
-          disc: "This certified quality inspection reflects the physical, electronic, and forensic state of the mobile device strictly at the recorded date and time. The testing laboratory is not liable for latent hardware defects, software account locks, or physical damage incurred subsequent to this audit."
-        },
-        device: {},
-        results: {},
-        currentReport: null,
-        history: []
-      };
-
-      function init() {
-        try {
-          const cfg = localStorage.getItem('pcp_gh_cfg');
-          if (cfg) state.config = JSON.parse(cfg);
-          const hist = localStorage.getItem('pcp_gh_hist');
-          if (hist) state.history = JSON.parse(hist);
-        } catch (e) { console.error(e); }
-
-        document.getElementById('shopHeaderName').innerText = state.config.name;
-        renderChecklistDOM();
-        nav('dash');
-        renderHistory();
-        updateMetrics();
-      }
-
-      function nav(viewId) {
-        document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-
-        const target = document.getElementById(`view-${viewId}`);
-        if (target) target.style.display = 'block';
-
-        const btn = document.getElementById(`btn-nav-${viewId}`);
-        if (btn) btn.classList.add('active');
-
-        if (viewId === 'setup') {
-          document.getElementById('cfgName').value = state.config.name;
-          document.getElementById('cfgAddr').value = state.config.addr;
-          document.getElementById('cfgPhone').value = state.config.phone;
-          document.getElementById('cfgEmail').value = state.config.email;
-          document.getElementById('cfgPin').value = state.config.pin || '';
-          document.getElementById('cfgPfx').value = state.config.pfx || 'PCP';
-          document.getElementById('cfgDisc').value = state.config.disc;
-        }
-
-        if (viewId === 'dash') {
-          renderHistory();
-          updateMetrics();
-        }
-
-        window.scrollTo(0, 0);
-      }
-
-      function saveConfig() {
-        const name = document.getElementById('cfgName').value.trim();
-        const addr = document.getElementById('cfgAddr').value.trim();
-        const phone = document.getElementById('cfgPhone').value.trim();
-        const email = document.getElementById('cfgEmail').value.trim();
-        const pin = document.getElementById('cfgPin').value.trim();
-        const pfx = document.getElementById('cfgPfx').value.trim() || 'PCP';
-        const disc = document.getElementById('cfgDisc').value.trim();
-
-        if (!name || !addr || !phone) {
-          toast('Please fill all mandatory shop fields (*)', 'error');
-          return;
-        }
-
-        state.config = { name, addr, phone, email, pin, pfx, disc };
-        localStorage.setItem('pcp_gh_cfg', JSON.stringify(state.config));
-        document.getElementById('shopHeaderName').innerText = name;
-        toast('Shop credentials updated', 'success');
-        nav('dash');
-      }
-
-      // Mathematical Luhn (Mod 10) Check
-      function checkLuhn(str) {
-        if (!/^\d{15}$/.test(str)) return false;
-        let sum = 0;
-        for (let i = 0; i < 15; i++) {
-          let d = parseInt(str.charAt(i), 10);
-          if (i % 2 === 1) {
-            d *= 2;
-            if (d > 9) d -= 9;
-          }
-          sum += d;
-        }
-        return sum % 10 === 0;
-      }
-
-      function handleImeiInput() {
-        const val = document.getElementById('devImei').value.trim();
-        const fb = document.getElementById('imeiFeedback');
-        if (val.length < 15) {
-          fb.innerHTML = `<span class="val-warn">${val.length}/15 digits entered</span>`;
-        } else {
-          if (checkLuhn(val)) {
-            fb.innerHTML = `<span class="val-pass">✓ Valid GSMA Luhn Checksum</span>`;
-          } else {
-            fb.innerHTML = `<span class="val-fail">✗ Checksum Mismatch — Check Digit 15</span>`;
-          }
-        }
-      }
-
-      function handleStorageCheck() {
-        const stated = parseInt(document.getElementById('devStatedStorage').value, 10);
-        const detected = parseInt(document.getElementById('devDetectedStorage').value, 10);
-        const fb = document.getElementById('storageFeedback');
-
-        if (!detected) { fb.innerHTML = ''; return; }
-        const ratio = detected / stated;
-
-        if (ratio < 0.70) {
-          fb.innerHTML = `<span class="val-fail">⚠ Severe Storage Anomaly: Detected total is only ${(ratio * 100).toFixed(0)}% of stated size.</span>`;
-        } else {
-          fb.innerHTML = `<span class="val-pass">✓ Storage footprint normal</span>`;
-        }
-      }
-
-      function loadDemoData() {
-        document.getElementById('devBrand').value = "Apple";
-        document.getElementById('devModel').value = "iPhone 14 Pro Max";
-        document.getElementById('devImei').value = "358241092837465"; // Valid Luhn IMEI
-        document.getElementById('devSerial').value = "F2LDC012N6T4";
-        document.getElementById('devSku').value = "A2894";
-        document.getElementById('devStatedStorage').value = "128";
-        document.getElementById('devDetectedStorage').value = "118";
-        document.getElementById('devColor').value = "Space Black";
-        document.getElementById('devTech').value = "Alex Vance (Lead QC)";
-
-        handleImeiInput();
-        handleStorageCheck();
-        toast('Demo device fingerprint loaded', 'info');
-      }
-
-      function renderChecklistDOM() {
-        const root = document.getElementById('checklistRoot');
-        root.innerHTML = '';
-
-        CHECKLIST_SPEC.forEach(cat => {
-          const group = document.createElement('div');
-          group.className = 'cat-group';
-
-          const head = document.createElement('div');
-          head.className = 'cat-header';
-          head.innerText = cat.cat;
-          group.appendChild(head);
-
-          const body = document.createElement('div');
-          body.className = 'cat-body';
-
-          cat.items.forEach(item => {
-            if (!state.results[item.id]) {
-              state.results[item.id] = { status: 'PASS', note: '', photo: '' };
-            }
-
-            const card = document.createElement('div');
-            card.className = 'chk-item';
-
-            let pills = '';
-            if (item.isCrit) pills += `<span class="pill pill-crit">Critical Lock</span> `;
-            if (item.isRed) pills += `<span class="pill pill-red">Red Flag</span>`;
-
-            card.innerHTML = `
-              <div class="chk-top">
-                <span class="chk-title">${item.title}</span>
-                <div>${pills}</div>
-              </div>
-              <div class="chk-desc">${item.desc}</div>
-              <div class="toggle-row">
-                <button class="t-btn active-pass" id="btn_p_${item.id}" onclick="PCP.setStatus('${item.id}', 'PASS')">✓ PASS</button>
-                <button class="t-btn" id="btn_f_${item.id}" onclick="PCP.setStatus('${item.id}', 'FAIL')">✗ FAIL</button>
-                <button class="t-btn" id="btn_n_${item.id}" onclick="PCP.setStatus('${item.id}', 'NA')">— N/A</button>
-              </div>
-              <div class="chk-bottom">
-                <input type="text" placeholder="Fault note..." value="${state.results[item.id].note}" oninput="PCP.setNote('${item.id}', this.value)" style="font-size:0.8rem; padding:6px 10px;" />
-                <label style="cursor:pointer; margin:0;">
-                  <span class="btn btn-secondary btn-sm" style="padding:6px 8px;">📷</span>
-                  <input type="file" accept="image/*" style="display:none;" onchange="PCP.attachPhoto('${item.id}', event)" />
-                </label>
-                <img id="thumb_${item.id}" class="thumb-prev" onclick="PCP.viewPhoto('${item.id}')" />
-              </div>
-            `;
-            body.appendChild(card);
-          });
-
-          group.appendChild(body);
-          root.appendChild(group);
-        });
-      }
-
-      function proceedToChecklist() {
-        const brand = document.getElementById('devBrand').value.trim();
-        const model = document.getElementById('devModel').value.trim();
-        const imei = document.getElementById('devImei').value.trim();
-        const serial = document.getElementById('devSerial').value.trim();
-        const statedStorage = document.getElementById('devStatedStorage').value;
-        const detectedStorage = document.getElementById('devDetectedStorage').value;
-        const color = document.getElementById('devColor').value.trim();
-        const tech = document.getElementById('devTech').value.trim();
-        const context = document.getElementById('devContext').value;
-        const sku = document.getElementById('devSku').value.trim();
-
-        if (!brand || !model || !imei || !serial || !tech) {
-          toast('Please fill all mandatory device fields (*)', 'error');
-          return;
-        }
-
-        state.device = { brand, model, imei, serial, statedStorage, detectedStorage, color, tech, context, sku };
-
-        document.getElementById('chkDevTitle').innerText = `${brand} ${model} (${statedStorage} GB)`;
-        document.getElementById('chkDevMeta').innerText = `IMEI: ${imei} | Inspector: ${tech}`;
-
-        nav('checklist');
-      }
-
-      function setStatus(id, st) {
-        state.results[id].status = st;
-        const bp = document.getElementById(`btn_p_${id}`);
-        const bf = document.getElementById(`btn_f_${id}`);
-        const bn = document.getElementById(`btn_n_${id}`);
-
-        bp.className = 't-btn' + (st === 'PASS' ? ' active-pass' : '');
-        bf.className = 't-btn' + (st === 'FAIL' ? ' active-fail' : '');
-        bn.className = 't-btn' + (st === 'NA' ? ' active-na' : '');
-      }
-
-      function setNote(id, txt) {
-        state.results[id].note = txt;
-      }
-
-      function bulkPassAll() {
-        CHECKLIST_SPEC.forEach(cat => {
-          cat.items.forEach(it => {
-            if (state.results[it.id].status === 'PASS') return;
-            setStatus(it.id, 'PASS');
-          });
-        });
-        toast('All items marked as PASSED', 'success');
-      }
-
-      function attachPhoto(id, e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          const img = new Image();
-          img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const MAX = 640;
-            const scale = MAX / img.width;
-            canvas.width = MAX;
-            canvas.height = img.height * scale;
-
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            const b64 = canvas.toDataURL('image/jpeg', 0.6);
-
-            state.results[id].photo = b64;
-            const th = document.getElementById(`thumb_${id}`);
-            th.src = b64;
-            th.style.display = 'block';
-            toast('Photo attached and compressed', 'success');
-          };
-          img.src = evt.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-
-      function viewPhoto(id) {
-        const p = state.results[id]?.photo;
-        if (p) {
-          const w = window.open("");
-          w.document.write(`<img src="${p}" style="max-width:100%;" />`);
-        }
-      }
-
-      // Report & Scoring
-      function finalizeReport() {
-        let total = 0, passed = 0, failed = 0, na = 0;
-        let hasCriticalFail = false;
-        let redCount = 0;
-        let failedList = [];
-
-        CHECKLIST_SPEC.forEach(cat => {
-          cat.items.forEach(it => {
-            total++;
-            const r = state.results[it.id] || { status: 'PASS', note: '', photo: '' };
-            if (r.status === 'PASS') {
-              passed++;
-            } else if (r.status === 'FAIL') {
-              failed++;
-              if (it.isCrit) hasCriticalFail = true;
-              if (it.isRed) redCount++;
-              failedList.push({
-                id: it.id,
-                title: it.title,
-                cat: cat.cat,
-                note: r.note || 'Failed test criteria'
-              });
-            } else {
-              na++;
-            }
-          });
-        });
-
-        const applicable = total - na;
-        const rawPercent = applicable > 0 ? ((passed / applicable) * 100).toFixed(1) : 100;
-
-        let gradeLabel = 'GRADE A — EXCELLENT';
-        let gradeClass = 'grade-A';
-
-        if (hasCriticalFail) {
-          gradeLabel = 'GRADE X — CRITICAL FAIL (OVERRIDE)';
-          gradeClass = 'grade-X';
-        } else if (rawPercent >= 95) {
-          gradeLabel = 'GRADE A — EXCELLENT';
-          gradeClass = 'grade-A';
-        } else if (rawPercent >= 85) {
-          gradeLabel = 'GRADE B — VERY GOOD';
-          gradeClass = 'grade-B';
-        } else if (rawPercent >= 70) {
-          gradeLabel = 'GRADE C — GOOD';
-          gradeClass = 'grade-C';
-        } else {
-          gradeLabel = 'GRADE F — POOR';
-          gradeClass = 'grade-C';
-        }
-
-        let riskVerdict = { title: "✓ LOW RISK — CLEAN PROVENANCE", desc: "Device is authentic with zero security locks or major hardware faults.", class: "risk-low" };
-        if (hasCriticalFail) {
-          riskVerdict = { title: "🚨 CRITICAL RISK: DO NOT PURCHASE", desc: "Device is blacklisted, carrier locked, financed, or has water damage indicators triggered.", class: "risk-crit" };
-        } else if (redCount >= 2) {
-          riskVerdict = { title: `⚠ HIGH RISK (${redCount} Red Flags Detected)`, desc: "Multiple tampered, aftermarket, or degraded components found.", class: "risk-crit" };
-        } else if (redCount === 1) {
-          riskVerdict = { title: `⚠ MEDIUM RISK (1 Red Flag Detected)`, desc: "Minor component discrepancy noted. Negotiate price accordingly.", class: "risk-med" };
-        }
-
-        const reportId = `#${state.config.pfx || 'PCP'}-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const timestamp = new Date().toLocaleString();
-
-        const reportObj = {
-          reportId,
-          timestamp,
-          device: { ...state.device },
-          metrics: { total, passed, failed, na, rawPercent, gradeLabel, gradeClass, hasCriticalFail, redCount },
-          riskVerdict,
-          failedList,
-          results: JSON.parse(JSON.stringify(state.results)),
-          shop: { ...state.config }
-        };
-
-        state.currentReport = reportObj;
-        state.history.unshift(reportObj);
-        try {
-          localStorage.setItem('pcp_gh_hist', JSON.stringify(state.history));
-        } catch (e) { console.error(e); }
-
-        // Populate Report DOM
-        document.getElementById('repShopName').innerText = state.config.name;
-        document.getElementById('repShopAddress').innerText = state.config.addr;
-        document.getElementById('repShopContact').innerText = `Phone: ${state.config.phone} | ${state.config.email}`;
-        document.getElementById('repReportId').innerText = reportId;
-        document.getElementById('repTimestamp').innerText = timestamp;
-
-        const d = state.device;
-        document.getElementById('repDevName').innerText = `${d.brand} ${d.model}`;
-        document.getElementById('repImei').innerText = d.imei;
-        document.getElementById('repSerial').innerText = d.serial;
-        document.getElementById('repStorage').innerText = `${d.statedStorage} GB`;
-        document.getElementById('repContext').innerText = d.context;
-        document.getElementById('repTech').innerText = d.tech;
-
-        document.getElementById('repScorePercent').innerText = `${rawPercent}%`;
-        const gb = document.getElementById('repGradeBadge');
-        gb.innerText = gradeLabel;
-        gb.className = `grade-badge ${gradeClass}`;
-
-        const rb = document.getElementById('repRiskBanner');
-        rb.className = `risk-box ${riskVerdict.class}`;
-        document.getElementById('repRiskTitle').innerText = riskVerdict.title;
-        document.getElementById('repRiskDesc').innerText = riskVerdict.desc;
-
-        document.getElementById('repStatTotal').innerText = total;
-        document.getElementById('repStatPass').innerText = passed;
-        document.getElementById('repStatFail').innerText = failed;
-        document.getElementById('repStatNa').innerText = na;
-
-        const fc = document.getElementById('repFailedContainer');
-        fc.innerHTML = '';
-        if (failedList.length === 0) {
-          fc.innerHTML = '<div style="color:var(--status-pass); font-size:0.9rem;">✓ All conducted tests passed with zero component failures.</div>';
-        } else {
-          failedList.forEach((f, idx) => {
-            const card = document.createElement('div');
-            card.className = 'failed-card';
-            card.innerHTML = `
-              <div class="failed-title">${idx + 1}. ${f.title}</div>
-              <div class="failed-cat">${f.cat}</div>
-              <div class="failed-note">Note: "${f.note}"</div>
-            `;
-            fc.appendChild(card);
-          });
-        }
-
-        document.getElementById('repDisclaimer').innerText = state.config.disc;
-
-        toast('Certificate generated', 'success');
-        nav('report');
-      }
-
-      function renderHistory() {
-        const cont = document.getElementById('histContainer');
-        const q = (document.getElementById('histSearch')?.value || '').toLowerCase();
-        cont.innerHTML = '';
-
-        const filtered = state.history.filter(h => {
-          return h.device.model.toLowerCase().includes(q) ||
-                 h.device.imei.toLowerCase().includes(q) ||
-                 h.reportId.toLowerCase().includes(q);
-        });
-
-        if (filtered.length === 0) {
-          cont.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">No records found.</div>';
-          return;
-        }
-
-        filtered.forEach((h, idx) => {
-          const item = document.createElement('div');
-          item.style.cssText = "background:var(--bg-main); border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:8px;";
-          item.innerHTML = `
-            <div>
-              <div style="font-weight:700; color:#fff;">${h.device.brand} ${h.device.model} <span class="pill ${h.metrics.hasCriticalFail ? 'pill-crit' : ''}">${h.metrics.gradeLabel.split('—')[0]}</span></div>
-              <div style="font-size:0.75rem; color:var(--text-muted);">IMEI: ${h.device.imei} | ${h.timestamp} | ${h.metrics.rawPercent}%</div>
-            </div>
-            <div style="display:flex; gap:6px;">
-              <button class="btn btn-secondary btn-sm" onclick="PCP.viewHistReport(${idx})">View</button>
-              <button class="btn btn-danger btn-sm" onclick="PCP.delHistReport(${idx})">Delete</button>
-            </div>
-          `;
-          cont.appendChild(item);
-        });
-      }
-
-      function viewHistReport(idx) {
-        const h = state.history[idx];
-        if (!h) return;
-
-        state.device = { ...h.device };
-        state.results = { ...h.results };
-
-        document.getElementById('repShopName').innerText = h.shop.name;
-        document.getElementById('repShopAddress').innerText = h.shop.addr;
-        document.getElementById('repShopContact').innerText = `Phone: ${h.shop.phone} | ${h.shop.email}`;
-        document.getElementById('repReportId').innerText = h.reportId;
-        document.getElementById('repTimestamp').innerText = h.timestamp;
-
-        const d = h.device;
-        document.getElementById('repDevName').innerText = `${d.brand} ${d.model}`;
-        document.getElementById('repImei').innerText = d.imei;
-        document.getElementById('repSerial').innerText = d.serial;
-        document.getElementById('repStorage').innerText = `${d.statedStorage} GB`;
-        document.getElementById('repContext').innerText = d.context;
-        document.getElementById('repTech').innerText = d.tech;
-
-        document.getElementById('repScorePercent').innerText = `${h.metrics.rawPercent}%`;
-        const gb = document.getElementById('repGradeBadge');
-        gb.innerText = h.metrics.gradeLabel;
-        gb.className = `grade-badge ${h.metrics.gradeClass}`;
-
-        const rb = document.getElementById('repRiskBanner');
-        rb.className = `risk-box ${h.riskVerdict.class}`;
-        document.getElementById('repRiskTitle').innerText = h.riskVerdict.title;
-        document.getElementById('repRiskDesc').innerText = h.riskVerdict.desc;
-
-        document.getElementById('repStatTotal').innerText = h.metrics.total;
-        document.getElementById('repStatPass').innerText = h.metrics.passed;
-        document.getElementById('repStatFail').innerText = h.metrics.failed;
-        document.getElementById('repStatNa').innerText = h.metrics.na;
-
-        const fc = document.getElementById('repFailedContainer');
-        fc.innerHTML = '';
-        if (h.failedList.length === 0) {
-          fc.innerHTML = '<div style="color:var(--status-pass); font-size:0.9rem;">✓ All conducted tests passed.</div>';
-        } else {
-          h.failedList.forEach((f, fIdx) => {
-            const card = document.createElement('div');
-            card.className = 'failed-card';
-            card.innerHTML = `
-              <div class="failed-title">${fIdx + 1}. ${f.title}</div>
-              <div class="failed-cat">${f.cat}</div>
-              <div class="failed-note">Note: "${f.note}"</div>
-            `;
-            fc.appendChild(card);
-          });
-        }
-
-        nav('report');
-      }
-
-      function delHistReport(idx) {
-        if (!confirm('Permanently delete this inspection record?')) return;
-        state.history.splice(idx, 1);
-        localStorage.setItem('pcp_gh_hist', JSON.stringify(state.history));
-        renderHistory();
-        updateMetrics();
-        toast('Record deleted', 'info');
-      }
-
-      function updateMetrics() {
-        document.getElementById('metTotal').innerText = state.history.length;
-        const gA = state.history.filter(h => h.metrics.gradeLabel.includes('GRADE A')).length;
-        const gX = state.history.filter(h => h.metrics.hasCriticalFail).length;
-        document.getElementById('metGradeA').innerText = gA;
-        document.getElementById('metGradeX').innerText = gX;
-
-        const rate = state.history.length > 0 ? (((state.history.length - gX) / state.history.length) * 100).toFixed(0) : 100;
-        document.getElementById('metPassRate').innerText = `${rate}%`;
-      }
-
-      // =========================================================================
-      // INTERACTIVE HARDWARE WEB-API DIAGNOSTIC TOOLS
-      // =========================================================================
-      
-      // 1. Fullscreen Dead Pixel Color Flasher
-      const pixelColors = ['#ff0000', '#00ff00', '#0000ff', '#ffffff', '#000000', '#808080'];
-      let pixelIndex = 0;
-
-      function launchPixelTest() {
-        pixelIndex = 0;
-        const ov = document.getElementById('pixelTestOverlay');
-        ov.style.background = pixelColors[pixelIndex];
-        ov.style.display = 'flex';
-        toast('Tap screen to cycle Red, Green, Blue, White, Black. Double-tap to exit.', 'info');
-      }
-
-      let lastTap = 0;
-      function nextPixelColor() {
-        const now = Date.now();
-        if (now - lastTap < 300) {
-          // Double Tap Exit
-          document.getElementById('pixelTestOverlay').style.display = 'none';
-          return;
-        }
-        lastTap = now;
-        pixelIndex = (pixelIndex + 1) % pixelColors.length;
-        document.getElementById('pixelTestOverlay').style.background = pixelColors[pixelIndex];
-      }
-
-      // 2. Interactive Touch Grid Canvas Tester
-      let touchCanvas, touchCtx, touchGrid = [];
-      const ROWS = 6, COLS = 8;
-
-      function launchTouchTest() {
-        document.getElementById('touchGridModal').style.display = 'flex';
-        touchCanvas = document.getElementById('touchCanvas');
-        touchCanvas.width = touchCanvas.offsetWidth;
-        touchCanvas.height = 320;
-        touchCtx = touchCanvas.getContext('2d');
-
-        // Init grid
-        touchGrid = [];
-        for (let r = 0; r < ROWS; r++) {
-          touchGrid[r] = [];
-          for (let c = 0; c < COLS; c++) {
-            touchGrid[r][c] = false;
-          }
-        }
-        drawTouchGrid();
-
-        touchCanvas.onpointermove = function(e) {
-          const rect = touchCanvas.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const c = Math.floor((x / touchCanvas.width) * COLS);
-          const r = Math.floor((y / touchCanvas.height) * ROWS);
-          if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
-            touchGrid[r][c] = true;
-            drawTouchGrid();
-          }
-        };
-      }
-
-      function drawTouchGrid() {
-        const cellW = touchCanvas.width / COLS;
-        const cellH = touchCanvas.height / ROWS;
-
-        for (let r = 0; r < ROWS; r++) {
-          for (let c = 0; c < COLS; c++) {
-            touchCtx.fillStyle = touchGrid[r][c] ? '#10b981' : '#1e293b';
-            touchCtx.fillRect(c * cellW, r * cellH, cellW - 1, cellH - 1);
-          }
-        }
-      }
-
-      function clearTouchCanvas() {
-        for (let r = 0; r < ROWS; r++) {
-          for (let c = 0; c < COLS; c++) {
-            touchGrid[r][c] = false;
-          }
-        }
-        drawTouchGrid();
-      }
-
-      function closeTouchTest() {
-        document.getElementById('touchGridModal').style.display = 'none';
-        toast('Touch Grid Test recorded as PASSED', 'success');
-      }
-
-      // 3. Web Audio Acoustic Sine Wave Frequency Generator
-      function playAudioTone() {
-        try {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (!AudioContext) { toast('Web Audio not supported on this browser', 'error'); return; }
-          
-          const ctx = new AudioContext();
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(1000, ctx.currentTime); // 1kHz Sine Wave
-
-          gain.gain.setValueAtTime(0.1, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.5);
-
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-
-          osc.start();
-          osc.stop(ctx.currentTime + 1.5);
-          toast('🔊 Playing 1kHz Acoustic Frequency Tone', 'info');
-        } catch (e) {
-          toast('Acoustic synthesizer error', 'error');
-        }
-      }
-
-      // 4. Web Vibration API Tester
-      function triggerVibrate() {
-        if ("vibrate" in navigator) {
-          navigator.vibrate([150, 80, 150]);
-          toast('📳 Haptic pulse triggered', 'success');
-        } else {
-          toast('Vibration API not supported on this device/laptop', 'info');
-        }
-      }
-
-      // Export / Import
-      function exportJson() {
-        if (!state.currentReport) return;
-        const str = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state.currentReport, null, 2));
-        const a = document.createElement('a');
-        a.href = str;
-        a.download = `QC_${state.currentReport.device.imei || 'REPORT'}.json`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        toast('JSON exported', 'success');
-      }
-
-      function triggerJsonImport() {
-        document.getElementById('jsonFileInput').click();
-      }
-
-      function handleJsonFile(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          try {
-            const parsed = JSON.parse(evt.target.result);
-            if (!parsed.reportId || !parsed.device || !parsed.metrics) throw new Error();
-            state.history.unshift(parsed);
-            localStorage.setItem('pcp_gh_hist', JSON.stringify(state.history));
-            renderHistory();
-            updateMetrics();
-            toast('Record imported', 'success');
-          } catch (err) {
-            toast('Invalid JSON schema', 'error');
-          }
-        };
-        reader.readAsText(file);
-      }
-
-      function lockApp() {
-        document.getElementById('pinModal').style.display = 'flex';
-        document.getElementById('modalPinInput').value = '';
-        document.getElementById('modalPinInput').focus();
-      }
-
-      function unlockApp() {
-        const p = document.getElementById('modalPinInput').value.trim();
-        if (p === (state.config.pin || '1234')) {
-          document.getElementById('pinModal').style.display = 'none';
-          toast('Session unlocked', 'success');
-        } else {
-          toast('Incorrect PIN', 'error');
-        }
-      }
-
-      function toast(msg, type = 'info') {
-        const cont = document.getElementById('toastContainer');
-        const t = document.createElement('div');
-        t.className = `toast toast-${type}`;
-        t.innerText = msg;
-        cont.appendChild(t);
-        setTimeout(() => t.classList.add('show'), 10);
-        setTimeout(() => {
-          t.classList.remove('show');
-          setTimeout(() => t.remove(), 250);
-        }, 3000);
-      }
-
-      return {
-        init,
-        nav,
-        saveConfig,
-        handleImeiInput,
-        handleStorageCheck,
-        loadDemoData,
-        proceedToChecklist,
-        setStatus,
-        setNote,
-        bulkPassAll,
-        attachPhoto,
-        viewPhoto,
-        finalizeReport,
-        renderHistory,
-        viewHistReport,
-        delHistReport,
-        exportJson,
-        triggerJsonImport,
-        handleJsonFile,
-        lockApp,
-        unlockApp,
-        launchPixelTest,
-        nextPixelColor,
-        launchTouchTest,
-        clearTouchCanvas,
-        closeTouchTest,
-        playAudioTone,
-        triggerVibrate
-      };
-
-    })();
-
-    window.addEventListener('DOMContentLoaded', PCP.init);
-  </script>
+  <div class="card">
+    <div class="card-title" style="margin-bottom:6px;">📋 Full Detailed Checklist</div>
+    <div class="card-sub" style="margin-bottom:10px;">All 55 diagnostic points across 14 categories</div>
+    ${detailCats}
+  </div>
+
+  <div class="card" style="font-size:11.5px;color:var(--dim);">
+    <b style="color:var(--text);">Disclaimer:</b> ${esc(c.disclaimer||'This inspection reflects device condition at time of testing only.')}
+    <br><br>Customer Signature: ______________________ &nbsp;&nbsp;&nbsp; Technician Signature: ______________________
+    <br>Generated by Phone Check Pro on ${new Date().toLocaleString()}
+  </div>`;
+}
+
+/* ===================== TOOLS (interactive diagnostics) ===================== */
+PCP.openTool=function(type,itemId){
+  const root=document.getElementById('modalRoot');
+  if(type==='pixel'){
+    let idx=0; const colors=['#ff0000','#00ff00','#0000ff','#ffffff','#000000','#808080'];
+    root.innerHTML=`<div class="pixel-flash" style="background:${colors[0]}" id="pxFlash" onclick="PCP.pxNext()"></div>`;
+    let lastTap=0;
+    document.getElementById('pxFlash').addEventListener('click',()=>{
+      const now=Date.now();
+      if(now-lastTap<350){ document.getElementById('modalRoot').innerHTML=''; }
+      lastTap=now;
+    });
+    PCP._pxIdx=0; PCP._pxColors=colors;
+  } else if(type==='grid'){
+    root.innerHTML=`<div class="modal-overlay"><div class="modal-box" style="max-width:420px;">
+      <h3>🖐 Touch Digitizer Grid Test</h3><p>Touch every cell — it should turn green. Any cell that won't register indicates a dead touch zone.</p>
+      <div class="grid-canvas-wrap"><canvas id="touchGrid" width="360" height="270" style="width:100%;touch-action:none;"></canvas></div>
+      <button class="btn btn-primary" onclick="document.getElementById('modalRoot').innerHTML=''">Close</button>
+    </div></div>`;
+    setupTouchGrid();
+  } else if(type==='tone'){
+    root.innerHTML=`<div class="modal-overlay"><div class="modal-box">
+      <h3>🔊 Audio Output Test</h3><p>Playing a 1kHz test tone for 1.5 seconds at rising volume. Listen for distortion, rattle, or crackle.</p>
+      <button class="btn btn-primary" onclick="PCP.playTone()">▶ Play Test Tone</button>
+      <div style="height:10px;"></div>
+      <button class="btn btn-ghost btn-block" onclick="document.getElementById('modalRoot').innerHTML=''">Close</button>
+    </div></div>`;
+  } else if(type==='vibrate'){
+    root.innerHTML=`<div class="modal-overlay"><div class="modal-box">
+      <h3>📳 Haptic / Vibration Test</h3><p>Triggers a vibration pattern. Confirm it feels strong and consistent with no buzzing rattle.</p>
+      <button class="btn btn-primary" onclick="PCP.runVibrate()">▶ Trigger Vibration</button>
+      <div style="height:10px;"></div>
+      <button class="btn btn-ghost btn-block" onclick="document.getElementById('modalRoot').innerHTML=''">Close</button>
+    </div></div>`;
+  } else if(type==='stopwatch'){
+    root.innerHTML=`<div class="modal-overlay"><div class="modal-box">
+      <h3>⏱ Stress Test Timer</h3><p>Run the stated stress scenario (thermal or multitask) and watch the clock. Mark PASS/FAIL on the checklist once complete.</p>
+      <div class="stopwatch-num" id="swNum">00:00</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary" style="flex:1" onclick="PCP.swStart()">▶ Start</button>
+        <button class="btn btn-ghost" style="flex:1" onclick="PCP.swStop()">⏸ Stop/Reset</button>
+      </div>
+      <div style="height:10px;"></div>
+      <button class="btn btn-ghost btn-block" onclick="PCP.swStop();document.getElementById('modalRoot').innerHTML=''">Close</button>
+    </div></div>`;
+  }
+};
+PCP.pxNext=function(){
+  PCP._pxIdx=(PCP._pxIdx+1)%PCP._pxColors.length;
+  const el=document.getElementById('pxFlash'); if(el) el.style.background=PCP._pxColors[PCP._pxIdx];
+};
+function setupTouchGrid(){
+  const canvas=document.getElementById('touchGrid'); const ctx=canvas.getContext('2d');
+  const cols=8, rows=6; const cw=canvas.width/cols, ch=canvas.height/rows;
+  const touched=new Set();
+  function draw(){
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+      ctx.fillStyle = touched.has(r+'-'+c) ? '#10B981' : '#1A2338';
+      ctx.fillRect(c*cw+1,r*ch+1,cw-2,ch-2);
+    }
+  }
+  function mark(x,y){
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=canvas.width/rect.width, scaleY=canvas.height/rect.height;
+    const cx=Math.floor((x-rect.left)*scaleX/cw), cy=Math.floor((y-rect.top)*scaleY/ch);
+    if(cx>=0&&cx<cols&&cy>=0&&cy<rows){ touched.add(cy+'-'+cx); draw(); }
+  }
+  canvas.addEventListener('pointerdown',e=>mark(e.clientX,e.clientY));
+  canvas.addEventListener('pointermove',e=>{ if(e.pressure>0||e.buttons>0) mark(e.clientX,e.clientY); });
+  draw();
+}
+PCP.playTone=function(){
+  try{
+    const ctxA=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ctxA.createOscillator(); const gain=ctxA.createGain();
+    osc.frequency.value=1000; osc.type='sine';
+    gain.gain.setValueAtTime(0.0001,ctxA.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.3,ctxA.currentTime+0.05);
+    gain.gain.exponentialRampToValueAtTime(0.0001,ctxA.currentTime+1.5);
+    osc.connect(gain); gain.connect(ctxA.destination);
+    osc.start(); osc.stop(ctxA.currentTime+1.5);
+  }catch(e){ alert('Audio playback not supported on this browser.'); }
+};
+PCP.runVibrate=function(){
+  if(navigator.vibrate){ navigator.vibrate([150,80,150]); }
+  else alert('Vibration API not supported on this device/browser.');
+};
+PCP._swInterval=null; PCP._swSeconds=0;
+PCP.swStart=function(){
+  if(PCP._swInterval) return;
+  PCP._swInterval=setInterval(()=>{
+    PCP._swSeconds++;
+    const m=String(Math.floor(PCP._swSeconds/60)).padStart(2,'0');
+    const s=String(PCP._swSeconds%60).padStart(2,'0');
+    const el=document.getElementById('swNum'); if(el) el.textContent=m+':'+s;
+  },1000);
+};
+PCP.swStop=function(){ clearInterval(PCP._swInterval); PCP._swInterval=null; PCP._swSeconds=0; const el=document.getElementById('swNum'); if(el) el.textContent='00:00'; };
+
+/* ===================== EXPORT / IMPORT ===================== */
+PCP.exportJSON=function(){
+  const blob=new Blob([JSON.stringify(S.hist,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='phonecheckpro_history.json'; a.click();
+  URL.revokeObjectURL(url);
+};
+PCP.importJSON=function(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!Array.isArray(data)) throw new Error('Invalid format');
+      data.forEach(d=>{ if(!d.id||!d.device||!d.summary) throw new Error('Invalid schema'); });
+      S.hist=S.hist.concat(data); saveHist(); render();
+      alert(`✅ Imported ${data.length} report(s).`);
+    }catch(err){ alert('❌ Import failed: file is not a valid Phone Check Pro export.'); }
+  };
+  reader.readAsText(file);
+};
+
+/* ===================== NAV / LOCK ===================== */
+PCP.go=function(view){
+  if(view==='deviceid' && !(S.draft&&S.draft.finalized===false)) { /* keep or start new */ }
+  if(view==='deviceid' && (!S.draft || S.draft.finalized)) S.draft=newDraft();
+  S.view=view; render();
+};
+PCP.lock=function(){
+  document.getElementById('pinOverlay').style.display='flex';
+  document.getElementById('pinInput').value='';
+  document.getElementById('pinErr').style.display='none';
+};
+PCP.unlock=function(){
+  const pin=document.getElementById('pinInput').value;
+  const correct = S.cfg && S.cfg.pin ? S.cfg.pin : '1234';
+  if(pin===correct){ document.getElementById('pinOverlay').style.display='none'; }
+  else{ document.getElementById('pinErr').style.display='block'; }
+};
+
+/* ===================== INIT ===================== */
+loadAll();
+if(S.draft && S.draft.finalized) S.draft=null;
+if(!S.draft) S.draft=newDraft();
+S.view = S.cfg ? 'dashboard' : 'shop';
+render();
+
+})();
+</script>
 </body>
 </html>
