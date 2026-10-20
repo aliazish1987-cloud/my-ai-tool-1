@@ -25,6 +25,13 @@ label{display:block;font-size:12px;font-weight:600;color:var(--sub);margin:10px 
 input[type=text],input[type=number],input[type=tel],textarea,select{
   width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;font-size:14px;background:#fff;color:var(--ink)
 }
+input[type=checkbox]{width:auto}
+input[type=file]{
+  width:100%;padding:9px;border:1px dashed #C7D2FE;border-radius:9px;background:#F5F6FF;font-size:13px;color:var(--sub);cursor:pointer
+}
+input[type=file]::-webkit-file-upload-button{
+  background:var(--indigo);color:#fff;border:none;padding:7px 12px;border-radius:7px;font-weight:700;margin-right:10px;cursor:pointer;font-size:12.5px
+}
 textarea{resize:vertical;min-height:60px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:9px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
 .btn-primary{background:linear-gradient(135deg,var(--indigo),var(--sky));color:#fff}
@@ -63,6 +70,7 @@ textarea{resize:vertical;min-height:60px}
 .g-A{background:#16A34A}.g-B{background:#0EA5E9}.g-C{background:#D97706}.g-D{background:#EA580C}.g-F{background:#DC2626}.g-X{background:#7C2D12}
 .pixelover{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
 .thumb{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
+.draftbanner{border:1px solid #C7D2FE;background:#EEF2FF}
 @media print{
   .bottomnav,.btn,.topbar .chip,#usbBtnWrap{display:none!important}
   body{background:#fff;padding:0}
@@ -428,25 +436,74 @@ const PCP = {
     const d = JSON.parse(localStorage.getItem('pcp_gh_draft')||'null');
     if(d) this.state.draft = d;
     document.getElementById('shopChip').textContent = this.state.cfg ? this.state.cfg.name : 'No Shop Set';
+    if(this.state.cfg && this.state.cfg.pinEnabled && sessionStorage.getItem('pcp_unlocked')!=='1'){
+      this.renderLock(); return;
+    }
     this.go('dashboard');
   },
   saveCfg(){ localStorage.setItem('pcp_gh_cfg', JSON.stringify(this.state.cfg)); },
   saveHist(){ localStorage.setItem('pcp_gh_hist', JSON.stringify(this.state.hist)); },
   saveDraft(){ localStorage.setItem('pcp_gh_draft', JSON.stringify(this.state.draft)); },
   go(view){ this.state.view=view; this.render(); },
+
+  draftHasContent(){
+    const d = this.state.draft;
+    if(!d) return false;
+    const dev = d.device||{};
+    return Object.keys(d.results||{}).length>0 || !!(dev.imei||dev.brand||dev.model);
+  },
   startNew(){
+    if(this.draftHasContent()){
+      const d = this.state.draft;
+      const ok = confirm('An unfinished inspection draft was found:\n'+(d.device.brand||'')+' '+(d.device.model||'')+
+        '\n\nTap OK to resume it, or Cancel to discard it and start a brand new one.');
+      if(ok){ this.go(Object.keys(d.results||{}).length>0 ? 'checklist' : 'deviceid'); return; }
+    }
     this.state.draft = { id:'QC-'+Date.now(), createdAt:new Date().toISOString(), device:{}, results:{}, photos:[] };
     this.saveDraft(); this.go('deviceid');
+  },
+  resumeDraft(){
+    const d = this.state.draft;
+    this.go(Object.keys(d.results||{}).length>0 ? 'checklist' : 'deviceid');
+  },
+  discardDraft(){
+    if(!confirm('Discard this unfinished inspection? This cannot be undone.')) return;
+    this.state.draft = null;
+    localStorage.removeItem('pcp_gh_draft');
+    this.go('dashboard');
   },
 
   render(){
     const app = document.getElementById('app');
     ['dashboard','new','shop'].forEach(k=>document.getElementById('nav-'+k)?.classList.remove('active'));
+    const nav = document.querySelector('.bottomnav'); if(nav) nav.style.display='flex';
     if(this.state.view==='dashboard'){ document.getElementById('nav-dashboard').classList.add('active'); app.innerHTML=this.renderDashboard(); }
     else if(this.state.view==='shop'){ document.getElementById('nav-shop').classList.add('active'); app.innerHTML=this.renderShop(); }
-    else if(this.state.view==='deviceid'){ document.getElementById('nav-new').classList.add('active'); app.innerHTML=this.renderDeviceId(); }
+    else if(this.state.view==='deviceid'){ document.getElementById('nav-new').classList.add('active'); app.innerHTML=this.renderDeviceId(); this.checkImei(); }
     else if(this.state.view==='checklist'){ document.getElementById('nav-new').classList.add('active'); app.innerHTML=this.renderChecklist(); }
     else if(this.state.view==='report'){ app.innerHTML=this.renderReport(); }
+  },
+
+  /* ---------- LOCK SCREEN ---------- */
+  renderLock(){
+    document.getElementById('app').innerHTML = `
+    <div class="card" style="max-width:320px;margin:60px auto;text-align:center">
+      <div class="h1">🔒 Locked</div>
+      <div class="sub">Enter shop PIN to continue</div>
+      <input type="text" inputmode="numeric" id="pinInput" maxlength="6" style="text-align:center;font-size:22px;letter-spacing:6px" placeholder="••••">
+      <div id="pinErr" style="color:var(--red);font-size:12px;margin-top:6px"></div>
+      <button class="btn btn-primary btn-block" style="margin-top:12px" onclick="PCP.tryUnlock()">Unlock</button>
+    </div>`;
+    const nav = document.querySelector('.bottomnav'); if(nav) nav.style.display='none';
+  },
+  tryUnlock(){
+    const v = document.getElementById('pinInput').value.trim();
+    if(v && v===this.state.cfg.pin){
+      sessionStorage.setItem('pcp_unlocked','1');
+      this.go('dashboard');
+    } else {
+      document.getElementById('pinErr').textContent='Incorrect PIN. Try again.';
+    }
   },
 
   /* ---------- DASHBOARD ---------- */
@@ -456,7 +513,16 @@ const PCP = {
     const gradeA=hist.filter(h=>h.summary.grade==='A').length;
     const crit=hist.filter(h=>h.summary.criticalFail).length;
     const avgPass = total? Math.round(hist.reduce((a,h)=>a+h.summary.pct,0)/total) : 0;
+    const draftBanner = this.draftHasContent() ? `
+      <div class="card draftbanner"><div class="h2">📝 Unfinished Inspection Found</div>
+        <div class="sub">${this.state.draft.device.brand||''} ${this.state.draft.device.model||''} — started ${new Date(this.state.draft.createdAt).toLocaleString()}</div>
+        <div class="row">
+          <button class="btn btn-primary btn-sm" onclick="PCP.resumeDraft()">Resume</button>
+          <button class="btn btn-danger btn-sm" onclick="PCP.discardDraft()">Discard</button>
+        </div>
+      </div>` : '';
     return `
+    ${draftBanner}
     <div class="card"><div class="h1">Dashboard</div><div class="sub">Overview of all inspections performed.</div>
       <div class="grid2">
         <div class="stat"><b>${total}</b>Total Checks</div>
@@ -499,21 +565,37 @@ const PCP = {
 
   /* ---------- SHOP PROFILE ---------- */
   renderShop(){
-    const c = this.state.cfg || {name:'',address:'',phone:'',disclaimer:''};
+    const c = this.state.cfg || {name:'',address:'',phone:'',disclaimer:'',pinEnabled:false,pin:''};
     return `<div class="card"><div class="h1">Shop Profile</div><div class="sub">Shown on every generated report.</div>
       <label>Shop Name</label><input type="text" id="s_name" value="${c.name||''}">
       <label>Address</label><input type="text" id="s_addr" value="${c.address||''}">
       <label>Contact Phone</label><input type="tel" id="s_phone" value="${c.phone||''}">
       <label>Report Disclaimer</label><textarea id="s_disc">${c.disclaimer||'This report reflects condition at time of inspection only.'}</textarea>
+
+      <label style="display:flex;align-items:center;gap:8px;margin-top:16px">
+        <input type="checkbox" id="s_pinEnabled" ${c.pinEnabled?'checked':''} onchange="document.getElementById('pinFieldWrap').style.display=this.checked?'block':'none'">
+        Enable App PIN Lock <span style="color:var(--sub);font-weight:400">(basic deterrent only — not encryption-grade security)</span>
+      </label>
+      <div id="pinFieldWrap" style="${c.pinEnabled?'':'display:none'}">
+        <label>Set PIN (4–6 digits)</label>
+        <input type="text" id="s_pin" inputmode="numeric" maxlength="6" value="${c.pin||''}">
+      </div>
+
       <button class="btn btn-primary btn-block" style="margin-top:14px" onclick="PCP.saveShop()">💾 Save Shop Profile</button>
     </div>`;
   },
   saveShop(){
+    const pinEnabled = document.getElementById('s_pinEnabled').checked;
+    const pin = document.getElementById('s_pin').value.trim();
+    if(pinEnabled && !(/^\d{4,6}$/.test(pin))){
+      alert('PIN must be 4–6 digits.'); return;
+    }
     this.state.cfg = {
       name:document.getElementById('s_name').value||'My Shop',
       address:document.getElementById('s_addr').value,
       phone:document.getElementById('s_phone').value,
-      disclaimer:document.getElementById('s_disc').value
+      disclaimer:document.getElementById('s_disc').value,
+      pinEnabled, pin: pinEnabled ? pin : ''
     };
     this.saveCfg();
     document.getElementById('shopChip').textContent = this.state.cfg.name;
@@ -526,13 +608,19 @@ const PCP = {
     const usbOk = !!navigator.usb;
     return `<div class="card"><div class="h1">Step 1 — Device Fingerprinting</div>
       <button class="btn btn-ghost btn-sm" onclick="PCP.demoFill()">⚡ Quick Demo Fill</button>
-      <label>IMEI / Serial</label><input type="text" id="d_imei" value="${d.imei||''}" placeholder="15-digit IMEI">
+      <label>IMEI / Serial</label>
+      <input type="text" id="d_imei" value="${d.imei||''}" placeholder="15-digit IMEI" oninput="PCP.checkImei()">
+      <div id="imeiWarn"></div>
       <label>Brand</label><input type="text" id="d_brand" value="${d.brand||''}">
       <label>Model</label><input type="text" id="d_model" value="${d.model||''}">
       <div class="grid2">
         <div><label>Stated Storage (GB)</label><input type="number" id="d_storage" value="${d.storage||''}"></div>
         <div><label>Color</label><input type="text" id="d_color" value="${d.color||''}"></div>
       </div>
+      <label>Actual Detected Storage (GB) — optional manual check</label>
+      <input type="number" id="d_detstorage" value="${d.detectedStorage||''}" placeholder="Check in phone Settings → Storage">
+      <div class="item-desc">Used to catch counterfeit/under-spec storage. Leave blank if unknown, or use USB Mode below for auto-detection on Android.</div>
+
       <label>Upload Evidence Photos</label>
       <input type="file" accept="image/*" multiple onchange="PCP.addPhotos(event)">
       <div class="row" style="margin-top:8px">${(this.state.draft.photos||[]).map(p=>`<img class="thumb" src="${p}">`).join('')}</div>
@@ -541,15 +629,28 @@ const PCP = {
         <label>Technician Hardware Mode</label>
         ${usbOk ?
           `<button class="btn btn-ghost btn-block" onclick="PCP.openUsbModal()">🔌 Technician USB Mode (Beta)</button>
-           <div class="item-desc" style="margin-top:6px">Android + Chrome/Edge desktop only. Connects via USB cable for automated diagnostics.</div>`
+           <div class="item-desc" style="margin-top:6px">Android + Chrome/Edge desktop only. Connects via USB cable for automated diagnostics. Any fields already typed above are preserved.</div>`
           : `<div class="item-desc">USB Mode unavailable — open this tool in Chrome or Edge on a desktop/laptop to enable cable diagnostics. Guided manual mode works everywhere.</div>`}
       </div>
 
       <button class="btn btn-primary btn-block" style="margin-top:16px" onclick="PCP.proceedChecklist()">Proceed to Checklist →</button>
     </div>`;
   },
+  checkImei(){
+    const input = document.getElementById('d_imei');
+    const warnEl = document.getElementById('imeiWarn');
+    if(!input || !warnEl) return;
+    const digits = input.value.replace(/\D/g,'');
+    if(digits.length===0){ warnEl.innerHTML=''; return; }
+    if(digits.length<15){ warnEl.innerHTML = `<div class="item-desc" style="color:var(--amber)">⚠ ${digits.length}/15 digits entered</div>`; return; }
+    if(digits.length>15){ warnEl.innerHTML = `<div class="item-desc" style="color:var(--red)">⚠ Too many digits — IMEI must be exactly 15</div>`; return; }
+    const valid = luhnIMEI(digits);
+    warnEl.innerHTML = valid
+      ? `<div class="item-desc" style="color:var(--green)">✓ Valid IMEI checksum</div>`
+      : `<div class="item-desc" style="color:var(--red)">⚠ Invalid IMEI checksum — this number may be fake or mistyped</div>`;
+  },
   demoFill(){
-    this.state.draft.device = {imei:'358241092837465',brand:'Samsung',model:'Galaxy S21',storage:'128',color:'Phantom Gray'};
+    this.state.draft.device = {imei:'358241092837465',brand:'Samsung',model:'Galaxy S21',storage:'128',color:'Phantom Gray',detectedStorage:''};
     this.saveDraft(); this.render();
   },
   addPhotos(ev){
@@ -571,19 +672,41 @@ const PCP = {
       reader.readAsDataURL(f);
     });
   },
-  proceedChecklist(){
-    this.state.draft.device = {
-      imei:document.getElementById('d_imei').value,
-      brand:document.getElementById('d_brand').value,
-      model:document.getElementById('d_model').value,
-      storage:document.getElementById('d_storage').value,
-      color:document.getElementById('d_color').value
+  getDeviceFieldsFromDOM(){
+    const g = id => document.getElementById(id);
+    const cur = this.state.draft.device||{};
+    return {
+      imei: g('d_imei') ? g('d_imei').value.trim() : (cur.imei||''),
+      brand: g('d_brand') ? g('d_brand').value.trim() : (cur.brand||''),
+      model: g('d_model') ? g('d_model').value.trim() : (cur.model||''),
+      storage: g('d_storage') ? g('d_storage').value.trim() : (cur.storage||''),
+      color: g('d_color') ? g('d_color').value.trim() : (cur.color||''),
+      detectedStorage: g('d_detstorage') ? g('d_detstorage').value.trim() : (cur.detectedStorage||'')
     };
-    this.saveDraft(); this.go('checklist');
+  },
+  captureDeviceFields(){
+    this.state.draft.device = {...(this.state.draft.device||{}), ...this.getDeviceFieldsFromDOM()};
+    this.saveDraft();
+  },
+  proceedChecklist(){
+    this.captureDeviceFields();
+    const d = this.state.draft;
+    const digits = (d.device.imei||'').replace(/\D/g,'');
+    if(digits.length===15 && !luhnIMEI(digits)){
+      const cont = confirm('⚠ The IMEI entered fails checksum validation and may be invalid/fake.\n\nContinue anyway?');
+      if(!cont) return;
+    }
+    if(!d.storageCheck && d.device.storage && d.device.detectedStorage){
+      const anomaly = storageAnomaly(parseFloat(d.device.storage), parseFloat(d.device.detectedStorage));
+      d.storageCheck = {detected:parseFloat(d.device.detectedStorage), stated:parseFloat(d.device.storage), ...anomaly, source:'manual'};
+      this.saveDraft();
+    }
+    this.go('checklist');
   },
 
   /* ---------- USB MODE ---------- */
   openUsbModal(){
+    this.captureDeviceFields();
     this.state.usbLog = ['Ready. Click "Connect Device" and select your phone from the browser dialog.'];
     document.body.insertAdjacentHTML('beforeend', this.usbModalHtml());
   },
@@ -616,7 +739,7 @@ const PCP = {
       this.usbApplyResults(parsed);
       this.usbLogAdd('✅ Diagnostics complete. Auto-filled items marked in checklist.');
       this.usbLogAdd('Model: '+parsed.model+' | Android '+parsed.androidVer+' | Battery '+parsed.batteryLevel+'% ('+parsed.batteryHealth+')');
-      setTimeout(()=>{ this.closeUsbModal(); this.proceedChecklistFromUsb(); }, 1200);
+      setTimeout(()=>{ this.closeUsbModal(); this.go('checklist'); }, 1200);
     }catch(e){
       if(e.name==='NotFoundError'){ this.usbLogAdd('Cancelled — no device selected.'); return; }
       if(e.message==='NO_ADB_INTERFACE'){
@@ -652,13 +775,13 @@ const PCP = {
       const stated = parseFloat(draft.device.storage)||0;
       if(stated>0){
         const anomaly = storageAnomaly(stated, parseFloat(parsed.storageGB));
-        draft.storageCheck = {detected:parsed.storageGB, stated, ...anomaly};
+        draft.storageCheck = {detected:parseFloat(parsed.storageGB), stated, ...anomaly, source:'adb'};
+        draft.device.detectedStorage = parsed.storageGB;
       }
     }
     if(parsed.model && !draft.device.model) draft.device.model = parsed.model;
     this.saveDraft();
   },
-  proceedChecklistFromUsb(){ this.go('checklist'); },
 
   /* ---------- CHECKLIST ---------- */
   renderChecklist(){
@@ -699,12 +822,25 @@ const PCP = {
   },
   setResult(id,result){
     const d=this.state.draft;
-    d.results[id] = {...(d.results[id]||{}), result, auto:false};
+    let note = (d.results[id]&&d.results[id].note) || '';
+    if(result==='fail'){
+      const entered = window.prompt('Optional: add a note describing this failure (e.g., "crack on bottom-left corner"):', note||'');
+      if(entered!==null) note = entered;
+    }
+    d.results[id] = {...(d.results[id]||{}), result, note, auto:false};
     this.saveDraft(); this.render();
   },
   markRemainingPass(){
     const d=this.state.draft;
-    ALL_ITEMS.forEach(it=>{ if(!d.results[it.id] || !d.results[it.id].result) d.results[it.id]={result:'pass'}; });
+    const remaining = ALL_ITEMS.filter(it=>!d.results[it.id] || !d.results[it.id].result).length;
+    if(remaining===0){ alert('No remaining items to mark.'); return; }
+    const ok = confirm(`⚠ This will mark ${remaining} untested item(s) as PASS without individual inspection.\n\nOnly use this if those items were genuinely verified by other means. Continue?`);
+    if(!ok) return;
+    ALL_ITEMS.forEach(it=>{
+      if(!d.results[it.id] || !d.results[it.id].result){
+        d.results[it.id] = {result:'pass', note:'(Bulk-marked without individual test)'};
+      }
+    });
     this.saveDraft(); this.render();
   },
   finalize(){
@@ -802,12 +938,19 @@ const PCP = {
         <div class="item-desc">Category: ${f.cat}${f.note?' • '+f.note:''}</div></div>`).join('')}
     </div>
 
+    ${d.storageCheck ? `<div class="card"><div class="h2">💾 Storage Verification</div>
+      <div class="item-desc">Stated: ${d.storageCheck.stated}GB • Detected: ${d.storageCheck.detected}GB (${d.storageCheck.source==='adb'?'via ADB':'manual check'})</div>
+      <div class="item-desc" style="font-weight:700;margin-top:4px;color:${
+        d.storageCheck.level==='severe'||d.storageCheck.level==='impossible' ? 'var(--red)' :
+        d.storageCheck.level==='mild' ? 'var(--amber)' : 'var(--green)'
+      }">${d.storageCheck.msg}</div>
+    </div>`:''}
+
     ${d.adbData ? `<div class="card"><div class="h2">🔌 ADB Diagnostic Evidence</div>
       <div class="item-desc">Model: ${d.adbData.model} • Manufacturer: ${d.adbData.manufacturer}<br>
       Android: ${d.adbData.androidVer} • Security patch: ${d.adbData.secPatch}<br>
       Serial: ${d.adbData.serial}<br>
       Battery: ${d.adbData.batteryLevel}% (${d.adbData.batteryHealth}) • Temp: ${d.adbData.batteryTempC}°C<br>
-      Storage detected: ${d.adbData.storageGB} GB ${d.storageCheck?('('+d.storageCheck.msg+')'):''}<br>
       Screen: ${d.adbData.screen}</div>
     </div>`:''}
 
