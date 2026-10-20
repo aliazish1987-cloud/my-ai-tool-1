@@ -3,721 +3,836 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Phone Check Pro — Enterprise QC Platform</title>
+<title>Phone Check Pro</title>
 <style>
 :root{
-  --bg:#F7F8FB; --bg2:#FFFFFF; --surface:#FFFFFF; --surface2:#F1F4F9;
-  --border:#E3E7EF; --border-l:#D7DCE6;
-  --text:#0F172A; --dim:#64748B; --faint:#94A3B8;
-  --primary:#4F46E5; --primary-d:#4338CA; --primary-l:#6366F1; --accent:#0891B2;
-  --success:#16A34A; --danger:#DC2626; --warning:#D97706;
-  --grad:linear-gradient(135deg,#4F46E5 0%,#0EA5E9 100%);
-  --radius:14px; --shadow:0 1px 3px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.05);
+  --bg:#F7F8FB; --card:#FFFFFF; --card2:#F1F4F9; --ink:#0F172A; --sub:#64748B;
+  --indigo:#4F46E5; --sky:#0EA5E9; --green:#16A34A; --red:#DC2626; --amber:#D97706;
+  --border:#E2E8F0; --radius:12px;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;min-height:100vh;padding-bottom:80px;}
-a{color:inherit;text-decoration:none;}
-::-webkit-scrollbar{width:8px;height:8px;}
-::-webkit-scrollbar-thumb{background:var(--border-l);border-radius:8px;}
-
-.topbar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:14px 22px;}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.3px;}
-.brand .mark{width:30px;height:30px;border-radius:9px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 4px 14px rgba(79,70,229,.3);}
-.brand .pro{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.top-right{display:flex;gap:10px;align-items:center;}
-.shop-chip{background:#EEF2FF;border:1px solid #C7D2FE;padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--primary-d);}
-.lock-btn{background:var(--surface2);border:1px solid var(--border-l);color:var(--dim);padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer;}
-.lock-btn:hover{color:var(--text);border-color:var(--primary);}
-
-main{max-width:1000px;margin:0 auto;padding:26px 20px;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:20px;}
-.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
-.card-title{font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px;}
-.card-sub{color:var(--dim);font-size:12.5px;margin-top:2px;}
-
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-@media(max-width:680px){.grid2{grid-template-columns:1fr;}}
-.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
-.field label{font-size:12.5px;font-weight:600;color:var(--dim);}
-.field input,.field select,.field textarea{background:#FBFCFE;border:1px solid var(--border-l);color:var(--text);padding:11px 13px;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:.15s;}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,70,229,.12);background:#fff;}
-.field input::placeholder{color:var(--faint);}
-.err{color:var(--danger);font-size:11.5px;margin-top:3px;display:none;}
-
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 18px;border-radius:11px;font-weight:700;font-size:14px;cursor:pointer;border:none;transition:.15s;}
-.btn-primary{background:var(--grad);color:#fff;box-shadow:0 6px 18px rgba(79,70,229,.25);width:100%;}
-.btn-primary:hover{filter:brightness(1.07);transform:translateY(-1px);}
-.btn-ghost{background:var(--surface2);border:1px solid var(--border-l);color:var(--text);}
-.btn-ghost:hover{border-color:var(--primary);color:var(--primary-d);}
-.btn-outline{background:#fff;border:1px solid var(--primary);color:var(--primary-d);padding:8px 14px;font-size:12.5px;}
-.btn-sm{padding:7px 12px;font-size:12px;}
-.btn-danger{background:var(--danger);color:#fff;}
-.btn-block{width:100%;}
-
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
-@media(max-width:680px){.stat-grid{grid-template-columns:repeat(2,1fr);}}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
-.stat .n{font-size:26px;font-weight:800;}
-.stat .l{font-size:11.5px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:.4px;}
-.stat.g-a .n{color:var(--success);}
-.stat.g-x .n{color:var(--danger);}
-.stat.g-p .n{color:var(--accent);}
-
-.bottomnav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--border);display:flex;z-index:50;}
-.navbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 12px;color:var(--faint);cursor:pointer;font-size:11px;font-weight:600;}
-.navbtn.active{color:var(--primary-d);}
-.navbtn .ic{font-size:18px;}
-
-.cat-block{margin-bottom:18px;}
-.cat-header{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--border-l);border-radius:12px 12px 0 0;padding:13px 18px;cursor:pointer;}
-.cat-title{font-weight:700;font-size:14.5px;display:flex;align-items:center;gap:9px;}
-.cat-progress{font-size:11.5px;color:var(--dim);font-weight:600;}
-.cat-body{border:1px solid var(--border-l);border-top:none;border-radius:0 0 12px 12px;background:var(--surface);}
-.item-row{padding:16px 18px;border-bottom:1px solid var(--border);}
-.item-row:last-child{border-bottom:none;}
-.item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
-.item-label{font-weight:650;font-size:13.5px;}
-.item-desc{color:var(--dim);font-size:12px;margin-top:4px;line-height:1.5;}
-.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;margin-left:7px;letter-spacing:.3px;vertical-align:middle;}
-.tag-crit{background:#FEF2F2;color:#B91C1C;border:1px solid #FCA5A5;}
-.tag-red{background:#FFFBEB;color:#B45309;border:1px solid #FCD34D;}
-.seg{display:flex;gap:6px;flex-shrink:0;}
-.seg-btn{padding:7px 13px;border-radius:8px;font-size:11.5px;font-weight:700;background:#F8FAFC;border:1px solid var(--border-l);color:var(--dim);cursor:pointer;}
-.seg-btn.pass.on{background:#DCFCE7;border-color:var(--success);color:#15803D;}
-.seg-btn.fail.on{background:#FEE2E2;border-color:var(--danger);color:#B91C1C;}
-.seg-btn.na.on{background:#F1F5F9;border-color:var(--faint);color:var(--dim);}
-.item-extra{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center;}
-.item-extra textarea{flex:1;min-width:180px;background:#FBFCFE;border:1px solid var(--border-l);border-radius:8px;color:var(--text);padding:8px 10px;font-size:12px;font-family:inherit;resize:vertical;min-height:34px;}
-.tool-btn{background:#EEF2FF;border:1px solid #C7D2FE;color:var(--primary-d);padding:7px 12px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;}
-.photo-label{background:var(--surface2);border:1px solid var(--border-l);padding:7px 12px;border-radius:8px;font-size:11.5px;font-weight:600;cursor:pointer;color:var(--dim);}
-.photo-thumb{width:34px;height:34px;object-fit:cover;border-radius:6px;border:1px solid var(--border-l);}
-
-.sticky-bar{position:sticky;top:64px;z-index:30;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;box-shadow:var(--shadow);}
-.sb-stats{display:flex;gap:18px;flex-wrap:wrap;}
-.sb-stat{font-size:12px;color:var(--dim);}
-.sb-stat b{color:var(--text);font-size:14px;}
-
-.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;}
-.modal-box{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;max-width:480px;width:100%;box-shadow:0 20px 60px rgba(15,23,42,.25);}
-.modal-box h3{margin-bottom:6px;font-size:16px;}
-.modal-box p{color:var(--dim);font-size:12.5px;margin-bottom:16px;}
-.pixel-flash{position:fixed;inset:0;z-index:200;cursor:pointer;}
-.grid-canvas-wrap{background:#000;border-radius:10px;overflow:hidden;margin-bottom:14px;}
-.stopwatch-num{font-size:40px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums;color:var(--primary-d);margin:14px 0;}
-
-.hero-score{text-align:center;padding:30px 20px;border-radius:16px;margin-bottom:20px;background:var(--surface2);border:1px solid var(--border-l);}
-.hero-pct{font-size:52px;font-weight:900;line-height:1;color:var(--text);}
-.grade-badge{display:inline-block;padding:6px 20px;border-radius:999px;font-weight:800;font-size:15px;margin-top:12px;}
-.grade-A{background:#DCFCE7;color:#15803D;border:1px solid #86EFAC;}
-.grade-B{background:#E0F2FE;color:#0369A1;border:1px solid #7DD3FC;}
-.grade-C{background:#FEF3C7;color:#B45309;border:1px solid #FCD34D;}
-.grade-D{background:#FFEDD5;color:#C2410C;border:1px solid #FDBA74;}
-.grade-F,.grade-X{background:#FEE2E2;color:#B91C1C;border:1px solid #FCA5A5;}
-.risk-banner{padding:16px 18px;border-radius:12px;margin-bottom:20px;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:10px;}
-.risk-critical{background:#FEF2F2;border:1px solid var(--danger);color:#B91C1C;}
-.risk-high{background:#FFF7ED;border:1px solid #F97316;color:#C2410C;}
-.risk-medium{background:#FFFBEB;border:1px solid var(--warning);color:#B45309;}
-.risk-low{background:#F0FDF4;border:1px solid var(--success);color:#15803D;}
-.fail-item{background:#FEF2F2;border-left:3px solid var(--danger);border-radius:8px;padding:12px 14px;margin-bottom:8px;}
-.fail-item .ft{font-weight:700;font-size:13px;color:var(--text);}
-.fail-item .fd{color:var(--dim);font-size:12px;margin-top:3px;}
-.det-cat{font-weight:700;font-size:13.5px;margin:18px 0 8px;color:var(--primary-d);border-bottom:1px solid var(--border);padding-bottom:6px;}
-.det-row{display:flex;justify-content:space-between;padding:7px 0;font-size:12.5px;border-bottom:1px solid var(--border);}
-.det-pass{color:var(--success);font-weight:700;}
-.det-fail{color:var(--danger);font-weight:700;}
-.det-na{color:var(--faint);font-weight:700;}
-
-.hist-row{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#FBFCFE;cursor:pointer;}
-.hist-row:hover{border-color:var(--primary);}
-.hist-left b{font-size:13.5px;}
-.hist-left div{color:var(--dim);font-size:11.5px;margin-top:2px;}
-
-#pinOverlay{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
-#pinOverlay input{width:200px;text-align:center;font-size:22px;letter-spacing:8px;padding:12px;border-radius:10px;background:#fff;border:1px solid var(--border-l);color:var(--text);}
-
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:70px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px}
+.brand .mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--indigo),var(--sky));display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+.chip{font-size:11px;background:var(--card2);padding:4px 9px;border-radius:999px;color:var(--sub);border:1px solid var(--border)}
+#app{padding:16px;max-width:760px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.h1{font-size:20px;font-weight:800;margin:0 0 4px}
+.h2{font-size:15px;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.sub{color:var(--sub);font-size:13px;margin:0 0 14px}
+label{display:block;font-size:12px;font-weight:600;color:var(--sub);margin:10px 0 4px}
+input[type=text],input[type=number],input[type=tel],textarea,select{
+  width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;font-size:14px;background:#fff;color:var(--ink)
+}
+textarea{resize:vertical;min-height:60px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:9px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+.btn-primary{background:linear-gradient(135deg,var(--indigo),var(--sky));color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-ghost{background:var(--card2);color:var(--ink);border:1px solid var(--border)}
+.btn-danger{background:#FEE2E2;color:var(--red)}
+.btn-sm{padding:7px 11px;font-size:12.5px}
+.btn-block{width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cat-head{font-size:13px;font-weight:800;margin:18px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px}
+.item{border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;background:#fff}
+.item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.item-label{font-weight:700;font-size:13.5px}
+.item-desc{font-size:12px;color:var(--sub);margin-top:2px}
+.tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;margin-left:6px}
+.tag-crit{background:#FEE2E2;color:var(--red)}
+.tag-red{background:#FFF7ED;color:var(--amber)}
+.tag-auto{background:#EEF2FF;color:var(--indigo)}
+.result-btns{display:flex;gap:6px;margin-top:10px}
+.rbtn{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:#fff;font-size:12.5px;font-weight:700;cursor:pointer}
+.rbtn.pass.active{background:#DCFCE7;border-color:var(--green);color:var(--green)}
+.rbtn.fail.active{background:#FEE2E2;border-color:var(--red);color:var(--red)}
+.rbtn.na.active{background:#F1F5F9;border-color:var(--sub);color:var(--sub)}
+.auto-note{font-size:11px;color:var(--indigo);margin-top:6px;background:#EEF2FF;padding:5px 8px;border-radius:6px}
+.toolbtn{margin-top:8px;font-size:12px;padding:6px 10px;border-radius:7px;background:var(--card2);border:1px solid var(--border);cursor:pointer}
+.bottomnav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;z-index:50}
+.navbtn{flex:1;padding:10px 0;text-align:center;font-size:11px;font-weight:700;color:var(--sub);background:none;border:none;cursor:pointer}
+.navbtn.active{color:var(--indigo)}
+.stat{background:var(--card2);border-radius:10px;padding:12px;text-align:center}
+.stat b{font-size:20px;display:block}
+.modal-ov{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
+.modal{background:#fff;border-radius:14px;padding:20px;max-width:420px;width:100%;max-height:85vh;overflow:auto}
+.loglines{background:#0F172A;color:#A5F3FC;font-family:monospace;font-size:11px;padding:10px;border-radius:8px;max-height:160px;overflow:auto;margin-top:10px}
+.gradebadge{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:16px;font-size:28px;font-weight:900;color:#fff}
+.g-A{background:#16A34A}.g-B{background:#0EA5E9}.g-C{background:#D97706}.g-D{background:#EA580C}.g-F{background:#DC2626}.g-X{background:#7C2D12}
+.pixelover{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.thumb{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
 @media print{
-  .topbar,.bottomnav,.sticky-bar,.no-print,.tool-btn,.photo-label,.seg,.btn{display:none !important;}
-  body{background:#fff;color:#000;padding:0;}
-  .card{box-shadow:none;border:1px solid #ccc;background:#fff;color:#000;}
-  main{max-width:100%;padding:10px;}
+  .bottomnav,.btn,.topbar .chip,#usbBtnWrap{display:none!important}
+  body{background:#fff;padding:0}
+  .card{box-shadow:none;border:1px solid #ccc}
 }
 </style>
 </head>
 <body>
-
-<div id="pinOverlay" style="display:none;">
-  <div class="brand"><span class="mark">📱</span> Phone Check <span class="pro">PRO</span></div>
-  <div style="color:var(--dim);font-size:13px;">Enter PIN to unlock</div>
-  <input type="password" id="pinInput" maxlength="6" inputmode="numeric">
-  <div id="pinErr" style="color:var(--danger);font-size:12px;display:none;">Incorrect PIN</div>
-  <button class="btn btn-primary" style="width:200px;" onclick="PCP.unlock()">Unlock</button>
-</div>
-
 <div class="topbar">
-  <div class="brand"><span class="mark">📱</span> Phone Check <span class="pro">PRO</span></div>
-  <div class="top-right">
-    <span class="shop-chip" id="shopChip">Set Up Shop Profile</span>
-    <button class="lock-btn" onclick="PCP.lock()">🔒 Lock</button>
-  </div>
+  <div class="brand"><div class="mark">P</div> Phone Check Pro</div>
+  <div class="chip" id="shopChip">No Shop Set</div>
 </div>
-
-<main id="app"></main>
-
+<div id="app"></div>
 <div class="bottomnav">
-  <div class="navbtn" data-v="dashboard" onclick="PCP.go('dashboard')"><span class="ic">📊</span>Dashboard</div>
-  <div class="navbtn" data-v="deviceid" onclick="PCP.go('deviceid')"><span class="ic">🔍</span>New QC Check</div>
-  <div class="navbtn" data-v="shop" onclick="PCP.go('shop')"><span class="ic">🏪</span>Shop Profile</div>
+  <button class="navbtn" onclick="PCP.go('dashboard')" id="nav-dashboard">📊<br>Dashboard</button>
+  <button class="navbtn" onclick="PCP.startNew()" id="nav-new">➕<br>New QC Check</button>
+  <button class="navbtn" onclick="PCP.go('shop')" id="nav-shop">🏷️<br>Shop Profile</button>
 </div>
-
-<div id="modalRoot"></div>
 
 <script>
-(function(){
-"use strict";
-
-const CHECKLIST = [
-{id:'sec',title:'Critical Security & Account Locks',icon:'🔐',items:[
- {id:'SEC_IMEI',label:'IMEI Blacklist Status',desc:'Verify IMEI is not reported lost, stolen, or blacklisted via carrier/GSMA database.',critical:true,red:true},
- {id:'SEC_FRP',label:'Google FRP Lock (Factory Reset Protection)',desc:'Confirm Android FRP lock is cleared with no residual Google account lock.',critical:true,red:true},
- {id:'SEC_ICLOUD',label:'iCloud / Find My iPhone Lock',desc:'Confirm Apple ID fully signed out, Find My disabled, no Activation Lock.',critical:true,red:true},
- {id:'SEC_MDM',label:'MDM / Enterprise Supervision Lock',desc:'Check device is not enrolled in a corporate Mobile Device Management profile.',critical:true,red:true},
- {id:'SEC_ROOT',label:'Root / Jailbreak Detection',desc:'Inspect for unauthorized root or jailbreak modification of the OS.',critical:false,red:true}
-]},
-{id:'for',title:'Tamper & Repair Forensics (Opened / Non-Genuine Parts)',icon:'🔎',items:[
- {id:'FOR_SCREWS',label:'Screw Head Tamper Marks',desc:'Inspect internal screw heads for stripping/rotation marks indicating prior disassembly.',critical:false,red:true},
- {id:'FOR_SEAMS',label:'Chassis Seam & Glue Seal Integrity',desc:'Check chassis seams and factory adhesive for gaps indicating the device was opened before.',critical:false,red:true},
- {id:'FOR_SCREEN',label:'Screen Assembly Originality & Adhesive',desc:'Check screen adhesive freshness and bezel gap consistency for prior screen replacement.',critical:false,red:true},
- {id:'FOR_BATTERY',label:'Battery Pull-Tab / Adhesive Seal',desc:'Check battery adhesive/pull-tab condition for signs of prior battery replacement.',critical:false,red:true},
- {id:'FOR_GENUINE',label:'Genuine vs. Aftermarket Parts Cross-Check',desc:'Cross-check screen, battery & camera module serials against diagnostics to detect non-OEM / unofficial "market fitted" parts.',critical:false,red:true},
- {id:'FOR_LCI',label:'Liquid Contact Indicator (Water Damage)',desc:'Check LCI stickers in SIM tray / charging port for a triggered (red/pink) water damage indicator.',critical:true,red:true}
-]},
-{id:'dsp',title:'Display & Touch Panel',icon:'📱',items:[
- {id:'DSP_POWER',label:'Display Power-On & Backlight Uniformity',desc:'Confirm screen powers on with even backlight, no shadowing or discoloration.',critical:false,red:false},
- {id:'DSP_PIXELS',label:'Dead / Stuck Pixel Test',desc:'Run full-screen color cycle to detect dead, stuck, or discolored pixels.',critical:false,red:false,tool:'pixel'},
- {id:'DSP_GRID',label:'Touch Digitizer Grid Response',desc:'Run the multi-zone touch grid to confirm full digitizer responsiveness with no dead zones.',critical:false,red:false,tool:'grid'},
- {id:'DSP_BURNIN',label:'OLED Burn-In / Ghosting Check',desc:'Check for permanent image retention or burn-in on a full grey/white screen.',critical:false,red:true},
- {id:'DSP_GLASS',label:'Glass Surface Cracks / Scratches',desc:'Inspect front glass for cracks, chips, or deep scratches affecting visibility.',critical:false,red:false}
-]},
-{id:'aud',title:'Audio System (Speaker, Receiver, Microphones)',icon:'🔊',items:[
- {id:'AUD_EARPIECE',label:'Earpiece / Call Receiver + Distortion Test',desc:'Play tone through earpiece at max volume; confirm clear audio with no crackle, rattle or distortion.',critical:false,red:false,tool:'tone'},
- {id:'AUD_LOUD',label:'Loudspeaker + Distortion Test',desc:'Play 1kHz tone through main loudspeaker at full volume; confirm no rattling, muffling or distortion.',critical:false,red:false,tool:'tone'},
- {id:'AUD_MIC_PRI',label:'Primary Microphone & Voice Clarity',desc:'Record a voice memo; confirm clear pickup with no muffling, clipping, or distortion.',critical:false,red:false},
- {id:'AUD_MIC_SEC',label:'Secondary / Noise-Cancelling Microphone',desc:'Test secondary mic (top/back) used for call noise cancellation.',critical:false,red:false}
-]},
-{id:'cam',title:'Camera System',icon:'📷',items:[
- {id:'CAM_REAR',label:'Rear Primary Camera — Focus & Clarity',desc:'Capture a test photo; confirm correct autofocus, clarity, and color accuracy.',critical:false,red:false},
- {id:'CAM_OIS',label:'Optical Image Stabilization (OIS)',desc:'Check stabilization function and absence of unusual rattle from the OIS module.',critical:false,red:false},
- {id:'CAM_SEC',label:'Secondary Lenses (Ultra-Wide / Telephoto / Macro)',desc:'Test all secondary rear lenses for focus, clarity, and switching function.',critical:false,red:false},
- {id:'CAM_FRONT',label:'Front / Selfie Camera',desc:'Capture a test photo via front camera; confirm clarity and correct exposure.',critical:false,red:false},
- {id:'CAM_FLASH',label:'LED Flash / Flashlight Function',desc:'Confirm camera flash fires correctly and flashlight toggle works.',critical:false,red:false}
-]},
-{id:'sns',title:'Sensors & Biometrics',icon:'🧿',items:[
- {id:'SNS_PROX',label:'Proximity Sensor',desc:'Confirm screen blanks during calls when held near ear and relights when moved away.',critical:false,red:false},
- {id:'SNS_FINGER',label:'Fingerprint Sensor Enrollment & Unlock',desc:'Enroll a test fingerprint and confirm consistent, fast unlock recognition.',critical:false,red:false},
- {id:'SNS_FACE',label:'Face Recognition / Depth Sensor',desc:'Enroll and test facial unlock; a failed/disabled array may indicate prior repair damage.',critical:false,red:true},
- {id:'SNS_ACCEL',label:'Accelerometer / Gyroscope',desc:'Confirm screen auto-rotation and motion-based functions respond correctly.',critical:false,red:false}
-]},
-{id:'net',title:'Connectivity & Signal',icon:'📶',items:[
- {id:'NET_CELL',label:'Cellular Network / Signal Strength',desc:'Insert active SIM; confirm stable signal bars and successful call/data connection.',critical:false,red:true},
- {id:'NET_SIM',label:'SIM Card Tray & Reader',desc:'Test SIM tray ejector mechanism and confirm reliable SIM card detection.',critical:false,red:false},
- {id:'NET_SD',label:'MicroSD / Memory Card Slot',desc:'If supported, test card insertion, detection, and read/write. Mark N/A if device has no card slot.',critical:false,red:false,naAllowed:true},
- {id:'NET_WIFI',label:'Wi-Fi Connectivity & Signal Strength',desc:'Connect to 2.4GHz & 5GHz networks; confirm stable connection and strong signal at distance.',critical:false,red:false},
- {id:'NET_BT',label:'Bluetooth Pairing & Audio Streaming',desc:'Pair with a Bluetooth accessory and confirm stable streaming without dropouts.',critical:false,red:false},
- {id:'NET_GPS',label:'GPS Location Lock',desc:'Confirm device acquires accurate GPS location lock outdoors within reasonable time.',critical:false,red:false},
- {id:'NET_NFC',label:'NFC Read / Write',desc:'Test NFC tap function (payment or tag read) to confirm the chip is operational.',critical:false,red:false}
-]},
-{id:'btn',title:'Buttons & Physical Controls',icon:'🔘',items:[
- {id:'BTN_PWR',label:'Power / Sleep Button',desc:'Confirm power button responds consistently with no sticking or double-press issue.',critical:false,red:false},
- {id:'BTN_VOL',label:'Volume Up / Down Buttons',desc:'Confirm both volume buttons register presses reliably.',critical:false,red:false},
- {id:'BTN_MUTE',label:'Side Keys / Mute-Silent Switch',desc:'Confirm mute switch / action button toggles correctly and feels mechanically sound.',critical:false,red:false}
-]},
-{id:'bat',title:'Battery & Charging',icon:'🔋',items:[
- {id:'BAT_HEALTH',label:'Battery Health (≥80% Required)',desc:'Check battery health % in diagnostics; below 80% must be disclosed to the buyer.',critical:false,red:true},
- {id:'BAT_PORT',label:'Charging Port — Physical & Connection',desc:'Inspect port for debris/corrosion/bent pins; confirm secure cable connection.',critical:false,red:false},
- {id:'BAT_FAST',label:'Fast Charging Function',desc:'Confirm device accepts rated fast-charging wattage with a compatible charger.',critical:false,red:false},
- {id:'BAT_DATA',label:'USB Data Transfer Function',desc:'Confirm cable/port also passes data when connected to a computer.',critical:false,red:false},
- {id:'BAT_WIRELESS',label:'Wireless Charging (If Supported)',desc:'Confirm wireless coil engages correctly on a Qi charging pad.',critical:false,red:false,naAllowed:true}
-]},
-{id:'prf',title:'Performance & Thermal Stability',icon:'🌡️',items:[
- {id:'PRF_HEAT',label:'Overheating / Thermal Stress Test',desc:'Run camera 4K recording or a graphics-heavy app for 10 minutes; device should not become uncomfortably hot or throttle excessively.',critical:false,red:true,tool:'stopwatch'},
- {id:'PRF_LAG',label:'System Lag / Freeze / Hang Test',desc:'Rapidly multitask across 5+ apps and scroll heavy content; confirm no freezing, force-closes, or unresponsive hangs.',critical:false,red:true,tool:'stopwatch'},
- {id:'PRF_BENCH',label:'General Responsiveness & App Launch Speed',desc:'Confirm apps open and animations run smoothly without stutter versus expected device spec.',critical:false,red:false}
-]},
-{id:'vib',title:'Haptics & Vibration',icon:'📳',items:[
- {id:'VIB_MOTOR',label:'Vibration Motor / Haptic Engine',desc:'Trigger vibration test; confirm strong, consistent haptic feedback with no rattling buzz.',critical:false,red:false,tool:'vibrate'}
-]},
-{id:'chs',title:'Chassis & Cosmetic Condition',icon:'🧱',items:[
- {id:'CHS_BEND',label:'Frame Bend / Structural Warping',desc:'Check chassis frame for bending, warping, or twisting under light pressure.',critical:false,red:true},
- {id:'CHS_REAR',label:'Rear Panel / Back Glass Condition',desc:'Inspect rear panel for cracks, discoloration, or adhesive lifting.',critical:false,red:false},
- {id:'CHS_LENS',label:'Camera Lens Glass Condition',desc:'Inspect camera lens covers for cracks or deep scratches affecting image quality.',critical:false,red:false}
-]},
-{id:'fin',title:'Ownership & Financial Verification',icon:'💳',items:[
- {id:'FIN_LEASE',label:'Active Installment / EMI Finance Lock',desc:'Verify via carrier/retailer records the device is not under an active, unpaid installment or lease plan.',critical:true,red:true},
- {id:'FIN_CARRIER',label:'Carrier-Lock Status',desc:'Confirm whether device is carrier-locked vs factory unlocked, matching buyer expectation.',critical:false,red:true}
-]},
-{id:'new',title:'Sealed / New Device Authenticity',icon:'📦',items:[
- {id:'NEW_IMEI_MATCH',label:'IMEI Triple-Match (Box / Tray / Device)',desc:'Confirm IMEI printed on retail box, SIM tray, and in-device settings all match exactly.',critical:true,red:true},
- {id:'NEW_CYCLES',label:'Battery Cycle Count / Activation Date Consistency',desc:'For devices claimed "sealed/new", confirm battery cycle count and activation date are consistent with an unused device.',critical:false,red:true}
-]}
+/* ============== CHECKLIST DATA ============== */
+const CATEGORIES = [
+ {key:'SEC',icon:'🔐',title:'Critical Security & Account Locks'},
+ {key:'FOR',icon:'🔎',title:'Tamper & Repair Forensics'},
+ {key:'DSP',icon:'📱',title:'Display & Touch Panel'},
+ {key:'AUD',icon:'🔊',title:'Audio System'},
+ {key:'CAM',icon:'📷',title:'Camera System'},
+ {key:'SNS',icon:'🧿',title:'Sensors & Biometrics'},
+ {key:'NET',icon:'📶',title:'Connectivity & Signal'},
+ {key:'BTN',icon:'🔘',title:'Buttons & Physical Controls'},
+ {key:'BAT',icon:'🔋',title:'Battery & Charging'},
+ {key:'PRF',icon:'🌡️',title:'Performance & Thermal Stability'},
+ {key:'VIB',icon:'📳',title:'Haptics & Vibration'},
+ {key:'CHS',icon:'🧱',title:'Chassis & Cosmetic Condition'},
+ {key:'FIN',icon:'💳',title:'Ownership & Financial Verification'},
+ {key:'NEW',icon:'📦',title:'Sealed/New Device Authenticity'}
 ];
-const ALL_ITEMS = CHECKLIST.flatMap(c=>c.items.map(i=>({...i,cat:c.id,catTitle:c.title})));
 
-const CFG_KEY='pcp_gh_cfg', HIST_KEY='pcp_gh_hist', DRAFT_KEY='pcp_gh_draft';
-let S={cfg:null, hist:[], draft:null, view:'dashboard'};
+const ALL_ITEMS = [
+ {id:'SEC_IMEI',cat:'SEC',label:'IMEI Blacklist / Stolen Status',desc:'Check IMEI against blacklist/stolen database.',critical:true,red:true},
+ {id:'SEC_FRP',cat:'SEC',label:'Factory Reset Protection (FRP) Lock',desc:'Google/Samsung account lock must be clear.',critical:true,red:true},
+ {id:'SEC_ICLOUD',cat:'SEC',label:'iCloud Activation Lock',desc:'Device must not be iCloud locked.',critical:true,red:true},
+ {id:'SEC_MDM',cat:'SEC',label:'MDM / Enterprise Enrollment Lock',desc:'Corporate device management lock check.',critical:true,red:true},
+ {id:'SEC_ROOT',cat:'SEC',label:'Root / Jailbreak Detection',desc:'Unauthorized root/jailbreak modification check.',red:true},
 
-function loadAll(){
-  try{S.cfg=JSON.parse(localStorage.getItem(CFG_KEY))||null;}catch(e){S.cfg=null;}
-  try{S.hist=JSON.parse(localStorage.getItem(HIST_KEY))||[];}catch(e){S.hist=[];}
-  try{S.draft=JSON.parse(localStorage.getItem(DRAFT_KEY))||null;}catch(e){S.draft=null;}
-}
-function saveCfg(){localStorage.setItem(CFG_KEY,JSON.stringify(S.cfg));}
-function saveHist(){localStorage.setItem(HIST_KEY,JSON.stringify(S.hist));}
-function saveDraft(){localStorage.setItem(DRAFT_KEY,JSON.stringify(S.draft));}
-function clearDraft(){S.draft=null;localStorage.removeItem(DRAFT_KEY);}
-function newDraft(){ return {id:'RPT-'+Date.now(), createdAt:new Date().toISOString(), device:{}, results:{}, finalized:false}; }
+ {id:'FOR_SCREWS',cat:'FOR',label:'Screw Head Condition',desc:'Stripped/mismatched screws indicate prior opening.',red:true},
+ {id:'FOR_SEAMS',cat:'FOR',label:'Chassis Seam Gaps / Adhesive Residue',desc:'Uneven gaps or glue residue indicate reassembly.',red:true},
+ {id:'FOR_SCREEN',cat:'FOR',label:'Screen Assembly Originality',desc:'Check for aftermarket/non-OEM screen.',red:true},
+ {id:'FOR_BATTERY',cat:'FOR',label:'Battery Originality / Swell Check',desc:'Non-genuine or swollen battery check.',red:true},
+ {id:'FOR_GENUINE',cat:'FOR',label:'Non-Genuine / Company-Fitted Parts',desc:'Detect aftermarket parts fitted by third-party shop.',red:true},
+ {id:'FOR_LCI',cat:'FOR',label:'Liquid Contact Indicator Status',desc:'LCI stickers must be unexposed/white.',critical:true,red:true},
 
-function esc(s){return (s||'').toString().replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function luhnIMEI(imei){
-  const d=(imei||'').replace(/\D/g,'');
-  if(d.length!==15) return false;
+ {id:'DSP_POWER',cat:'DSP',label:'Display Power-On & Uniformity',desc:'Full screen lights evenly, no shadows.',tool:'pixel'},
+ {id:'DSP_PIXELS',cat:'DSP',label:'Dead/Stuck Pixel Scan',desc:'Cycle solid colors to find dead/stuck pixels.',tool:'pixel'},
+ {id:'DSP_GRID',cat:'DSP',label:'Touch Digitizer Grid Accuracy',desc:'Every grid cell must register touch.',tool:'grid'},
+ {id:'DSP_BURNIN',cat:'DSP',label:'OLED Burn-in / Ghosting',desc:'Check for retained ghost images on grey screen.',red:true},
+ {id:'DSP_GLASS',cat:'DSP',label:'Front Glass Crack/Scratch',desc:'Visual inspection of front glass condition.'},
+
+ {id:'AUD_EARPIECE',cat:'AUD',label:'Earpiece Speaker & Voice Clarity',desc:'Play tone close to ear, check for distortion.',tool:'tone'},
+ {id:'AUD_LOUD',cat:'AUD',label:'Loudspeaker Output & Distortion',desc:'Max volume tone, check rattling/distortion.',tool:'tone'},
+ {id:'AUD_MIC_PRI',cat:'AUD',label:'Primary Microphone',desc:'Record/voice call clarity test.'},
+ {id:'AUD_MIC_SEC',cat:'AUD',label:'Secondary/Noise-Cancelling Mic',desc:'Secondary mic function test.'},
+
+ {id:'CAM_REAR',cat:'CAM',label:'Rear Main Camera Focus & Clarity',desc:'Check autofocus, clarity, spots.'},
+ {id:'CAM_OIS',cat:'CAM',label:'Optical Image Stabilization',desc:'Check OIS functions during movement.'},
+ {id:'CAM_SEC',cat:'CAM',label:'Secondary/Ultra-Wide/Macro Lens',desc:'Secondary lens function check.'},
+ {id:'CAM_FRONT',cat:'CAM',label:'Front Camera Clarity',desc:'Selfie camera focus/clarity check.'},
+ {id:'CAM_FLASH',cat:'CAM',label:'LED Flash/Torch',desc:'Flash fires correctly, torch mode works.'},
+
+ {id:'SNS_PROX',cat:'SNS',label:'Proximity Sensor',desc:'Screen blanks correctly near ear during calls.'},
+ {id:'SNS_FINGER',cat:'SNS',label:'Fingerprint Sensor Enrollment',desc:'Enroll and unlock test.'},
+ {id:'SNS_FACE',cat:'SNS',label:'Face Unlock / IR Sensor',desc:'Face unlock enrollment test.',red:true},
+ {id:'SNS_ACCEL',cat:'SNS',label:'Accelerometer/Gyroscope',desc:'Auto-rotate screen test.'},
+
+ {id:'NET_CELL',cat:'NET',label:'Cellular Network Registration & Call',desc:'Registers on network, test call connects.',red:true},
+ {id:'NET_SIM',cat:'NET',label:'SIM Card Tray & Reader',desc:'SIM detected and reads correctly.'},
+ {id:'NET_SD',cat:'NET',label:'MicroSD Card Reader',desc:'External SD card detected/readable.',naAllowed:true},
+ {id:'NET_WIFI',cat:'NET',label:'Wi-Fi Signal Strength & Stability',desc:'Connects and holds stable signal.'},
+ {id:'NET_BT',cat:'NET',label:'Bluetooth Pairing & Audio',desc:'Pairs with device and streams audio.'},
+ {id:'NET_GPS',cat:'NET',label:'GPS/Location Lock Accuracy',desc:'Acquires location lock within reasonable time.'},
+ {id:'NET_NFC',cat:'NET',label:'NFC Tap & Read',desc:'NFC reads a tag/payment terminal.'},
+
+ {id:'BTN_PWR',cat:'BTN',label:'Power Button',desc:'Responsive, no sticking.'},
+ {id:'BTN_VOL',cat:'BTN',label:'Volume Up/Down Buttons',desc:'Both register correctly.'},
+ {id:'BTN_MUTE',cat:'BTN',label:'Mute/Alert Slider or Custom Button',desc:'Functions correctly.'},
+
+ {id:'BAT_HEALTH',cat:'BAT',label:'Battery Health Percentage',desc:'Battery health at or above acceptable threshold.',red:true},
+ {id:'BAT_PORT',cat:'BAT',label:'Charging Port Condition',desc:'No corrosion/bent pins, firm connection.'},
+ {id:'BAT_FAST',cat:'BAT',label:'Fast Charging Function',desc:'Fast charge negotiates correctly.'},
+ {id:'BAT_DATA',cat:'BAT',label:'Data Transfer via Cable',desc:'Recognized by PC, file transfer works.'},
+ {id:'BAT_WIRELESS',cat:'BAT',label:'Wireless Charging',desc:'Charges on Qi pad if supported.',naAllowed:true},
+
+ {id:'PRF_HEAT',cat:'PRF',label:'Thermal Stress Test',desc:'Run load for timed period, check overheating.',red:true,tool:'stopwatch'},
+ {id:'PRF_LAG',cat:'PRF',label:'Freeze/Hang Stability Test',desc:'Multitask apps, check for freezing/hangs.',red:true,tool:'stopwatch'},
+ {id:'PRF_BENCH',cat:'PRF',label:'General Performance/Responsiveness',desc:'Overall UI smoothness check.'},
+
+ {id:'VIB_MOTOR',cat:'VIB',label:'Vibration Motor',desc:'Vibration fires and feels normal strength.',tool:'vibrate'},
+
+ {id:'CHS_BEND',cat:'CHS',label:'Chassis Bend/Warp',desc:'Frame is straight, not bent/warped.',red:true},
+ {id:'CHS_REAR',cat:'CHS',label:'Rear Housing/Glass Condition',desc:'No cracks/deep scratches on back.'},
+ {id:'CHS_LENS',cat:'CHS',label:'Camera Lens Glass Condition',desc:'No cracks on camera lens cover.'},
+
+ {id:'FIN_LEASE',cat:'FIN',label:'Installment/EMI/Lease Finance Status',desc:'Confirm device is fully paid off, not under active finance.',critical:true,red:true},
+ {id:'FIN_CARRIER',cat:'FIN',label:'Carrier Lock Status',desc:'Confirm carrier-lock status and disclose if locked.',red:true},
+
+ {id:'NEW_IMEI_MATCH',cat:'NEW',label:'Box IMEI vs Device IMEI Match',desc:'IMEI on box/sticker must match device IMEI.',critical:true,red:true},
+ {id:'NEW_CYCLES',cat:'NEW',label:'Battery Cycle Count',desc:'Verify cycle count matches "new/sealed" claim.',red:true}
+];
+
+/* ============== UTILITIES ============== */
+function luhnIMEI(raw){
+  const s = (raw||'').replace(/\D/g,'');
+  if(s.length!==15) return false;
   let sum=0;
-  for(let i=0;i<15;i++){ let n=parseInt(d[i],10); if((i%2)===1){ n*=2; if(n>9) n-=9; } sum+=n; }
+  for(let i=0;i<15;i++){
+    let d = parseInt(s[i]);
+    if(i%2===1){ d*=2; if(d>9) d-=9; }
+    sum+=d;
+  }
   return sum%10===0;
 }
-function storageAnomaly(stated,detected){
-  if(!stated||!detected) return null;
-  const ratio=detected/stated;
-  if(ratio<0.70) return {level:'severe',msg:'⚠ Severe mismatch — possible counterfeit/fake storage chip.'};
-  if(ratio>1.05) return {level:'impossible',msg:'⚠ Detected capacity exceeds stated — data inconsistency.'};
-  if(ratio<0.85) return {level:'mild',msg:'Note: some capacity loss is normal (OS/system reserved space).'};
-  return {level:'normal',msg:'Storage capacity within normal range.'};
+function storageAnomaly(statedGB, detectedGB){
+  if(!statedGB||!detectedGB) return {level:'unknown',msg:'Insufficient data'};
+  const ratio = detectedGB/statedGB;
+  if(ratio<0.70) return {level:'severe',msg:'Severe shortfall — counterfeit storage suspected',ratio};
+  if(ratio<0.85) return {level:'mild',msg:'Mild shortfall — normal OS/partition overhead',ratio};
+  if(ratio<=1.05) return {level:'normal',msg:'Storage matches stated capacity',ratio};
+  return {level:'impossible',msg:'Detected exceeds stated — data inconsistency',ratio};
 }
-function grade(pct,criticalFail){
-  if(criticalFail) return 'X';
-  if(pct>=95) return 'A'; if(pct>=85) return 'B'; if(pct>=70) return 'C'; if(pct>=50) return 'D'; return 'F';
+function gradeFromPercent(p){
+  if(p>=95) return 'A'; if(p>=85) return 'B'; if(p>=70) return 'C'; if(p>=50) return 'D'; return 'F';
 }
-const GRADE_LABEL={A:'Excellent — Like New',B:'Very Good — Minor Issues',C:'Good — Notable Issues',D:'Fair — Needs Disclosure',F:'Poor — Significant Faults',X:'CRITICAL FAIL — Override'};
-
 function computeSummary(draft){
-  let pass=0,fail=0,na=0,total=0, criticalFails=[], redFlags=[];
+  let total=0,passed=0,failed=0,na=0,criticalFail=false,redFlags=0;
+  const failedList=[];
   ALL_ITEMS.forEach(it=>{
-    const r=draft.results[it.id];
-    if(!r || !r.status) return;
+    const r = draft.results[it.id];
+    if(!r || !r.result) return;
     total++;
-    if(r.status==='pass') pass++;
-    else if(r.status==='na') na++;
-    else if(r.status==='fail'){ fail++; if(it.critical) criticalFails.push(it); if(it.red) redFlags.push(it); }
+    if(r.result==='pass') passed++;
+    else if(r.result==='na') na++;
+    else if(r.result==='fail'){
+      failed++;
+      if(it.critical) criticalFail=true;
+      if(it.red) redFlags++;
+      failedList.push({id:it.id,label:it.label,cat:it.cat,critical:!!it.critical,auto:!!r.auto,note:r.note||''});
+    }
   });
-  const scored=pass+fail;
-  const pct=scored>0?Math.round((pass/scored)*100):0;
-  const critical=criticalFails.length>0;
-  const g=grade(pct,critical);
-  let risk='low';
-  if(critical) risk='critical'; else if(redFlags.length>=2) risk='high'; else if(redFlags.length===1) risk='medium';
-  return {pass,fail,na,total,pct,grade:g,criticalFails,redFlags,risk};
+  const applicable = total - na;
+  const pct = applicable>0 ? Math.round((passed/applicable)*1000)/10 : 0;
+  let g = gradeFromPercent(pct);
+  if(criticalFail) g='X';
+  let risk='Low';
+  if(criticalFail) risk='Critical';
+  else if(redFlags>=2) risk='High';
+  else if(redFlags===1) risk='Medium';
+  return {total,passed,failed,na,pct,grade:g,criticalFail,redFlags,risk,failedList};
 }
 
-function render(){
-  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.v===S.view || (S.view==='checklist'&&b.dataset.v==='deviceid') || (S.view==='report'&&b.dataset.v==='deviceid')));
-  document.getElementById('shopChip').textContent = S.cfg? (S.cfg.name||'Shop Profile') : 'Set Up Shop Profile';
-  const app=document.getElementById('app');
-  if(S.view==='dashboard') app.innerHTML=renderDashboard();
-  else if(S.view==='shop') app.innerHTML=renderShop();
-  else if(S.view==='deviceid') app.innerHTML=renderDeviceId();
-  else if(S.view==='checklist') app.innerHTML=renderChecklist();
-  else if(S.view==='report') app.innerHTML=renderReport();
-}
+/* ============== ADB / WEBUSB MODULE ============== */
+const Adb = (function(){
+  function T(s){ return (s.charCodeAt(0) | s.charCodeAt(1)<<8 | s.charCodeAt(2)<<16 | s.charCodeAt(3)<<24) >>> 0; }
+  const CMD = { CNXN:T('CNXN'), AUTH:T('AUTH'), OPEN:T('OPEN'), OKAY:T('OKAY'), CLSE:T('CLSE'), WRTE:T('WRTE') };
+  const AUTH_TOKEN=1, AUTH_SIGNATURE=2, AUTH_RSAPUBLICKEY=3, VERSION=0x01000000, MAXDATA=1048576;
 
-function renderDashboard(){
-  const total=S.hist.length;
-  const gA=S.hist.filter(h=>h.summary.grade==='A').length;
-  const gX=S.hist.filter(h=>h.summary.grade==='X').length;
-  const passRate= total>0? Math.round(S.hist.reduce((a,h)=>a+h.summary.pct,0)/total):0;
-  let rows = S.hist.slice().reverse().map(h=>`
-    <div class="hist-row" onclick="PCP.viewHistory('${h.id}')">
-      <div class="hist-left"><b>${esc(h.device.brand||'')} ${esc(h.device.model||'')}</b><div>IMEI: ${esc(h.device.imei||'—')} · ${new Date(h.createdAt).toLocaleString()}</div></div>
-      <div class="grade-badge grade-${h.summary.grade}">${h.summary.grade} · ${h.summary.pct}%</div>
-    </div>`).join('') || `<div style="color:var(--dim);padding:20px;text-align:center;">No reports yet. Start your first QC check →</div>`;
-  return `
-  <div class="stat-grid">
-    <div class="stat"><div class="n">${total}</div><div class="l">Total Checks</div></div>
-    <div class="stat g-a"><div class="n">${gA}</div><div class="l">Grade A Devices</div></div>
-    <div class="stat g-x"><div class="n">${gX}</div><div class="l">Critical Fails</div></div>
-    <div class="stat g-p"><div class="n">${passRate}%</div><div class="l">Avg Pass Rate</div></div>
-  </div>
-  <div class="card">
-    <div class="card-head">
-      <div><div class="card-title">📁 Inspection History</div><div class="card-sub">Search or re-open any past report</div></div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-outline" onclick="PCP.exportJSON()">⬇ Export</button>
-        <label class="btn btn-outline" style="cursor:pointer;">⬆ Import<input type="file" accept="application/json" style="display:none" onchange="PCP.importJSON(this)"></label>
-      </div>
-    </div>
-    <input class="field-search" placeholder="Search by IMEI, model, or report ID..." oninput="PCP.filterHist(this.value)" style="width:100%;background:#FBFCFE;border:1px solid var(--border-l);color:var(--text);padding:11px 13px;border-radius:10px;margin-bottom:14px;">
-    <div id="histList">${rows}</div>
-  </div>`;
-}
-window.PCP=window.PCP||{};
-PCP.filterHist=function(q){
-  q=q.toLowerCase();
-  const filtered=S.hist.filter(h=> (h.device.brand||'').toLowerCase().includes(q) || (h.device.model||'').toLowerCase().includes(q) || (h.device.imei||'').includes(q) || h.id.toLowerCase().includes(q));
-  document.getElementById('histList').innerHTML = filtered.slice().reverse().map(h=>`
-    <div class="hist-row" onclick="PCP.viewHistory('${h.id}')">
-      <div class="hist-left"><b>${esc(h.device.brand||'')} ${esc(h.device.model||'')}</b><div>IMEI: ${esc(h.device.imei||'—')} · ${new Date(h.createdAt).toLocaleString()}</div></div>
-      <div class="grade-badge grade-${h.summary.grade}">${h.summary.grade} · ${h.summary.pct}%</div>
-    </div>`).join('') || `<div style="color:var(--dim);padding:20px;text-align:center;">No matches.</div>`;
-};
-PCP.viewHistory=function(id){
-  const h=S.hist.find(x=>x.id===id); if(!h) return;
-  S.draft=JSON.parse(JSON.stringify(h)); S.view='report'; render();
-};
-
-function renderShop(){
-  const c=S.cfg||{};
-  return `
-  <div class="card">
-    <div class="card-head"><div><div class="card-title">🏪 Shop Profile</div><div class="card-sub">Appears on every report you generate — set once.</div></div></div>
-    <div class="grid2">
-      <div class="field"><label>Shop / Business Name *</label><input id="shName" value="${esc(c.name)}" placeholder="e.g. Apex Mobile Lab & Diagnostics"></div>
-      <div class="field"><label>Contact Phone *</label><input id="shPhone" value="${esc(c.phone)}" placeholder="e.g. +1 234 567 8900"></div>
-      <div class="field"><label>Address</label><input id="shAddr" value="${esc(c.address)}" placeholder="Street, City, Country"></div>
-      <div class="field"><label>Email</label><input id="shEmail" value="${esc(c.email)}" placeholder="shop@example.com"></div>
-    </div>
-    <div class="field"><label>Report Disclaimer Footer</label><textarea id="shDisc" rows="3" placeholder="This report reflects the condition of the device at the time of inspection...">${esc(c.disclaimer)}</textarea></div>
-    <div class="field"><label>Security PIN (4–6 digits, protects app access)</label><input id="shPin" value="${esc(c.pin)}" maxlength="6" placeholder="1234"></div>
-    <button class="btn btn-primary" onclick="PCP.saveShop()">💾 Save Shop Profile</button>
-  </div>`;
-}
-PCP.saveShop=function(){
-  S.cfg={ name:document.getElementById('shName').value.trim()||'Unnamed Shop', phone:document.getElementById('shPhone').value.trim(), address:document.getElementById('shAddr').value.trim(), email:document.getElementById('shEmail').value.trim(), disclaimer:document.getElementById('shDisc').value.trim()||'This inspection reflects device condition at time of testing only. Results may vary with future use.', pin:document.getElementById('shPin').value.trim()||'1234' };
-  saveCfg(); render(); alert('✅ Shop profile saved.');
-};
-
-function renderDeviceId(){
-  const d=(S.draft&&S.draft.device)||{};
-  return `
-  <div class="card">
-    <div class="card-head">
-      <div><div class="card-title">🔍 Step 1: Device Fingerprinting & IMEI Binding</div><div class="card-sub">Identify the exact unit before running the 14-category diagnostic</div></div>
-      <button class="btn-outline btn" onclick="PCP.quickDemo()">⚡ Quick Demo Fill</button>
-    </div>
-    <div class="field"><label>Inspection Context *</label>
-      <select id="dCtx">
-        <option ${d.ctx==='pre'?'selected':''} value="pre">Pre-Purchase Inspection (Used / Secondary Market)</option>
-        <option ${d.ctx==='repair'?'selected':''} value="repair">Post-Repair Quality Check</option>
-        <option ${d.ctx==='new'?'selected':''} value="new">Sealed / New Unit Verification</option>
-        <option ${d.ctx==='trade'?'selected':''} value="trade">Trade-In Valuation Check</option>
-      </select>
-    </div>
-    <div class="grid2">
-      <div class="field"><label>Brand / Manufacturer *</label><input id="dBrand" value="${esc(d.brand)}" placeholder="e.g. Apple, Samsung, Google"></div>
-      <div class="field"><label>Marketing Model Name *</label><input id="dModel" value="${esc(d.model)}" placeholder="e.g. iPhone 14 Pro Max"></div>
-    </div>
-    <div class="field"><label>Primary IMEI (15 Digits) *</label><input id="dImei" value="${esc(d.imei)}" maxlength="17" placeholder="Enter 15-digit IMEI" oninput="PCP.liveImeiCheck(this.value)"><div class="err" id="imeiErr">Invalid IMEI (checksum failed)</div></div>
-    <div class="grid2">
-      <div class="field"><label>Serial Number *</label><input id="dSerial" value="${esc(d.serial)}" placeholder="e.g. F2LDC012N6T4"></div>
-      <div class="field"><label>Hardware SKU Code (Optional)</label><input id="dSku" value="${esc(d.sku)}" placeholder="e.g. A2894, SM-S918B"></div>
-    </div>
-    <div class="grid2">
-      <div class="field"><label>Stated Storage (GB) *</label>
-        <select id="dStated">${[64,128,256,512,1024].map(v=>`<option value="${v}" ${d.stated==v?'selected':''}>${v} GB</option>`).join('')}</select>
-      </div>
-      <div class="field"><label>Detected Total Capacity in OS (GB) *</label><input id="dDetected" type="number" value="${esc(d.detected)}" placeholder="Total seen in Settings" oninput="PCP.liveStorageCheck()"></div>
-    </div>
-    <div id="storageNote" style="margin-bottom:14px;font-size:12px;color:var(--dim);"></div>
-    <div class="grid2">
-      <div class="field"><label>Chassis Color & Finish *</label><input id="dColor" value="${esc(d.color)}" placeholder="e.g. Space Black, Deep Purple"></div>
-      <div class="field"><label>Lead Inspector *</label><input id="dTech" value="${esc(d.tech)}" placeholder="e.g. Alex Vance (Tech #04)"></div>
-    </div>
-    <button class="btn btn-primary" onclick="PCP.proceedChecklist()">Proceed to 14-Category Diagnostic Checklist →</button>
-  </div>`;
-}
-PCP.liveImeiCheck=function(v){
-  const el=document.getElementById('imeiErr'); const digits=v.replace(/\D/g,'');
-  el.style.display = (digits.length===15 && !luhnIMEI(v)) ? 'block':'none';
-};
-PCP.liveStorageCheck=function(){
-  const stated=parseInt(document.getElementById('dStated').value,10);
-  const detected=parseFloat(document.getElementById('dDetected').value);
-  const note=document.getElementById('storageNote'); const a=storageAnomaly(stated,detected);
-  if(!a){note.textContent='';return;}
-  note.textContent=a.msg;
-  note.style.color = a.level==='severe'||a.level==='impossible' ? 'var(--danger)' : (a.level==='mild'?'var(--warning)':'var(--success)');
-};
-PCP.quickDemo=function(){
-  if(!S.draft) S.draft=newDraft();
-  S.draft.device={ctx:'pre',brand:'Apple',model:'iPhone 14 Pro Max',imei:'358241092837465',serial:'F2LDC012N6T4',sku:'A2894',stated:128,detected:118,color:'Space Black',tech:'Alex Vance (Lead QC)'};
-  render();
-};
-PCP.proceedChecklist=function(){
-  const imei=document.getElementById('dImei').value.trim();
-  const brand=document.getElementById('dBrand').value.trim();
-  const model=document.getElementById('dModel').value.trim();
-  const serial=document.getElementById('dSerial').value.trim();
-  const tech=document.getElementById('dTech').value.trim();
-  if(!brand||!model||!serial||!tech){ alert('Please complete all required (*) fields.'); return; }
-  if(imei.replace(/\D/g,'').length!==15 || !luhnIMEI(imei)){ alert('Please enter a valid 15-digit IMEI.'); return; }
-  if(!S.draft) S.draft=newDraft();
-  S.draft.device={ ctx:document.getElementById('dCtx').value, brand, model, imei, serial, sku:document.getElementById('dSku').value.trim(), stated:parseInt(document.getElementById('dStated').value,10), detected:parseFloat(document.getElementById('dDetected').value)||0, color:document.getElementById('dColor').value.trim(), tech };
-  if(!S.draft.id) S.draft.id='RPT-'+Date.now();
-  if(!S.draft.createdAt) S.draft.createdAt=new Date().toISOString();
-  saveDraft(); S.view='checklist'; render();
-};
-
-PCP.setResult=function(id,status){
-  if(!S.draft.results[id]) S.draft.results[id]={};
-  S.draft.results[id].status = (S.draft.results[id].status===status)? null : status;
-  saveDraft(); render();
-};
-PCP.saveNote=function(id,val){ if(!S.draft.results[id]) S.draft.results[id]={}; S.draft.results[id].note=val; saveDraft(); };
-PCP.attachPhoto=function(id,input){
-  const file=input.files[0]; if(!file) return;
-  const img=new Image(); const reader=new FileReader();
-  reader.onload=e=>{
-    img.onload=()=>{
-      const maxW=640; const scale=Math.min(1,maxW/img.width);
-      const canvas=document.createElement('canvas'); canvas.width=img.width*scale; canvas.height=img.height*scale;
-      const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height);
-      const dataUrl=canvas.toDataURL('image/jpeg',0.6);
-      if(!S.draft.results[id]) S.draft.results[id]={};
-      S.draft.results[id].photo=dataUrl; saveDraft(); render();
-    };
-    img.src=e.target.result;
-  };
-  reader.readAsDataURL(file);
-};
-PCP.bulkPass=function(){
-  if(!confirm('Mark ALL remaining untested items as PASS? Already-set items are kept.')) return;
-  ALL_ITEMS.forEach(it=>{ if(!S.draft.results[it.id] || !S.draft.results[it.id].status){ S.draft.results[it.id]={...(S.draft.results[it.id]||{}),status:'pass'}; } });
-  saveDraft(); render();
-};
-
-function renderChecklist(){
-  const sum=computeSummary(S.draft);
-  const catBlocks = CHECKLIST.map(cat=>{
-    const done=cat.items.filter(i=>S.draft.results[i.id]&&S.draft.results[i.id].status).length;
-    const rows=cat.items.map(it=>{
-      const r=S.draft.results[it.id]||{};
-      const tags = (it.critical?'<span class="tag tag-crit">CRITICAL</span>':'') + (it.red?'<span class="tag tag-red">RED FLAG</span>':'');
-      const toolBtn = it.tool? `<button class="tool-btn" onclick="PCP.openTool('${it.tool}','${it.id}')">▶ Run Test</button>`:'';
-      const photoThumb = r.photo? `<img class="photo-thumb" src="${r.photo}">`:'';
-      return `
-      <div class="item-row">
-        <div class="item-top">
-          <div style="flex:1;min-width:200px;">
-            <span class="item-label">${esc(it.label)}</span>${tags}
-            <div class="item-desc">${esc(it.desc)}</div>
-          </div>
-          <div class="seg">
-            <button class="seg-btn pass ${r.status==='pass'?'on':''}" onclick="PCP.setResult('${it.id}','pass')">PASS</button>
-            <button class="seg-btn fail ${r.status==='fail'?'on':''}" onclick="PCP.setResult('${it.id}','fail')">FAIL</button>
-            <button class="seg-btn na ${r.status==='na'?'on':''}" onclick="PCP.setResult('${it.id}','na')">N/A</button>
-          </div>
-        </div>
-        <div class="item-extra">
-          ${toolBtn}
-          <label class="photo-label">📷 Attach Photo<input type="file" accept="image/*" capture="environment" style="display:none" onchange="PCP.attachPhoto('${it.id}',this)"></label>
-          ${photoThumb}
-          <textarea placeholder="Technician note (optional)" oninput="PCP.saveNote('${it.id}',this.value)">${esc(r.note)}</textarea>
-        </div>
-      </div>`;
-    }).join('');
-    return `<div class="cat-block"><div class="cat-header"><div class="cat-title">${cat.icon} ${esc(cat.title)}</div><div class="cat-progress">${done}/${cat.items.length} tested</div></div><div class="cat-body">${rows}</div></div>`;
-  }).join('');
-  return `
-  <div class="sticky-bar">
-    <div class="sb-stats">
-      <div class="sb-stat"><b>${sum.pass}</b> Passed</div>
-      <div class="sb-stat"><b>${sum.fail}</b> Failed</div>
-      <div class="sb-stat"><b>${sum.na}</b> N/A</div>
-      <div class="sb-stat"><b>${sum.total}/${ALL_ITEMS.length}</b> Tested</div>
-      <div class="sb-stat"><b>${sum.pct}%</b> Current Score</div>
-    </div>
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-ghost btn-sm" onclick="PCP.bulkPass()">Mark Remaining Pass</button>
-      <button class="btn btn-primary btn-sm" onclick="PCP.finalize()">✅ Finalize Report</button>
-    </div>
-  </div>
-  ${catBlocks}
-  <div style="text-align:center;margin-top:10px;"><button class="btn btn-primary" onclick="PCP.finalize()">✅ Finalize Report &amp; Generate Grade</button></div>`;
-}
-PCP.finalize=function(){
-  const sum=computeSummary(S.draft);
-  if(sum.total < ALL_ITEMS.length){ if(!confirm(`${ALL_ITEMS.length - sum.total} item(s) are untested. Finalize anyway (untested items are excluded from scoring)?`)) return; }
-  S.draft.summary=sum; S.draft.finalized=true; S.draft.finalizedAt=new Date().toISOString();
-  const existingIdx=S.hist.findIndex(h=>h.id===S.draft.id);
-  if(existingIdx>=0) S.hist[existingIdx]=JSON.parse(JSON.stringify(S.draft)); else S.hist.push(JSON.parse(JSON.stringify(S.draft)));
-  saveHist(); clearDraft(); S.view='report'; render();
-};
-
-function renderReport(){
-  const d=S.draft; const c=S.cfg||{}; const sum=d.summary||computeSummary(d);
-  const riskText={critical:'⛔ CRITICAL RISK — DO NOT PURCHASE without resolving critical issues.',high:'🟠 HIGH RISK — Multiple tamper/aftermarket indicators found. Negotiate heavily or decline.',medium:'🟡 MEDIUM RISK — One flagged issue found. Recommend price negotiation.',low:'🟢 LOW RISK — Clean provenance, no red flags detected.'}[sum.risk];
-  const failList = ALL_ITEMS.filter(it=> d.results[it.id] && d.results[it.id].status==='fail').map(it=>`<div class="fail-item"><div class="ft">${esc(it.label)} ${it.critical?'<span class="tag tag-crit">CRITICAL</span>':''}${it.red?'<span class="tag tag-red">RED FLAG</span>':''}</div><div class="fd">${esc(it.catTitle)} — ${esc(it.desc)}${d.results[it.id].note? ' | Note: '+esc(d.results[it.id].note):''}</div></div>`).join('') || '<div style="color:var(--dim);">No failed items — all tested components passed.</div>';
-  const detailCats = CHECKLIST.map(cat=>{
-    const rows=cat.items.map(it=>{
-      const r=d.results[it.id]||{};
-      const cls = r.status==='pass'?'det-pass':r.status==='fail'?'det-fail':'det-na';
-      const label = r.status==='pass'?'PASS':r.status==='fail'?'FAIL':r.status==='na'?'N/A':'—';
-      return `<div class="det-row"><span>${esc(it.label)}</span><span class="${cls}">${label}</span></div>`;
-    }).join('');
-    return `<div class="det-cat">${cat.icon} ${esc(cat.title)}</div>${rows}`;
-  }).join('');
-  return `
-  <div class="card no-print" style="display:flex;justify-content:flex-end;gap:10px;">
-    <button class="btn btn-outline" onclick="window.print()">🖨 Print / Save PDF</button>
-    <button class="btn btn-outline" onclick="PCP.go('dashboard')">← Back to Dashboard</button>
-  </div>
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;">
-      <div><b style="font-size:17px;">${esc(c.name||'Independent Inspection')}</b><div style="color:var(--dim);font-size:12px;">${esc(c.address||'')} ${c.phone?'· '+esc(c.phone):''} ${c.email?'· '+esc(c.email):''}</div></div>
-      <div style="text-align:right;color:var(--dim);font-size:12px;">Report ID: ${esc(d.id)}<br>${new Date(d.finalizedAt||d.createdAt).toLocaleString()}<br>Technician: ${esc(d.device.tech)}</div>
-    </div>
-    <div class="grid2">
-      <div><b>${esc(d.device.brand)} ${esc(d.device.model)}</b><div style="color:var(--dim);font-size:12px;">IMEI: ${esc(d.device.imei)} · S/N: ${esc(d.device.serial)}</div></div>
-      <div style="text-align:right;color:var(--dim);font-size:12px;">${esc(d.device.color)} · ${d.device.stated}GB stated / ${d.device.detected}GB detected</div>
-    </div>
-  </div>
-  <div class="hero-score"><div class="hero-pct">${sum.pct}%</div><div class="grade-badge grade-${sum.grade}">Grade ${sum.grade} — ${GRADE_LABEL[sum.grade]}</div></div>
-  <div class="risk-banner risk-${sum.risk}">${riskText}</div>
-  <div class="card">
-    <div class="card-title" style="margin-bottom:14px;">🚩 Failed Hardware / Non-Cleared Tests Summary</div>
-    <div class="stat-grid" style="margin-bottom:16px;">
-      <div class="stat"><div class="n">${sum.total}</div><div class="l">Total Tested</div></div>
-      <div class="stat g-a"><div class="n">${sum.pass}</div><div class="l">Passed</div></div>
-      <div class="stat g-x"><div class="n">${sum.fail}</div><div class="l">Failed</div></div>
-      <div class="stat"><div class="n">${sum.na}</div><div class="l">N/A</div></div>
-    </div>
-    ${failList}
-  </div>
-  <div class="card">
-    <div class="card-title" style="margin-bottom:6px;">📋 Full Detailed Checklist</div>
-    <div class="card-sub" style="margin-bottom:10px;">All 55 diagnostic points across 14 categories</div>
-    ${detailCats}
-  </div>
-  <div class="card" style="font-size:11.5px;color:var(--dim);">
-    <b style="color:var(--text);">Disclaimer:</b> ${esc(c.disclaimer||'This inspection reflects device condition at time of testing only.')}
-    <br><br>Customer Signature: ______________________ &nbsp;&nbsp;&nbsp; Technician Signature: ______________________
-    <br>Generated by Phone Check Pro on ${new Date().toLocaleString()}
-  </div>`;
-}
-
-PCP.openTool=function(type,itemId){
-  const root=document.getElementById('modalRoot');
-  if(type==='pixel'){
-    const colors=['#ff0000','#00ff00','#0000ff','#ffffff','#000000','#808080'];
-    root.innerHTML=`<div class="pixel-flash" style="background:${colors[0]}" id="pxFlash"></div>`;
-    PCP._pxIdx=0; PCP._pxColors=colors;
-    let lastTap=0;
-    document.getElementById('pxFlash').addEventListener('click',()=>{
-      const now=Date.now();
-      if(now-lastTap<350){ document.getElementById('modalRoot').innerHTML=''; } else { PCP.pxNext(); }
-      lastTap=now;
-    });
-  } else if(type==='grid'){
-    root.innerHTML=`<div class="modal-overlay"><div class="modal-box" style="max-width:420px;">
-      <h3>🖐 Touch Digitizer Grid Test</h3><p>Touch every cell — it should turn green. Any cell that won't register indicates a dead touch zone.</p>
-      <div class="grid-canvas-wrap"><canvas id="touchGrid" width="360" height="270" style="width:100%;touch-action:none;"></canvas></div>
-      <button class="btn btn-primary" onclick="document.getElementById('modalRoot').innerHTML=''">Close</button>
-    </div></div>`;
-    setupTouchGrid();
-  } else if(type==='tone'){
-    root.innerHTML=`<div class="modal-overlay"><div class="modal-box">
-      <h3>🔊 Audio Output Test</h3><p>Playing a 1kHz test tone for 1.5 seconds at rising volume. Listen for distortion, rattle, or crackle.</p>
-      <button class="btn btn-primary" onclick="PCP.playTone()">▶ Play Test Tone</button><div style="height:10px;"></div>
-      <button class="btn btn-ghost btn-block" onclick="document.getElementById('modalRoot').innerHTML=''">Close</button>
-    </div></div>`;
-  } else if(type==='vibrate'){
-    root.innerHTML=`<div class="modal-overlay"><div class="modal-box">
-      <h3>📳 Haptic / Vibration Test</h3><p>Triggers a vibration pattern. Confirm it feels strong and consistent with no buzzing rattle.</p>
-      <button class="btn btn-primary" onclick="PCP.runVibrate()">▶ Trigger Vibration</button><div style="height:10px;"></div>
-      <button class="btn btn-ghost btn-block" onclick="document.getElementById('modalRoot').innerHTML=''">Close</button>
-    </div></div>`;
-  } else if(type==='stopwatch'){
-    root.innerHTML=`<div class="modal-overlay"><div class="modal-box">
-      <h3>⏱ Stress Test Timer</h3><p>Run the stated stress scenario (thermal or multitask) and watch the clock. Mark PASS/FAIL on the checklist once complete.</p>
-      <div class="stopwatch-num" id="swNum">00:00</div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-primary" style="flex:1" onclick="PCP.swStart()">▶ Start</button>
-        <button class="btn btn-ghost" style="flex:1" onclick="PCP.swStop()">⏸ Stop/Reset</button>
-      </div><div style="height:10px;"></div>
-      <button class="btn btn-ghost btn-block" onclick="PCP.swStop();document.getElementById('modalRoot').innerHTML=''">Close</button>
-    </div></div>`;
+  function checksum(data){ let s=0; for(let i=0;i<data.length;i++) s=(s+data[i])>>>0; return s>>>0; }
+  function buildMsg(cmd,arg0,arg1,data){
+    data = data || new Uint8Array(0);
+    const h = new Uint8Array(24); const dv = new DataView(h.buffer);
+    dv.setUint32(0,cmd,true); dv.setUint32(4,arg0,true); dv.setUint32(8,arg1,true);
+    dv.setUint32(12,data.length,true); dv.setUint32(16,checksum(data),true);
+    dv.setUint32(20,(cmd^0xFFFFFFFF)>>>0,true);
+    return {header:h,data};
   }
-};
-function setupTouchGrid(){
-  const canvas=document.getElementById('touchGrid'); const ctx=canvas.getContext('2d');
-  const cols=8, rows=6; const cw=canvas.width/cols, ch=canvas.height/rows; const touched=new Set();
-  function draw(){
-    ctx.fillStyle='#000'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){ ctx.fillStyle = touched.has(r+'-'+c) ? '#10B981' : '#2A3344'; ctx.fillRect(c*cw+1,r*ch+1,cw-2,ch-2); }
+  function parseHeader(h){
+    const dv = new DataView(h.buffer,h.byteOffset,h.byteLength);
+    return {cmd:dv.getUint32(0,true),arg0:dv.getUint32(4,true),arg1:dv.getUint32(8,true),len:dv.getUint32(12,true)};
   }
-  function mark(x,y){
-    const rect=canvas.getBoundingClientRect(); const scaleX=canvas.width/rect.width, scaleY=canvas.height/rect.height;
-    const cx=Math.floor((x-rect.left)*scaleX/cw), cy=Math.floor((y-rect.top)*scaleY/ch);
-    if(cx>=0&&cx<cols&&cy>=0&&cy<rows){ touched.add(cy+'-'+cx); draw(); }
+  function b64urlToBytes(s){
+    s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='=';
+    const bin=atob(s); const out=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) out[i]=bin.charCodeAt(i);
+    return out;
   }
-  canvas.addEventListener('pointerdown',e=>mark(e.clientX,e.clientY));
-  canvas.addEventListener('pointermove',e=>{ if(e.pressure>0||e.buttons>0) mark(e.clientX,e.clientY); });
-  draw();
-}
-PCP.pxNext=function(){ PCP._pxIdx=(PCP._pxIdx+1)%PCP._pxColors.length; const el=document.getElementById('pxFlash'); if(el) el.style.background=PCP._pxColors[PCP._pxIdx]; };
-PCP.playTone=function(){
-  try{
-    const ctxA=new (window.AudioContext||window.webkitAudioContext)();
-    const osc=ctxA.createOscillator(); const gain=ctxA.createGain();
-    osc.frequency.value=1000; osc.type='sine';
-    gain.gain.setValueAtTime(0.0001,ctxA.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.3,ctxA.currentTime+0.05);
-    gain.gain.exponentialRampToValueAtTime(0.0001,ctxA.currentTime+1.5);
-    osc.connect(gain); gain.connect(ctxA.destination); osc.start(); osc.stop(ctxA.currentTime+1.5);
-  }catch(e){ alert('Audio playback not supported on this browser.'); }
-};
-PCP.runVibrate=function(){ if(navigator.vibrate){ navigator.vibrate([150,80,150]); } else alert('Vibration API not supported on this device/browser.'); };
-PCP._swInterval=null; PCP._swSeconds=0;
-PCP.swStart=function(){
-  if(PCP._swInterval) return;
-  PCP._swInterval=setInterval(()=>{
-    PCP._swSeconds++;
-    const m=String(Math.floor(PCP._swSeconds/60)).padStart(2,'0'); const s=String(PCP._swSeconds%60).padStart(2,'0');
-    const el=document.getElementById('swNum'); if(el) el.textContent=m+':'+s;
-  },1000);
-};
-PCP.swStop=function(){ clearInterval(PCP._swInterval); PCP._swInterval=null; PCP._swSeconds=0; const el=document.getElementById('swNum'); if(el) el.textContent='00:00'; };
+  function bytesToBig(bytes){ let r=0n; for(const b of bytes) r=(r<<8n)|BigInt(b); return r; }
+  function bigToBytes(n,len){ const out=new Uint8Array(len); for(let i=len-1;i>=0;i--){ out[i]=Number(n&0xFFn); n>>=8n; } return out; }
+  function modPow(base,exp,mod){
+    let result=1n; base%=mod;
+    while(exp>0n){ if(exp&1n) result=(result*base)%mod; exp>>=1n; base=(base*base)%mod; }
+    return result;
+  }
+  async function getOrCreateKey(){
+    const saved = localStorage.getItem('pcp_adb_key');
+    if(saved){ try{ return JSON.parse(saved); }catch(e){} }
+    const pair = await crypto.subtle.generateKey(
+      {name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-1'},
+      true,['sign','verify']
+    );
+    const jwk = await crypto.subtle.exportKey('jwk', pair.privateKey);
+    const key = {n:jwk.n,e:jwk.e,d:jwk.d};
+    localStorage.setItem('pcp_adb_key', JSON.stringify(key));
+    return key;
+  }
+  function signToken(key, token){
+    const n = bytesToBig(b64urlToBytes(key.n));
+    const d = bytesToBig(b64urlToBytes(key.d));
+    const klen=256, ps=klen-3-token.length;
+    const em = new Uint8Array(klen);
+    em[0]=0;em[1]=1; for(let i=0;i<ps;i++) em[2+i]=0xFF; em[2+ps]=0; em.set(token,3+ps);
+    return bigToBytes(modPow(bytesToBig(em),d,n), klen);
+  }
+  function modInverse32(n0){
+    const MASK=(1n<<32n)-1n; let inv=BigInt.asUintN(32,n0);
+    for(let i=0;i<4;i++) inv=(inv*((2n-(BigInt.asUintN(32,n0)*inv & MASK)) & MASK)) & MASK;
+    return BigInt.asUintN(32,(0n-inv));
+  }
+  function encodePublicKey(key){
+    const n = bytesToBig(b64urlToBytes(key.n));
+    const e = bytesToBig(b64urlToBytes(key.e));
+    const words=64, n0=n & 0xFFFFFFFFn, n0inv=modInverse32(n0);
+    const R = 1n<<BigInt(32*words), rr=(R*R)%n;
+    const out = new Uint8Array(4+4+256+256+4); const dv = new DataView(out.buffer);
+    dv.setUint32(0,words,true); dv.setUint32(4,Number(n0inv),true);
+    out.set(bigToBytes(n,256).reverse(),8);
+    out.set(bigToBytes(rr,256).reverse(),8+256);
+    dv.setUint32(8+512,Number(e),true);
+    let bin=''; for(const b of out) bin+=String.fromCharCode(b);
+    return btoa(bin)+' pcp@webadb\u0000';
+  }
 
-PCP.exportJSON=function(){
-  const blob=new Blob([JSON.stringify(S.hist,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='phonecheckpro_history.json'; a.click(); URL.revokeObjectURL(url);
-};
-PCP.importJSON=function(input){
-  const file=input.files[0]; if(!file) return; const reader=new FileReader();
-  reader.onload=e=>{
-    try{
-      const data=JSON.parse(e.target.result); if(!Array.isArray(data)) throw new Error('Invalid format');
-      data.forEach(d=>{ if(!d.id||!d.device||!d.summary) throw new Error('Invalid schema'); });
-      S.hist=S.hist.concat(data); saveHist(); render(); alert(`✅ Imported ${data.length} report(s).`);
-    }catch(err){ alert('❌ Import failed: file is not a valid Phone Check Pro export.'); }
-  };
-  reader.readAsText(file);
-};
-
-PCP.go=function(view){
-  if(view==='deviceid' && (!S.draft || S.draft.finalized)) S.draft=newDraft();
-  S.view=view; render();
-};
-PCP.lock=function(){ document.getElementById('pinOverlay').style.display='flex'; document.getElementById('pinInput').value=''; document.getElementById('pinErr').style.display='none'; };
-PCP.unlock=function(){
-  const pin=document.getElementById('pinInput').value; const correct = S.cfg && S.cfg.pin ? S.cfg.pin : '1234';
-  if(pin===correct){ document.getElementById('pinOverlay').style.display='none'; } else{ document.getElementById('pinErr').style.display='block'; }
-};
-
-loadAll();
-if(S.draft && S.draft.finalized) S.draft=null;
-if(!S.draft) S.draft=newDraft();
-S.view = S.cfg ? 'dashboard' : 'shop';
-render();
-
+  class Connection{
+    constructor(){ this.device=null; this.epIn=null; this.epOut=null; this.localId=0; this.onLog=()=>{}; }
+    log(m){ this.onLog(m); }
+    async requestDevice(){
+      this.device = await navigator.usb.requestDevice({filters:[{classCode:0xFF,subclassCode:0x42,protocolCode:0x01}]});
+    }
+    async open(){
+      const d=this.device; await d.open();
+      if(!d.configuration) await d.selectConfiguration(1);
+      let found=null;
+      for(const cfg of d.configurations) for(const itf of cfg.interfaces) for(const alt of itf.alternates)
+        if(alt.interfaceClass===0xFF && alt.interfaceSubclass===0x42 && alt.interfaceProtocol===0x01)
+          found={interfaceNumber:itf.interfaceNumber,alt};
+      if(!found) throw new Error('NO_ADB_INTERFACE');
+      await d.claimInterface(found.interfaceNumber);
+      for(const ep of found.alt.endpoints){
+        if(ep.direction==='in') this.epIn=ep.endpointNumber;
+        if(ep.direction==='out') this.epOut=ep.endpointNumber;
+      }
+      if(!this.epIn||!this.epOut) throw new Error('NO_ENDPOINTS');
+    }
+    async writeMsg(cmd,arg0,arg1,data){
+      const {header,data:d} = buildMsg(cmd,arg0,arg1,data);
+      await this.device.transferOut(this.epOut,header);
+      if(d.length>0) await this.device.transferOut(this.epOut,d);
+    }
+    async readMsg(timeoutMs){
+      timeoutMs = timeoutMs||10000;
+      const res = await Promise.race([
+        this.device.transferIn(this.epIn,24),
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT')),timeoutMs))
+      ]);
+      const h = new Uint8Array(res.data.buffer,res.data.byteOffset,res.data.byteLength);
+      const parsed = parseHeader(h);
+      let data = new Uint8Array(0);
+      if(parsed.len>0){
+        const res2 = await Promise.race([
+          this.device.transferIn(this.epIn,parsed.len),
+          new Promise((_,rej)=>setTimeout(()=>rej(new Error('TIMEOUT')),timeoutMs))
+        ]);
+        data = new Uint8Array(res2.data.buffer,res2.data.byteOffset,res2.data.byteLength);
+      }
+      return {...parsed,data};
+    }
+    async handshake(){
+      const key = await getOrCreateKey();
+      this.log('Sending CNXN...');
+      await this.writeMsg(CMD.CNXN,VERSION,MAXDATA,new TextEncoder().encode('host::pcp\u0000'));
+      let tries=0;
+      while(tries<4){
+        const msg = await this.readMsg(15000);
+        if(msg.cmd===CMD.CNXN){ this.log('Connected: '+new TextDecoder().decode(msg.data)); return true; }
+        if(msg.cmd===CMD.AUTH && msg.arg0===AUTH_TOKEN){
+          tries++;
+          if(tries===1){
+            this.log('Signing auth token...');
+            await this.writeMsg(CMD.AUTH,AUTH_SIGNATURE,0,signToken(key,msg.data));
+          } else {
+            this.log('⚠ Check your phone screen — tap "Allow USB debugging"');
+            await this.writeMsg(CMD.AUTH,AUTH_RSAPUBLICKEY,0,new TextEncoder().encode(encodePublicKey(key)));
+          }
+          continue;
+        }
+        throw new Error('UNEXPECTED_RESPONSE');
+      }
+      throw new Error('AUTH_TIMEOUT');
+    }
+    async shell(cmd,timeoutMs){
+      timeoutMs = timeoutMs||8000;
+      const id = ++this.localId;
+      await this.writeMsg(CMD.OPEN,id,0,new TextEncoder().encode('shell:'+cmd+'\u0000'));
+      let remoteId=0, chunks=[], deadline=Date.now()+timeoutMs;
+      while(Date.now()<deadline){
+        const msg = await this.readMsg(timeoutMs);
+        if(msg.cmd===CMD.OKAY){ remoteId=msg.arg0; continue; }
+        if(msg.cmd===CMD.WRTE){ chunks.push(msg.data); await this.writeMsg(CMD.OKAY,id,msg.arg0); continue; }
+        if(msg.cmd===CMD.CLSE){ await this.writeMsg(CMD.CLSE,id,msg.arg0||remoteId); break; }
+      }
+      const total = chunks.reduce((a,c)=>a+c.length,0);
+      const buf = new Uint8Array(total); let off=0;
+      for(const c of chunks){ buf.set(c,off); off+=c.length; }
+      return new TextDecoder().decode(buf);
+    }
+    async close(){ try{ await this.device.close(); }catch(e){} }
+  }
+  return {Connection};
 })();
+
+async function runAdbDiagnostics(conn, logFn){
+  const cmds = {
+    model:'getprop ro.product.model', manufacturer:'getprop ro.product.manufacturer',
+    androidVer:'getprop ro.build.version.release', secPatch:'getprop ro.build.version.security_patch',
+    serial:'getprop ro.serialno', battery:'dumpsys battery', storage:'df /data',
+    features:'pm list features', sim:'getprop gsm.sim.state', screen:'wm size'
+  };
+  const out={};
+  for(const k in cmds){
+    logFn('Running: '+cmds[k]);
+    try{ out[k]=await conn.shell(cmds[k]); }catch(e){ out[k]=''; logFn('⚠ failed: '+k); }
+  }
+  return out;
+}
+function parseAdbResults(raw){
+  const battery={};
+  (raw.battery||'').split('\n').forEach(line=>{
+    const m=line.match(/^\s*(\w[\w ]*?):\s*(.+)$/); if(m) battery[m[1].trim()]=m[2].trim();
+  });
+  const healthMap={1:'Unknown',2:'Good',3:'Overheat',4:'Dead',5:'Over voltage',6:'Unspecified failure',7:'Cold'};
+  const healthCode = parseInt(battery['health']);
+  const tempC = battery['temperature'] ? (parseInt(battery['temperature'])/10).toFixed(1) : null;
+  let storageGB=null;
+  const sline = (raw.storage||'').split('\n').find(l=>l.includes('/data'));
+  if(sline){ const p=sline.trim().split(/\s+/); if(p[1]) storageGB=(parseInt(p[1])/1024/1024).toFixed(1); }
+  const features = raw.features||'';
+  return {
+    model:(raw.model||'').trim(), manufacturer:(raw.manufacturer||'').trim(),
+    androidVer:(raw.androidVer||'').trim(), secPatch:(raw.secPatch||'').trim(),
+    serial:(raw.serial||'').trim(), batteryLevel:battery['level']||null,
+    batteryHealth:healthMap[healthCode]||'Unknown', batteryTempC:tempC, storageGB,
+    hasNFC:/feature:android\.hardware\.nfc/.test(features),
+    hasFinger:/feature:android\.hardware\.fingerprint/.test(features),
+    hasBT:/feature:android\.hardware\.bluetooth/.test(features),
+    simState:(raw.sim||'').trim(), screen:(raw.screen||'').trim()
+  };
+}
+
+/* ============== APP STATE ============== */
+const PCP = {
+  state:{ view:'dashboard', cfg:null, hist:[], draft:null, usbConn:null, usbLog:[] },
+  init(){
+    this.state.cfg = JSON.parse(localStorage.getItem('pcp_gh_cfg')||'null');
+    this.state.hist = JSON.parse(localStorage.getItem('pcp_gh_hist')||'[]');
+    const d = JSON.parse(localStorage.getItem('pcp_gh_draft')||'null');
+    if(d) this.state.draft = d;
+    document.getElementById('shopChip').textContent = this.state.cfg ? this.state.cfg.name : 'No Shop Set';
+    this.go('dashboard');
+  },
+  saveCfg(){ localStorage.setItem('pcp_gh_cfg', JSON.stringify(this.state.cfg)); },
+  saveHist(){ localStorage.setItem('pcp_gh_hist', JSON.stringify(this.state.hist)); },
+  saveDraft(){ localStorage.setItem('pcp_gh_draft', JSON.stringify(this.state.draft)); },
+  go(view){ this.state.view=view; this.render(); },
+  startNew(){
+    this.state.draft = { id:'QC-'+Date.now(), createdAt:new Date().toISOString(), device:{}, results:{}, photos:[] };
+    this.saveDraft(); this.go('deviceid');
+  },
+
+  render(){
+    const app = document.getElementById('app');
+    ['dashboard','new','shop'].forEach(k=>document.getElementById('nav-'+k)?.classList.remove('active'));
+    if(this.state.view==='dashboard'){ document.getElementById('nav-dashboard').classList.add('active'); app.innerHTML=this.renderDashboard(); }
+    else if(this.state.view==='shop'){ document.getElementById('nav-shop').classList.add('active'); app.innerHTML=this.renderShop(); }
+    else if(this.state.view==='deviceid'){ document.getElementById('nav-new').classList.add('active'); app.innerHTML=this.renderDeviceId(); }
+    else if(this.state.view==='checklist'){ document.getElementById('nav-new').classList.add('active'); app.innerHTML=this.renderChecklist(); }
+    else if(this.state.view==='report'){ app.innerHTML=this.renderReport(); }
+  },
+
+  /* ---------- DASHBOARD ---------- */
+  renderDashboard(){
+    const hist=this.state.hist;
+    const total=hist.length;
+    const gradeA=hist.filter(h=>h.summary.grade==='A').length;
+    const crit=hist.filter(h=>h.summary.criticalFail).length;
+    const avgPass = total? Math.round(hist.reduce((a,h)=>a+h.summary.pct,0)/total) : 0;
+    return `
+    <div class="card"><div class="h1">Dashboard</div><div class="sub">Overview of all inspections performed.</div>
+      <div class="grid2">
+        <div class="stat"><b>${total}</b>Total Checks</div>
+        <div class="stat"><b>${gradeA}</b>Grade A</div>
+        <div class="stat"><b>${crit}</b>Critical Fails</div>
+        <div class="stat"><b>${avgPass}%</b>Avg Pass Rate</div>
+      </div>
+    </div>
+    <div class="card"><div class="h2">📜 Inspection History</div>
+      <div class="row" style="margin-bottom:10px">
+        <button class="btn btn-ghost btn-sm" onclick="PCP.exportData()">⬇ Export</button>
+        <label class="btn btn-ghost btn-sm" style="cursor:pointer">⬆ Import<input type="file" accept=".json" style="display:none" onchange="PCP.importData(event)"></label>
+      </div>
+      ${hist.length===0?'<div class="sub">No reports yet. Tap "New QC Check" to begin.</div>':
+        hist.slice().reverse().map(h=>`
+        <div class="item"><div class="item-top">
+          <div><div class="item-label">${h.device.brand||''} ${h.device.model||''}</div>
+          <div class="item-desc">${new Date(h.createdAt).toLocaleString()} • ${h.summary.pct}% • Grade ${h.summary.grade}</div></div>
+          <button class="btn btn-ghost btn-sm" onclick="PCP.viewHist('${h.id}')">View</button>
+        </div></div>`).join('')}
+    </div>`;
+  },
+  viewHist(id){ this.state.draft = this.state.hist.find(h=>h.id===id); this.go('report'); },
+  exportData(){
+    const blob = new Blob([JSON.stringify({cfg:this.state.cfg,hist:this.state.hist},null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='phonecheckpro-backup.json'; a.click();
+  },
+  importData(ev){
+    const f=ev.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{ try{
+      const data=JSON.parse(r.result);
+      if(data.cfg) this.state.cfg=data.cfg; this.saveCfg();
+      if(data.hist) this.state.hist=data.hist; this.saveHist();
+      document.getElementById('shopChip').textContent = this.state.cfg?this.state.cfg.name:'No Shop Set';
+      this.go('dashboard'); alert('Import successful.');
+    }catch(e){ alert('Invalid file.'); } };
+    r.readAsText(f);
+  },
+
+  /* ---------- SHOP PROFILE ---------- */
+  renderShop(){
+    const c = this.state.cfg || {name:'',address:'',phone:'',disclaimer:''};
+    return `<div class="card"><div class="h1">Shop Profile</div><div class="sub">Shown on every generated report.</div>
+      <label>Shop Name</label><input type="text" id="s_name" value="${c.name||''}">
+      <label>Address</label><input type="text" id="s_addr" value="${c.address||''}">
+      <label>Contact Phone</label><input type="tel" id="s_phone" value="${c.phone||''}">
+      <label>Report Disclaimer</label><textarea id="s_disc">${c.disclaimer||'This report reflects condition at time of inspection only.'}</textarea>
+      <button class="btn btn-primary btn-block" style="margin-top:14px" onclick="PCP.saveShop()">💾 Save Shop Profile</button>
+    </div>`;
+  },
+  saveShop(){
+    this.state.cfg = {
+      name:document.getElementById('s_name').value||'My Shop',
+      address:document.getElementById('s_addr').value,
+      phone:document.getElementById('s_phone').value,
+      disclaimer:document.getElementById('s_disc').value
+    };
+    this.saveCfg();
+    document.getElementById('shopChip').textContent = this.state.cfg.name;
+    alert('Shop profile saved.'); this.go('dashboard');
+  },
+
+  /* ---------- DEVICE ID ---------- */
+  renderDeviceId(){
+    const d = this.state.draft.device;
+    const usbOk = !!navigator.usb;
+    return `<div class="card"><div class="h1">Step 1 — Device Fingerprinting</div>
+      <button class="btn btn-ghost btn-sm" onclick="PCP.demoFill()">⚡ Quick Demo Fill</button>
+      <label>IMEI / Serial</label><input type="text" id="d_imei" value="${d.imei||''}" placeholder="15-digit IMEI">
+      <label>Brand</label><input type="text" id="d_brand" value="${d.brand||''}">
+      <label>Model</label><input type="text" id="d_model" value="${d.model||''}">
+      <div class="grid2">
+        <div><label>Stated Storage (GB)</label><input type="number" id="d_storage" value="${d.storage||''}"></div>
+        <div><label>Color</label><input type="text" id="d_color" value="${d.color||''}"></div>
+      </div>
+      <label>Upload Evidence Photos</label>
+      <input type="file" accept="image/*" multiple onchange="PCP.addPhotos(event)">
+      <div class="row" style="margin-top:8px">${(this.state.draft.photos||[]).map(p=>`<img class="thumb" src="${p}">`).join('')}</div>
+
+      <div id="usbBtnWrap" style="margin-top:16px;padding-top:14px;border-top:1px dashed var(--border)">
+        <label>Technician Hardware Mode</label>
+        ${usbOk ?
+          `<button class="btn btn-ghost btn-block" onclick="PCP.openUsbModal()">🔌 Technician USB Mode (Beta)</button>
+           <div class="item-desc" style="margin-top:6px">Android + Chrome/Edge desktop only. Connects via USB cable for automated diagnostics.</div>`
+          : `<div class="item-desc">USB Mode unavailable — open this tool in Chrome or Edge on a desktop/laptop to enable cable diagnostics. Guided manual mode works everywhere.</div>`}
+      </div>
+
+      <button class="btn btn-primary btn-block" style="margin-top:16px" onclick="PCP.proceedChecklist()">Proceed to Checklist →</button>
+    </div>`;
+  },
+  demoFill(){
+    this.state.draft.device = {imei:'358241092837465',brand:'Samsung',model:'Galaxy S21',storage:'128',color:'Phantom Gray'};
+    this.saveDraft(); this.render();
+  },
+  addPhotos(ev){
+    const files = Array.from(ev.target.files);
+    files.forEach(f=>{
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = e => {
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const scale = Math.min(1, 800/img.width);
+          canvas.width = img.width*scale; canvas.height = img.height*scale;
+          canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+          this.state.draft.photos.push(canvas.toDataURL('image/jpeg',0.7));
+          this.saveDraft(); this.render();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(f);
+    });
+  },
+  proceedChecklist(){
+    this.state.draft.device = {
+      imei:document.getElementById('d_imei').value,
+      brand:document.getElementById('d_brand').value,
+      model:document.getElementById('d_model').value,
+      storage:document.getElementById('d_storage').value,
+      color:document.getElementById('d_color').value
+    };
+    this.saveDraft(); this.go('checklist');
+  },
+
+  /* ---------- USB MODE ---------- */
+  openUsbModal(){
+    this.state.usbLog = ['Ready. Click "Connect Device" and select your phone from the browser dialog.'];
+    document.body.insertAdjacentHTML('beforeend', this.usbModalHtml());
+  },
+  closeUsbModal(){ document.getElementById('usbModalRoot')?.remove(); },
+  usbModalHtml(){
+    return `<div class="modal-ov" id="usbModalRoot"><div class="modal">
+      <div class="h2">🔌 Technician USB Mode (Beta)</div>
+      <div class="sub">Plug the Android phone in via USB, then connect below.</div>
+      <button class="btn btn-primary btn-block" onclick="PCP.usbConnect()">Connect Device</button>
+      <button class="btn btn-ghost btn-block" style="margin-top:8px" onclick="PCP.closeUsbModal()">Close</button>
+      <div class="loglines" id="usbLog">${this.state.usbLog.join('\n')}</div>
+    </div></div>`;
+  },
+  usbLogAdd(m){ this.state.usbLog.push(m); const el=document.getElementById('usbLog'); if(el){ el.textContent=this.state.usbLog.join('\n'); el.scrollTop=el.scrollHeight; } },
+  async usbConnect(){
+    const conn = new Adb.Connection();
+    conn.onLog = (m)=>this.usbLogAdd(m);
+    try{
+      this.usbLogAdd('Opening device picker...');
+      await conn.requestDevice();
+      this.usbLogAdd('Opening USB interface...');
+      await conn.open();
+      this.usbLogAdd('Starting handshake...');
+      await conn.handshake();
+      this.usbLogAdd('✅ Connected successfully.');
+      this.state.usbConn = conn;
+      this.usbLogAdd('Running diagnostics...');
+      const raw = await runAdbDiagnostics(conn, (m)=>this.usbLogAdd(m));
+      const parsed = parseAdbResults(raw);
+      this.usbApplyResults(parsed);
+      this.usbLogAdd('✅ Diagnostics complete. Auto-filled items marked in checklist.');
+      this.usbLogAdd('Model: '+parsed.model+' | Android '+parsed.androidVer+' | Battery '+parsed.batteryLevel+'% ('+parsed.batteryHealth+')');
+      setTimeout(()=>{ this.closeUsbModal(); this.proceedChecklistFromUsb(); }, 1200);
+    }catch(e){
+      if(e.name==='NotFoundError'){ this.usbLogAdd('Cancelled — no device selected.'); return; }
+      if(e.message==='NO_ADB_INTERFACE'){
+        this.usbLogAdd('⚠ No ADB interface found.');
+        this.usbLogAdd('→ On phone: Settings → About Phone → tap "Build Number" 7 times.');
+        this.usbLogAdd('→ Settings → Developer Options → enable "USB debugging".');
+        this.usbLogAdd('→ Reconnect cable and click Connect again.');
+        return;
+      }
+      if(e.message==='AUTH_TIMEOUT'){
+        this.usbLogAdd('⚠ Timed out waiting for authorization. Check phone screen for the "Allow USB debugging?" popup and tap Allow, then retry.');
+        return;
+      }
+      this.usbLogAdd('⚠ Connection failed: '+e.message);
+      this.usbLogAdd('You can continue in Guided Manual Mode instead — tap Close below.');
+    }
+  },
+  usbApplyResults(parsed){
+    const draft = this.state.draft;
+    draft.adbData = parsed;
+    const set = (id,result,note)=>{ draft.results[id] = {...(draft.results[id]||{}), result, note, auto:true}; };
+    if(parsed.batteryHealth && parsed.batteryHealth!=='Unknown'){
+      set('BAT_HEALTH', parsed.batteryHealth==='Good' ? 'pass':'fail',
+        `ADB: health=${parsed.batteryHealth}, level=${parsed.batteryLevel}%, temp=${parsed.batteryTempC}°C`);
+    }
+    if(parsed.simState){
+      set('NET_SIM', /ready|loaded/i.test(parsed.simState) ? 'pass':'fail', `ADB: sim_state=${parsed.simState}`);
+    }
+    set('NET_NFC', parsed.hasNFC?'pass':'na', `ADB: NFC hardware ${parsed.hasNFC?'present':'not detected'}`);
+    set('SNS_FINGER', parsed.hasFinger?'pass':'na', `ADB: fingerprint hardware ${parsed.hasFinger?'present':'not detected'}`);
+    set('NET_BT', parsed.hasBT?'pass':'na', `ADB: bluetooth hardware ${parsed.hasBT?'present':'not detected'}`);
+    if(parsed.storageGB){
+      const stated = parseFloat(draft.device.storage)||0;
+      if(stated>0){
+        const anomaly = storageAnomaly(stated, parseFloat(parsed.storageGB));
+        draft.storageCheck = {detected:parsed.storageGB, stated, ...anomaly};
+      }
+    }
+    if(parsed.model && !draft.device.model) draft.device.model = parsed.model;
+    this.saveDraft();
+  },
+  proceedChecklistFromUsb(){ this.go('checklist'); },
+
+  /* ---------- CHECKLIST ---------- */
+  renderChecklist(){
+    const d = this.state.draft;
+    let html = `<div class="card"><div class="h1">Step 2 — Full Diagnostic Checklist</div>
+      <div class="sub">${d.device.brand||''} ${d.device.model||''} • IMEI: ${d.device.imei||'—'}</div>
+      ${d.adbData? `<div class="auto-note">🔌 ADB Connected: ${d.adbData.model} • Android ${d.adbData.androidVer} • Security patch ${d.adbData.secPatch}</div>`:''}
+    </div>`;
+    CATEGORIES.forEach(cat=>{
+      const items = ALL_ITEMS.filter(i=>i.cat===cat.key);
+      html += `<div class="cat-head">${cat.icon} ${cat.title}</div>`;
+      items.forEach(it=>{
+        const r = d.results[it.id] || {};
+        html += `<div class="item">
+          <div class="item-top">
+            <div><div class="item-label">${it.label}
+              ${it.critical?'<span class="tag tag-crit">CRITICAL</span>':''}
+              ${it.red&&!it.critical?'<span class="tag tag-red">RED FLAG</span>':''}
+              ${r.auto?'<span class="tag tag-auto">✓ AUTO-VERIFIED</span>':''}
+            </div>
+            <div class="item-desc">${it.desc}</div></div>
+          </div>
+          ${r.note?`<div class="auto-note">${r.note}</div>`:''}
+          ${it.tool?`<button class="toolbtn" onclick="PCP.openTool('${it.tool}','${it.id}')">▶ Run ${it.tool} tool</button>`:''}
+          <div class="result-btns">
+            <button class="rbtn pass ${r.result==='pass'?'active':''}" onclick="PCP.setResult('${it.id}','pass')">✓ Pass</button>
+            <button class="rbtn fail ${r.result==='fail'?'active':''}" onclick="PCP.setResult('${it.id}','fail')">✗ Fail</button>
+            ${it.naAllowed?`<button class="rbtn na ${r.result==='na'?'active':''}" onclick="PCP.setResult('${it.id}','na')">N/A</button>`:''}
+          </div>
+        </div>`;
+      });
+    });
+    html += `<div class="card">
+      <button class="btn btn-ghost btn-block" onclick="PCP.markRemainingPass()">Mark All Remaining as Pass</button>
+      <button class="btn btn-primary btn-block" style="margin-top:8px" onclick="PCP.finalize()">✅ Finalize Report</button>
+    </div>`;
+    return html;
+  },
+  setResult(id,result){
+    const d=this.state.draft;
+    d.results[id] = {...(d.results[id]||{}), result, auto:false};
+    this.saveDraft(); this.render();
+  },
+  markRemainingPass(){
+    const d=this.state.draft;
+    ALL_ITEMS.forEach(it=>{ if(!d.results[it.id] || !d.results[it.id].result) d.results[it.id]={result:'pass'}; });
+    this.saveDraft(); this.render();
+  },
+  finalize(){
+    const d = this.state.draft;
+    d.summary = computeSummary(d);
+    d.finalizedAt = new Date().toISOString();
+    this.state.hist.push(d);
+    this.saveHist();
+    localStorage.removeItem('pcp_gh_draft');
+    this.go('report');
+  },
+
+  /* ---------- TOOLS ---------- */
+  openTool(tool,itemId){
+    if(tool==='pixel') this.toolPixel();
+    else if(tool==='grid') this.toolGrid();
+    else if(tool==='tone') this.toolTone();
+    else if(tool==='vibrate') navigator.vibrate ? navigator.vibrate([150,80,150]) : alert('Vibration not supported on this device.');
+    else if(tool==='stopwatch') this.toolStopwatch();
+  },
+  toolPixel(){
+    const colors=['#ff0000','#00ff00','#0000ff','#ffffff','#000000','#808080'];
+    let i=0;
+    const ov=document.createElement('div');
+    ov.className='pixelover'; ov.style.background=colors[0];
+    ov.innerHTML='Tap to cycle color • Double-tap to close';
+    ov.onclick=()=>{ i=(i+1)%colors.length; ov.style.background=colors[i]; };
+    ov.ondblclick=(e)=>{ e.stopPropagation(); document.body.removeChild(ov); };
+    document.body.appendChild(ov);
+  },
+  toolGrid(){
+    const ov=document.createElement('div'); ov.className='pixelover'; ov.style.background='#111';
+    ov.innerHTML='<canvas id="gridCanvas" style="width:95vw;height:70vh;background:#222"></canvas><div style="position:absolute;bottom:20px">Double-tap to close</div>';
+    ov.ondblclick=()=>document.body.removeChild(ov);
+    document.body.appendChild(ov);
+    const canvas=document.getElementById('gridCanvas');
+    canvas.width=canvas.clientWidth; canvas.height=canvas.clientHeight;
+    const ctx=canvas.getContext('2d'); const cols=8, rows=6;
+    const cw=canvas.width/cols, ch=canvas.height/rows;
+    for(let x=0;x<cols;x++)for(let y=0;y<rows;y++){ ctx.strokeStyle='#555'; ctx.strokeRect(x*cw,y*ch,cw,ch); }
+    canvas.addEventListener('pointermove',e=>{
+      const r=canvas.getBoundingClientRect();
+      const x=Math.floor((e.clientX-r.left)/cw), y=Math.floor((e.clientY-r.top)/ch);
+      ctx.fillStyle='rgba(0,255,0,.5)'; ctx.fillRect(x*cw,y*ch,cw,ch);
+    });
+  },
+  toolTone(){
+    try{
+      const ctx = new (window.AudioContext||window.webkitAudioContext)();
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.frequency.value=1000; osc.connect(gain); gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+1.5);
+      osc.start(); osc.stop(ctx.currentTime+1.5);
+    }catch(e){ alert('Audio test not supported.'); }
+  },
+  toolStopwatch(){
+    const ov=document.createElement('div'); ov.className='pixelover'; ov.style.background='rgba(15,23,42,.9)';
+    ov.innerHTML=`<div style="text-align:center"><div id="swTime" style="font-size:40px;font-weight:800">00:00</div>
+      <button class="btn btn-primary" id="swBtn" style="margin-top:10px">Start</button>
+      <button class="btn btn-ghost" style="margin-top:10px;margin-left:8px" onclick="this.closest('.pixelover').remove()">Close</button></div>`;
+    document.body.appendChild(ov);
+    let t=0, running=false, iv=null;
+    document.getElementById('swBtn').onclick=(e)=>{
+      running=!running; e.target.textContent = running?'Stop':'Start';
+      if(running){ iv=setInterval(()=>{ t++; const m=String(Math.floor(t/60)).padStart(2,'0'); const s=String(t%60).padStart(2,'0'); document.getElementById('swTime').textContent=m+':'+s; },1000); }
+      else clearInterval(iv);
+    };
+  },
+
+  /* ---------- REPORT ---------- */
+  renderReport(){
+    const d = this.state.draft;
+    const s = d.summary;
+    const cfg = this.state.cfg || {name:'My Shop',address:'',phone:'',disclaimer:''};
+    const riskColor = {Critical:'var(--red)',High:'#EA580C',Medium:'var(--amber)',Low:'var(--green)'}[s.risk];
+    return `<div class="card">
+      <div class="h1">${cfg.name}</div>
+      <div class="sub">${cfg.address||''} ${cfg.phone?'• '+cfg.phone:''}</div>
+      <div class="row" style="align-items:center;margin-top:10px">
+        <div class="gradebadge g-${s.grade}">${s.grade}</div>
+        <div><div style="font-size:22px;font-weight:800">${s.pct}%</div>
+          <div style="color:${riskColor};font-weight:700;font-size:13px">${s.risk.toUpperCase()} RISK</div></div>
+      </div>
+      <div class="sub" style="margin-top:10px">${d.device.brand||''} ${d.device.model||''} • IMEI ${d.device.imei||'—'} • ${new Date(d.finalizedAt||d.createdAt).toLocaleString()}</div>
+    </div>
+
+    <div class="card"><div class="h2">⚠️ Failed Hardware / Non-Cleared Tests Summary</div>
+      <div class="grid2" style="margin-bottom:10px">
+        <div class="stat"><b>${s.total}</b>Total</div><div class="stat"><b>${s.passed}</b>Passed</div>
+        <div class="stat"><b>${s.failed}</b>Failed</div><div class="stat"><b>${s.na}</b>N/A</div>
+      </div>
+      ${s.failedList.length===0?'<div class="sub">No failed items. Device passed all tested checks.</div>':
+        s.failedList.map(f=>`<div class="item"><div class="item-label">${f.label} ${f.critical?'<span class="tag tag-crit">CRITICAL</span>':''}${f.auto?'<span class="tag tag-auto">ADB</span>':''}</div>
+        <div class="item-desc">Category: ${f.cat}${f.note?' • '+f.note:''}</div></div>`).join('')}
+    </div>
+
+    ${d.adbData ? `<div class="card"><div class="h2">🔌 ADB Diagnostic Evidence</div>
+      <div class="item-desc">Model: ${d.adbData.model} • Manufacturer: ${d.adbData.manufacturer}<br>
+      Android: ${d.adbData.androidVer} • Security patch: ${d.adbData.secPatch}<br>
+      Serial: ${d.adbData.serial}<br>
+      Battery: ${d.adbData.batteryLevel}% (${d.adbData.batteryHealth}) • Temp: ${d.adbData.batteryTempC}°C<br>
+      Storage detected: ${d.adbData.storageGB} GB ${d.storageCheck?('('+d.storageCheck.msg+')'):''}<br>
+      Screen: ${d.adbData.screen}</div>
+    </div>`:''}
+
+    <div class="card"><div class="h2">📋 Full Checklist Detail</div>
+      ${CATEGORIES.map(cat=>{
+        const items = ALL_ITEMS.filter(i=>i.cat===cat.key);
+        return `<div class="cat-head">${cat.icon} ${cat.title}</div>` + items.map(it=>{
+          const r=d.results[it.id]||{result:'—'};
+          const color = r.result==='pass'?'var(--green)':r.result==='fail'?'var(--red)':'var(--sub)';
+          return `<div class="item-desc" style="margin-bottom:4px"><b style="color:${color}">[${(r.result||'—').toUpperCase()}]</b> ${it.label}${r.note?' — '+r.note:''}</div>`;
+        }).join('');
+      }).join('')}
+    </div>
+
+    ${d.photos&&d.photos.length?`<div class="card"><div class="h2">📷 Evidence Photos</div><div class="row">${d.photos.map(p=>`<img class="thumb" src="${p}">`).join('')}</div></div>`:''}
+
+    <div class="card"><div class="item-desc"><i>${cfg.disclaimer||''}</i></div></div>
+
+    <div class="card">
+      <button class="btn btn-primary btn-block" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      <button class="btn btn-ghost btn-block" style="margin-top:8px" onclick="PCP.go('dashboard')">← Back to Dashboard</button>
+    </div>`;
+  }
+};
+PCP.init();
 </script>
 </body>
 </html>
